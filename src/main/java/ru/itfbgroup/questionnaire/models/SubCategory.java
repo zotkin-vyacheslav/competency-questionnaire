@@ -16,7 +16,17 @@ public class SubCategory {
 	private String name;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Option.class)
+	@JoinTable(name = "subcategory_options", joinColumns = { @JoinColumn(name = "subcategory_id") },
+			inverseJoinColumns = { @JoinColumn(name = "option_id") })
 	private Set<Option> options;
+
+	public SubCategory() {
+	}
+
+	public SubCategory(String name, Set<Option> options) {
+		this.name = name;
+		this.options = options;
+	}
 
 	public Long getSubCategoryId() {
 		return subCategoryId;

@@ -1,0 +1,11 @@
+package ru.itfbgroup.questionnaire.dao.impl;
+
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import ru.itfbgroup.questionnaire.dao.abstr.UserDao;
+import ru.itfbgroup.questionnaire.models.User;
+
+@Repository
+@Transactional
+public class UserDaoImpl extends AbstractDao<Long, User> implements UserDao {
+}

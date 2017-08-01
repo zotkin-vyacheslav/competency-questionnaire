@@ -18,6 +18,14 @@ public class Category {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = SubCategory.class)
 	private Set<SubCategory> subCategories;
 
+	public Category() {
+	}
+
+	public Category(String categoryName, Set<SubCategory> subCategories) {
+		this.categoryName = categoryName;
+		this.subCategories = subCategories;
+	}
+
 	public Long getCategoryId() {
 		return categoryId;
 	}
