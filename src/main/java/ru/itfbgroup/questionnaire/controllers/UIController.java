@@ -1,12 +1,12 @@
 package ru.itfbgroup.questionnaire.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
-import ru.itfbgroup.questionnaire.dao.abstr.UserDao;
+import ru.itfbgroup.questionnaire.models.Answer;
+import ru.itfbgroup.questionnaire.models.AnswerOption;
 import ru.itfbgroup.questionnaire.models.User;
 import ru.itfbgroup.questionnaire.service.abstr.CategoryService;
 import ru.itfbgroup.questionnaire.service.abstr.UserService;
@@ -29,37 +29,43 @@ public class UIController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView getLoginPage(@RequestParam(value = "email") String email) {
-		ModelAndView modelAndView = new ModelAndView("redirect:/form");
-		User user = new User(email);
-		modelAndView.addObject("user", user);
+		ModelAndView modelAndView = new ModelAndView("redirect:/index");
+
+		Answer userAnswer = new Answer();
+		AnswerOption answerOption = new AnswerOption();
+		answerOption.setAnswer(userAnswer);
+
+		User user = new User(email, userAnswer);
+		userService.addUser(user);
+//		modelAndView.addObject("user", user);
 
 		return modelAndView;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/form")
-	public ModelAndView getQuestionPage() {
-		ModelAndView modelAndView = new ModelAndView("formPage");
-		modelAndView.addObject("categories", categoryService.getAllCategories());
-
-		return modelAndView;
-	}
-
-	@RequestMapping(method = RequestMethod.POST, value = "/form")
-	public ModelAndView getQuestionPage(@ModelAttribute User user,
-										@RequestParam(value = "additional") String additional,
-										@RequestParam(value = "optradio") String radioValue,
-										SessionStatus sessionStatus) {
-		ModelAndView modelAndView = new ModelAndView("formPage");
-		modelAndView.addObject("categories", categoryService.getAllCategories());
-
-//		sessionStatus.setComplete();
-		return modelAndView;
-	}
+//	@RequestMapping(method = RequestMethod.GET, value = "/form")
+//	public ModelAndView getQuestionPage() {
+//		ModelAndView modelAndView = new ModelAndView("formPage");
+//		modelAndView.addObject("categories", categoryService.getAllCategories());
+//
+//		return modelAndView;
+//	}
+//
+//	@RequestMapping(method = RequestMethod.POST, value = "/form")
+//	public ModelAndView getQuestionPage(@ModelAttribute User user,
+//										@RequestParam(value = "additional") String additional,
+//										@RequestParam(value = "optradio") String radioValue,
+//										SessionStatus sessionStatus) {
+//		ModelAndView modelAndView = new ModelAndView("formPage");
+//		modelAndView.addObject("categories", categoryService.getAllCategories());
+//
+////		sessionStatus.setComplete();
+//		return modelAndView;
+//	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/index")
 	public ModelAndView getTableData() {
-		ModelAndView modelAndView = new ModelAndView("tablesEx");
-
+		ModelAndView modelAndView = new ModelAndView("index");
+		modelAndView.addObject("categoriesId", categoryService.getAllCategoriesId());
 		return modelAndView;
 	}
 }

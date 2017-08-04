@@ -1,7 +1,5 @@
 package ru.itfbgroup.questionnaire.models;
 
-import ru.itfbgroup.questionnaire.models.enums.AnswerOptionsEnum;
-
 import javax.persistence.*;
 
 @Entity
@@ -9,34 +7,20 @@ import javax.persistence.*;
 public class Option {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO)
 //	@GeneratedValue(strategy=GenerationType.AUTO, generator="my_entity_seq_gen")
 //	@SequenceGenerator(name="my_entity_seq_gen", sequenceName="MY_ENTITY_SEQ", allocationSize = 1)
 	@Column(name = "option_id")
 	private Long optionId;
 
-	@Column(name = "answer_options")
-	@Enumerated(EnumType.STRING)
-	private AnswerOptionsEnum answerOptionsEnum;
-
 	@Column(name = "option_name")
 	private String optionName;
-
-	@Column(name = "additional")
-	private String additional;
 
 	public Option() {
 	}
 
-	public Option(AnswerOptionsEnum answerOptionsEnum, String additional) {
-		this.answerOptionsEnum = answerOptionsEnum;
-		this.additional = additional;
-	}
-
-	public Option(AnswerOptionsEnum answerOptionsEnum, String optionName, String additional) {
-		this.answerOptionsEnum = answerOptionsEnum;
+	public Option(String optionName) {
 		this.optionName = optionName;
-		this.additional = additional;
 	}
 
 	public Long getOptionId() {
@@ -47,27 +31,37 @@ public class Option {
 		this.optionId = optionId;
 	}
 
-	public AnswerOptionsEnum getAnswerOptionsEnum() {
-		return answerOptionsEnum;
-	}
-
-	public void setAnswerOptionsEnum(AnswerOptionsEnum answerOptionsEnum) {
-		this.answerOptionsEnum = answerOptionsEnum;
-	}
-
-	public String getAdditional() {
-		return additional;
-	}
-
-	public void setAdditional(String additional) {
-		this.additional = additional;
-	}
-
 	public String getOptionName() {
 		return optionName;
 	}
 
 	public void setOptionName(String optionName) {
 		this.optionName = optionName;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Option option = (Option) o;
+
+		if (optionId != null ? !optionId.equals(option.optionId) : option.optionId != null) return false;
+		return optionName != null ? optionName.equals(option.optionName) : option.optionName == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = optionId != null ? optionId.hashCode() : 0;
+		result = 31 * result + (optionName != null ? optionName.hashCode() : 0);
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "Option{" +
+				"optionId=" + optionId +
+				", optionName='" + optionName + '\'' +
+				'}';
 	}
 }

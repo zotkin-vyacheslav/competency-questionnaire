@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ITFB Group - компетенции специалистов</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css"/>
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../resources/static/css/style.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        var currentIndexId = 0;
+        var categories_id = [[${categoriesId}]];
+
+        $(document).ready(function () {
+
+            getPage(categories_id[0]);
+
+//            if (currentIndexId === Object.keys(categories_id).length - 2) {
+//                $("#next_button_id").hide();
+//            }
+//
+//            if (currentIndexId === 0) {
+//                $("#previous_button_id").hide();
+//                return categories_id[currentIndexId];
+//            }
+
+//            $("#next_button_id").on('click', alert(getNextId()));
+            $("#next_button_id").on("click", function () {
+                getPage(getNextId());
+            });
+            $("#previous_button_id").on("click", function () {
+                getPage(getPreviousId());
+            });
+
+        });
+
+        function getPreviousId() {
+            if (currentIndexId === 0) {
+//                $("#previous_button_id").hide();
+                return categories_id[currentIndexId];
+            }
+
+            return categories_id[--currentIndexId];
+        }
+
+        function getNextId() {
+//            if (currentIndexId === 0) {
+//                return categories_id[currentIndexId++];
+//            } else
+            if (currentIndexId === Object.keys(categories_id).length - 2) {
+//                $("#next_button_id").hide();
+                return categories_id[++currentIndexId];
+            }
+
+            return categories_id[++currentIndexId];
+        }
+
+        function getPage(i) {
+            $("#table_id td").hide();
+            $.getJSON("rest/cat/" + i.toString(), function (result) {
+                var category_title = result["categoryName"];
+
+                $("#category_id").html(category_title);
+
+//                var subcategory_title = result["subCategories"][0]["name"];
+//
+//                $("#subcategory_id").html(subcategory_title);
+
+                var subCategories = result["subCategories"];
+
+                for (i = 0; i < subCategories.length; i++) {
+
+                    var subcategory_title = result["subCategories"][0]["name"];
+
+                    $("#subcategory_id").html(subcategory_title);
+
+                    $("#form_id").html("<input class=\"form-control\" placeholder=\"Мой ответ\" name=\"additional\"/>");
+
+                    var options = result["subCategories"][i]["options"];
+
+                    var j;
+
+                    for (j = 0; j < options.length; j++) {
+                        str1 = options[j]["optionName"];
+
+                        str2 = "<tr><td>" + str1 + "</td>";
+
+                        str2 = str2 + "  <td> <label class='radio-inline'> <input type='radio' name='optradio" + j.toString() + "'> </label></td>";
+                        str2 = str2 + "  <td> <label class='radio-inline'> <input type='radio' name='optradio" + j.toString() + "'> </label></td>";
+                        str2 = str2 + "  <td> <label class='radio-inline'> <input type='radio' name='optradio" + j.toString() + "'> </label></td>";
+                        str2 = str2 + "  <td> <label class='radio-inline'> <input type='radio' name='optradio" + j.toString() + "'> </label></td>";
+
+                        str2 = str2 + "</tr>";
+                        $("#table_id tr:last").after(str2);
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <h1>ITFB Group - компетенции специалистов</h1>
+    <div class="table-responsive">
+        <div id="questions">
+            <div class="category">
+                <h2 id="category_id"></h2>
+            </div>
+            <div>
+                <div>
+                    <!--<div id="subcategory_id">-->
+
+                    <!--</div>-->
+                    <table class="table table-striped" id="table_id">
+                        <p id="subcategory_id" ></p>
+                        <thead>
+                        <tr>
+                            <th class="col-md-4"></th>
+                            <th class="col-md-2"><b>No</b></th>
+                            <th class="col-md-2"><b>Begin</b></th>
+                            <th class="col-md-2"><b>Basic</b></th>
+                            <th class="col-md-2"><b>Advanced</b></th>
+                        </tr>
+                        </thead>
+                    </table>
+                    <div>
+                        <p>
+                            Если в списке выше что-то отсутствует из того, что Вы знаете и использовали, то укажите ниже
+                            через запятую:
+                        </p>
+                        <div class="form-group" id="form_id">
+                            <!--<input class="form-control" placeholder="Мой ответ" name="additional"/>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="buttons">
+            <!--<div class="next-button-class">-->
+            <button id="next_button_id" class="next">Далее</button>
+            <!--</div>-->
+            <!--<div class="previous-button-class">-->
+            <button id="previous_button_id" class="next">Назад</button>
+            <!--</div>-->
+        </div>
+    </div>
+</div>
+</body>
+<style>
+    body {
+        background-color: #f1f1f1;
+    }
+
+    .container {
+        width: 600px;
+        padding: 20px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        position: absolute;
+        left: 30%;
+        top: 20%;
+        border-top: 6px solid #481cff;
+    }
+
+    /*.category {*/
+    /*background-color: #090fe6;*/
+    /*color: white;*/
+    /*}*/
+
+</style>
+</html>

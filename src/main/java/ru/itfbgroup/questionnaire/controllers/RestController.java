@@ -10,18 +10,19 @@ import ru.itfbgroup.questionnaire.service.abstr.CategoryService;
 import java.util.List;
 
 @org.springframework.web.bind.annotation.RestController
+@RequestMapping(value = "rest")
 public class RestController {
 
 	@Autowired
 	private CategoryService categoryService;
 
 	@RequestMapping(path="/cat", method= RequestMethod.GET)
-	public List<Category> getAllEmployees(){
+	public List<Category> getAllCategories(){
 		return categoryService.getAllCategories();
 	}
 
 	@RequestMapping(value = "/cat/{id}", method = RequestMethod.GET)
-	public Category getEmployeeById(@PathVariable("id") long id){
+	public Category getCategoryById(@PathVariable("id") long id){
 		return categoryService.getCategoryById(id);
 	}
 }

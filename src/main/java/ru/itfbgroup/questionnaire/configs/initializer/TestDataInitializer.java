@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.itfbgroup.questionnaire.models.Category;
 import ru.itfbgroup.questionnaire.models.Option;
 import ru.itfbgroup.questionnaire.models.SubCategory;
-import ru.itfbgroup.questionnaire.models.enums.AnswerOptionsEnum;
 import ru.itfbgroup.questionnaire.service.abstr.CategoryService;
 
-import java.util.HashSet;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class TestDataInitializer {
@@ -15,45 +15,100 @@ public class TestDataInitializer {
 	@Autowired
 	private CategoryService categoryService;
 
-	public void startInit() {
-		Option option1 = new Option(AnswerOptionsEnum.NO, "java", "");
-		Option option2 = new Option(AnswerOptionsEnum.NO, "c", "");
-		Option option3 = new Option(AnswerOptionsEnum.NO, "js", "");
+	private void addMiddleware() {
+		Option option1 = new Option("Oracle Weblogic Server");
+		Option option2 = new Option("IBM WebSphere Application Server");
+		Option option3 = new Option("WildFly / JBoss");
+		Option option4 = new Option("TomEE");
+		Option option5 = new Option("Glassfish");
+		Option option6 = new Option("SAP NetWeaver Application Server");
+		Option option7 = new Option("Microsoft IIS");
+		Option option8 = new Option("Oracle Tuxedo");
 
-		Option option4 = new Option(AnswerOptionsEnum.NO, "Oracle", "");
-		Option option5 = new Option(AnswerOptionsEnum.NO, "MySQL", "");
-		Option option6 = new Option(AnswerOptionsEnum.NO, "PostgreSQL", "");
+		Option[] middlewaresApplicationServersOptions = {option1, option2, option3, option4, option5, option6, option7, option8};
+		Set<Option> mwASOptions = new LinkedHashSet<>(Arrays.asList(middlewaresApplicationServersOptions));
 
-		Set<Option> options = new HashSet<>();
-		options.add(option1);
-		options.add(option2);
-		options.add(option3);
+		SubCategory middlewareSC = new SubCategory("Application Servers", mwASOptions);
 
-		Set<Option> dbOptions = new HashSet<>();
-		dbOptions.add(option4);
-		dbOptions.add(option5);
-		dbOptions.add(option6);
+		Set<SubCategory> middlewareSubCategories = new LinkedHashSet<>();
+		middlewareSubCategories.add(middlewareSC);
 
-		SubCategory subCategory = new SubCategory("langs", options);
-		SubCategory dbDev = new SubCategory("develop", dbOptions);
-		SubCategory dbAdmin = new SubCategory("admin", dbOptions);
+		Category middlewareCategory = new Category("Middleware", middlewareSubCategories);
+		categoryService.addCategory(middlewareCategory);
+	}
 
-		Set<SubCategory> subCategories = new HashSet<>();
+	private void addDb() {
+		Option option4 = new Option("Oracle Database");
+		Option option5 = new Option("Oracle TimesTen");
+		Option option6 = new Option("MS SQL Server");
+		Option option7 = new Option("IBM DB2");
+		Option option8 = new Option("IBM Informix");
+		Option option9 = new Option("PostgreSQL");
+		Option option10 = new Option("MySQL / MariaDB");
+		Option option11= new Option("Interbase / Firebird");
+
+		Option[] dbs = {option4, option5, option6, option7, option8, option9, option10, option11};
+
+		Option option12 = new Option("Cassandra");
+		Option option13 = new Option("HBase");
+		Option option14 = new Option("Druid");
+		Option option15 = new Option("MongoDB");
+		Option option16 = new Option("CouchDB");
+		Option option17 = new Option("ArangoDB");
+		Option option18 = new Option("Oracle NoSQL Database / Berkley DB");
+		Option option19 = new Option("MarkLogic");
+		Option option20 = new Option("Couchbase");
+
+		Option[] addevOptions = {option12, option13, option14, option15, option16, option17, option18, option19, option20};
+
+		Set<Option> dbOptions = new LinkedHashSet<>();
+		dbOptions.addAll(Arrays.asList(dbs));
+
+		Set<Option> adddevOptionsSet = new LinkedHashSet<>();
+		adddevOptionsSet.addAll(Arrays.asList(addevOptions));
+
+		SubCategory dbDevSC = new SubCategory("Разработка", dbOptions);
+		SubCategory dbAdminSC = new SubCategory("Администрирование", dbOptions);
+		SubCategory addevSC = new SubCategory("Разработка и администрирование", adddevOptionsSet);
+
+		Set<SubCategory> dbSubCategories = new LinkedHashSet<>();
+		dbSubCategories.add(dbDevSC);
+		dbSubCategories.add(addevSC);
+//		dbSubCategories.add(dbAdminSC);
+
+		Category dbCategory = new Category("Базы данных", dbSubCategories);
+
+		categoryService.addCategory(dbCategory);
+	}
+
+	private void startInit() {
+		Option option1 = new Option("Java");
+		Option option2 = new Option("Python");
+		Option option3 = new Option("Java Script");
+		Option option11 = new Option("С/С++");
+		Option option12 = new Option("С#");
+		Option option13 = new Option("Objective-C");
+
+		Option[] langs = {option1, option2, option3, option11, option12, option13};
+
+		Set<Option> options = new LinkedHashSet<>();
+		options.addAll(Arrays.asList(langs));
+
+		SubCategory subCategory = new SubCategory("Язык", options);
+
+		Set<SubCategory> subCategories = new LinkedHashSet<>();
 		subCategories.add(subCategory);
 
-		Set<SubCategory> dbSubCategories = new HashSet<>();
-		dbSubCategories.add(dbDev);
-//		dbSubCategories.add(dbAdmin);
-
-		Category category = new Category("PROG", subCategories);
-		Category dbCategory = new Category("DB", dbSubCategories);
+		Category category = new Category("Языки программирования", subCategories);
 
 		categoryService.addCategory(category);
-		categoryService.addCategory(dbCategory);
 
 	}
 
 	private void init() {
 		startInit();
+		addDb();
+		addMiddleware();
+
 	}
  }

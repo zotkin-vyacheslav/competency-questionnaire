@@ -8,7 +8,7 @@ import java.util.Set;
 public class SubCategory {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "subcategory_id")
 	private Long subCategoryId;
 
@@ -50,5 +50,33 @@ public class SubCategory {
 
 	public void setOptions(Set<Option> options) {
 		this.options = options;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		SubCategory that = (SubCategory) o;
+
+		if (subCategoryId != null ? !subCategoryId.equals(that.subCategoryId) : that.subCategoryId != null)
+			return false;
+		return name != null ? name.equals(that.name) : that.name == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = subCategoryId != null ? subCategoryId.hashCode() : 0;
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "SubCategory{" +
+				"subCategoryId=" + subCategoryId +
+				", name='" + name + '\'' +
+				", options=" + options +
+				'}';
 	}
 }

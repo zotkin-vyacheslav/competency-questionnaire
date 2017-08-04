@@ -14,7 +14,7 @@ import java.util.List;
 public class AbstractDao<PK extends Serializable, T> {
 
 	@PersistenceContext
-	private EntityManager entityManager;
+	EntityManager entityManager;
 
 	private final Class<T> persistentClass;
 

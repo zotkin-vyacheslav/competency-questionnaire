@@ -38,4 +38,9 @@ public class CategoryServiceImpl implements CategoryService {
 	public void deleteCategory(Long id) {
 		categoryDao.deleteByKey(id);
 	}
+
+	@Override
+	public List<Integer> getAllCategoriesId() {
+		return categoryDao.getAllCategoriesId();
+	}
 }

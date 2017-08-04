@@ -8,7 +8,7 @@ import java.util.Set;
 public class Category {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "category_id")
 	private Long categoryId;
 
@@ -48,5 +48,32 @@ public class Category {
 
 	public void setSubCategories(Set<SubCategory> subCategories) {
 		this.subCategories = subCategories;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Category category = (Category) o;
+
+		if (categoryId != null ? !categoryId.equals(category.categoryId) : category.categoryId != null) return false;
+		return categoryName != null ? categoryName.equals(category.categoryName) : category.categoryName == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = categoryId != null ? categoryId.hashCode() : 0;
+		result = 31 * result + (categoryName != null ? categoryName.hashCode() : 0);
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "Category{" +
+				"categoryId=" + categoryId +
+				", categoryName='" + categoryName + '\'' +
+				", subCategories=" + subCategories +
+				'}';
 	}
 }
