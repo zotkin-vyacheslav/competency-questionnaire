@@ -31,7 +31,6 @@
             $("#previous_button_id").on("click", function () {
                 getPage(getPreviousId());
             });
-
         });
 
         function getPreviousId() {
@@ -53,6 +52,23 @@
             }
 
             return categories_id[++currentIndexId];
+        }
+
+        function createJSON() {
+            jsonObj = [];
+            $('input[type="radio"]').each(function() {
+
+                var id = $(this).attr("name");
+                var value = $(this).val();
+
+                item = {}
+                item ["title"] = id;
+                item ["value"] = value;
+
+                jsonObj.push(item);
+            });
+
+            console.log(jsonObj);
         }
 
         function getPage(i) {
@@ -85,13 +101,14 @@
 
                         str2 = "<tr><td>" + str1 + "</td>";
 
-                        str2 = str2 + "  <td> <label class='radio-inline'> <input type='radio' name='optradio" + j.toString() + "'> </label></td>";
-                        str2 = str2 + "  <td> <label class='radio-inline'> <input type='radio' name='optradio" + j.toString() + "'> </label></td>";
-                        str2 = str2 + "  <td> <label class='radio-inline'> <input type='radio' name='optradio" + j.toString() + "'> </label></td>";
-                        str2 = str2 + "  <td> <label class='radio-inline'> <input type='radio' name='optradio" + j.toString() + "'> </label></td>";
+                        str2 = str2 + "  <td> <label class='radio-inline'> <input type='radio' name='no" + options[j]["optionId"] + "'> </label></td>";
+                        str2 = str2 + "  <td> <label class='radio-inline'> <input type='radio' name='begin" + options[j]["optionId"]  + "'> </label></td>";
+                        str2 = str2 + "  <td> <label class='radio-inline'> <input type='radio' name='basic" + options[j]["optionId"]  + "'> </label></td>";
+                        str2 = str2 + "  <td> <label class='radio-inline'> <input type='radio' name='advanced" + options[j]["optionId"]  + "'> </label></td>";
 
                         str2 = str2 + "</tr>";
                         $("#table_id tr:last").after(str2);
+                        createJSON();
                     }
                 }
             });
