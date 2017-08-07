@@ -22,6 +22,15 @@ public class AnswerOption {
 	@Column(name = "string_answer")
 	private String stringAnswer;
 
+	public AnswerOption() {
+	}
+
+	public AnswerOption(Answer answer, Option option, String stringAnswer) {
+		this.answer = answer;
+		this.option = option;
+		this.stringAnswer = stringAnswer;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -53,5 +62,4 @@ public class AnswerOption {
 	public void setStringAnswer(String stringAnswer) {
 		this.stringAnswer = stringAnswer;
 	}
-
 }

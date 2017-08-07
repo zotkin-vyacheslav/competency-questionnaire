@@ -12,26 +12,11 @@ public class Answer {
 	@Column(name = "answer_id")
 	private Long id;
 
-//	@OneToOne
-//	private User user;
-//
-//	@ManyToOne(cascade = CascadeType.ALL)
-//	private Option option;
-
-//	private SubCategory subCategory;
-
-	@Column(name = "additional")
-	private String additional;
-
-	@OneToMany(mappedBy = "option")
+	@OneToMany(mappedBy = "option", cascade = CascadeType.ALL)
 	private Set<AnswerOption> answerOptions;
 
 	public Answer() {
 	}
-
-//	public UserAnswer(User user) {
-//		this.user = user;
-//	}
 
 	public Long getId() {
 		return id;
@@ -39,22 +24,6 @@ public class Answer {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-//
-//	public Option getOption() {
-//		return option;
-//	}
-//
-//	public void setOption(Option option) {
-//		this.option = option;
-//	}
-
-	public String getAdditional() {
-		return additional;
-	}
-
-	public void setAdditional(String additional) {
-		this.additional = additional;
 	}
 
 	public Set<AnswerOption> getAnswerOptions() {

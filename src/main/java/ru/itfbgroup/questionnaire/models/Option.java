@@ -8,8 +8,6 @@ public class Option {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-//	@GeneratedValue(strategy=GenerationType.AUTO, generator="my_entity_seq_gen")
-//	@SequenceGenerator(name="my_entity_seq_gen", sequenceName="MY_ENTITY_SEQ", allocationSize = 1)
 	@Column(name = "option_id")
 	private Long optionId;
 
