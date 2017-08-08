@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.itfbgroup.questionnaire.dao.abstr.AnswerDao;
 import ru.itfbgroup.questionnaire.dao.abstr.OptionDao;
 import ru.itfbgroup.questionnaire.models.Answer;
-import ru.itfbgroup.questionnaire.models.AnswerOption;
+import ru.itfbgroup.questionnaire.models.join.AnswerOption;
 import ru.itfbgroup.questionnaire.models.JSONParse;
 import ru.itfbgroup.questionnaire.service.abstr.AnswerOptionService;
 

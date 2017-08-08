@@ -1,4 +1,7 @@
-package ru.itfbgroup.questionnaire.models;
+package ru.itfbgroup.questionnaire.models.join;
+
+import ru.itfbgroup.questionnaire.models.Answer;
+import ru.itfbgroup.questionnaire.models.Option;
 
 import javax.persistence.*;
 

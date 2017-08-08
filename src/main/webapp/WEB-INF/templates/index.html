@@ -3,16 +3,9 @@
 <head>
     <title>ITFB Group - компетенции специалистов</title>
     <link rel="stylesheet" href="../../resources/static/css/style.css"/>
-    <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-    <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-    <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
         var currentIndexId = 0;
         var categories_id = [[${categoriesId}]];
@@ -39,6 +32,10 @@
                 getPage(getPreviousId());
             });
             $("#finish_button_id").on("click", function () {
+                $("#survey-page").hide();
+                $("#main-page").append("<p>Данные сохранены. Спасибо!</p>");
+                $("#main-page").append('<a role="button" href="/" class="btn btn-link">Ответить заново</a>');
+
                 createJSON();
             });
         });
@@ -59,23 +56,11 @@
         }
 
         function getPreviousId() {
-//            if (currentIndexId === 0) {
-////                $("#previous_button_id").hide();
-//                return categories_id[currentIndexId];
-//            }
 
             return categories_id[--currentIndexId];
         }
 
         function getNextId() {
-//            if (currentIndexId === 0) {
-//                return categories_id[currentIndexId++];
-//            } else
-//            if (currentIndexId === Object.keys(categories_id).length - 2) {
-//                $("#next_button_id").hide();
-//                $("#finish_button_id").show();
-//                return categories_id[++currentIndexId];
-//            }
 
             return categories_id[++currentIndexId];
         }
@@ -100,14 +85,14 @@
 
             $.ajax({
                 url: "rest/getAnswer",
-                type:"POST",
+                type: "POST",
                 contentType: "application/json; charset=utf-8",
                 dataType: 'application/json',
                 data: JSON.stringify(jsonObj),
                 async: false,
                 cache: false,
-                processData:false,
-                success: function(responseJsonObject){
+                processData: false,
+                success: function (responseJsonObject) {
                     // Success Message Handler
                     console.log(responseJsonObject);
                 }
@@ -121,10 +106,6 @@
                 var category_title = result["categoryName"];
 
                 $("#category_id").html(category_title);
-
-//                var subcategory_title = result["subCategories"][0]["name"];
-//
-//                $("#subcategory_id").html(subcategory_title);
 
                 var subCategories = result["subCategories"];
 
@@ -161,49 +142,49 @@
 <body>
 <div class="container">
     <h1>ITFB Group - компетенции специалистов</h1>
-    <div class="table-responsive">
-        <div id="questions">
-            <div class="category">
-                <h2 id="category_id"></h2>
-            </div>
-            <div>
+    <div id="main-page">
+        <div id="survey-page">
+            <div id="questions">
+                <div class="category">
+                    <h2 id="category_id"></h2>
+                </div>
                 <div>
-                    <!--<div id="subcategory_id">-->
-
-                    <!--</div>-->
-                    <table class="table table-stripped" id="table_id">
-                        <p id="subcategory_id"></p>
-                        <thead>
-                        <tr>
-                            <th class="col-md-4"></th>
-                            <th class="col-md-2"><b>No</b></th>
-                            <th class="col-md-2"><b>Begin</b></th>
-                            <th class="col-md-2"><b>Basic</b></th>
-                            <th class="col-md-2"><b>Advanced</b></th>
-                        </tr>
-                        </thead>
-                    </table>
                     <div>
-                        <p>
-                            Если в списке выше что-то отсутствует из того, что Вы знаете и использовали, то укажите ниже
-                            через запятую:
-                        </p>
-                        <div class="form-group" id="form_id">
-                            <!--<input class="form-control" placeholder="Мой ответ" name="additional"/>-->
+                        <!--<div id="subcategory_id">-->
+
+                        <!--</div>-->
+                        <table class="table table-stripped" id="table_id">
+                            <p id="subcategory_id"></p>
+                            <thead>
+                            <tr>
+                                <th class="col-md-4"></th>
+                                <th class="col-md-2"><b>No</b></th>
+                                <th class="col-md-2"><b>Begin</b></th>
+                                <th class="col-md-2"><b>Basic</b></th>
+                                <th class="col-md-2"><b>Advanced</b></th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <div>
+                            <p>
+                                Если в списке выше что-то отсутствует из того, что Вы знаете и использовали, то укажите
+                                ниже
+                                через запятую:
+                            </p>
+                            <div class="form-group" id="form_id">
+                                <!--<input class="form-control" placeholder="Мой ответ" name="additional"/>-->
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="buttons">
-            <!--<div class="next-button-class">-->
-            <button id="previous_button_id" class="btn">Назад</button>
+            <div class="buttons">
+                <button id="previous_button_id" class="btn">Назад</button>
 
-            <button id="next_button_id" class="btn">Далее</button>
-            <button style="display: none" id="finish_button_id" class="btn btn-primary" name="submit">Отправить</button>
-            <!--</div>-->
-            <!--<div class="previous-button-class">-->
-            <!--</div>-->
+                <button id="next_button_id" class="btn">Далее</button>
+                <button style="display: none" id="finish_button_id" class="btn btn-primary" name="submit">Отправить
+                </button>
+            </div>
         </div>
     </div>
 </div>
