@@ -4,13 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import ru.itfbgroup.questionnaire.models.Category;
-import ru.itfbgroup.questionnaire.models.JSONParse;
+import ru.itfbgroup.questionnaire.models.util.JSONParse;
 import ru.itfbgroup.questionnaire.models.User;
-import ru.itfbgroup.questionnaire.service.abstr.AnswerOptionService;
+import ru.itfbgroup.questionnaire.service.abstr.AnswerService;
 import ru.itfbgroup.questionnaire.service.abstr.CategoryService;
 
 import java.util.List;
-import java.util.Map;
 
 @org.springframework.web.bind.annotation.RestController
 @RequestMapping(value = "rest")
@@ -21,7 +20,7 @@ public class RestController {
 	private CategoryService categoryService;
 
 	@Autowired
-	private AnswerOptionService answerOptionService;
+	private AnswerService answerService;
 
 	@RequestMapping(value="/cat", method= RequestMethod.GET)
 	public List<Category> getAllCategories(){
@@ -37,8 +36,16 @@ public class RestController {
 	public @ResponseBody String getAnswer(@RequestBody List<JSONParse> jsonParses,
 										  @ModelAttribute User user,
 										  SessionStatus status){
-		answerOptionService.saveAnswers(user.getnswer(), jsonParses);
+		answerService.saveAnswers(user.getAnswer(), jsonParses);
 		status.setComplete();
+		return jsonParses.toString();
+	}
+
+	@RequestMapping(value = "/getStringAnswers", method = RequestMethod.POST, produces = "application/json")
+	public @ResponseBody String getAdditionalInfo(@RequestBody List<JSONParse> jsonParses,
+												  @ModelAttribute User user){
+		answerService.saveAdditionalInfo(user.getAnswer(), jsonParses);
+//		status.setComplete();
 		return jsonParses.toString();
 	}
 }

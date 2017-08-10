@@ -1,11 +1,13 @@
 package ru.itfbgroup.questionnaire.service.abstr;
 
 import ru.itfbgroup.questionnaire.models.Answer;
-import ru.itfbgroup.questionnaire.models.JSONParse;
+import ru.itfbgroup.questionnaire.models.util.JSONParse;
 
 import java.util.List;
 
-public interface AnswerOptionService {
+public interface AnswerService {
 
 	void saveAnswers(Answer answer, List<JSONParse> jsonParses);
+
+	void saveAdditionalInfo(Answer answer, List<JSONParse> jsonParses);
 }

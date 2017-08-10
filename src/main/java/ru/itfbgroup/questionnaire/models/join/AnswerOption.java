@@ -2,6 +2,7 @@ package ru.itfbgroup.questionnaire.models.join;
 
 import ru.itfbgroup.questionnaire.models.Answer;
 import ru.itfbgroup.questionnaire.models.Option;
+import ru.itfbgroup.questionnaire.models.util.PossibleAnswer;
 
 import javax.persistence.*;
 
@@ -14,24 +15,20 @@ public class AnswerOption {
 	@Column(name = "answer_options_id")
 	private Long id;
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "answer_id")
-	private Answer answer;
-
 	@OneToOne
 	@JoinColumn(name = "option_id")
 	private Option option;
 
-	@Column(name = "string_answer")
-	private String stringAnswer;
+	@OneToOne
+	@JoinColumn(name = "id")
+	private PossibleAnswer possibleAnswer;
 
 	public AnswerOption() {
 	}
 
-	public AnswerOption(Answer answer, Option option, String stringAnswer) {
-		this.answer = answer;
+	public AnswerOption(Option option, PossibleAnswer possibleAnswer) {
 		this.option = option;
-		this.stringAnswer = stringAnswer;
+		this.possibleAnswer = possibleAnswer;
 	}
 
 	public Long getId() {
@@ -42,14 +39,6 @@ public class AnswerOption {
 		this.id = id;
 	}
 
-	public Answer getAnswer() {
-		return answer;
-	}
-
-	public void setAnswer(Answer answer) {
-		this.answer = answer;
-	}
-
 	public Option getOption() {
 		return option;
 	}
@@ -58,11 +47,31 @@ public class AnswerOption {
 		this.option = option;
 	}
 
-	public String getStringAnswer() {
-		return stringAnswer;
+	public PossibleAnswer getPossibleAnswer() {
+		return possibleAnswer;
 	}
 
-	public void setStringAnswer(String stringAnswer) {
-		this.stringAnswer = stringAnswer;
+	public void setPossibleAnswer(PossibleAnswer possibleAnswer) {
+		this.possibleAnswer = possibleAnswer;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		AnswerOption that = (AnswerOption) o;
+
+		if (id != null ? !id.equals(that.id) : that.id != null) return false;
+		if (option != null ? !option.equals(that.option) : that.option != null) return false;
+		return possibleAnswer != null ? possibleAnswer.equals(that.possibleAnswer) : that.possibleAnswer == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = id != null ? id.hashCode() : 0;
+		result = 31 * result + (option != null ? option.hashCode() : 0);
+		result = 31 * result + (possibleAnswer != null ? possibleAnswer.hashCode() : 0);
+		return result;
 	}
 }

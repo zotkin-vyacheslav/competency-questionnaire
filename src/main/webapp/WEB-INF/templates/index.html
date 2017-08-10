@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <title>ITFB Group - компетенции специалистов</title>
-    <link rel="stylesheet" href="../../resources/static/css/style.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../../resources/static/css/style.css"/>
+    <script type="text/javascript" src="resources/static/js/page.js"></script>
+
     <script>
         var currentIndexId = 0;
         var categories_id = [[${categoriesId}]];
@@ -13,17 +15,6 @@
         $(document).ready(function () {
 
             getPage(categories_id[0]);
-
-//            if (currentIndexId === Object.keys(categories_id).length - 2) {
-//                $("#next_button_id").hide();
-//            }
-//
-//            if (currentIndexId === 0) {
-//                $("#previous_button_id").hide();
-//                return categories_id[currentIndexId];
-//            }
-
-//            $("#next_button_id").on('click', alert(getNextId()));
 
             $("#next_button_id").on("click", function () {
                 getPage(getNextId());
@@ -33,8 +24,7 @@
             });
             $("#finish_button_id").on("click", function () {
                 $("#survey-page").hide();
-                $("#main-page").append("<p>Данные сохранены. Спасибо!</p>");
-                $("#main-page").append('<a role="button" href="/" class="btn btn-link">Ответить заново</a>');
+                $("#main-page").append("<p>Данные сохранены. Спасибо!</p><a href=\"/\" class=\"btn btn-link\">Ответить заново</a>");
 
                 createJSON();
             });
@@ -67,6 +57,7 @@
 
         function createJSON() {
             jsonObj = [];
+            stringAnswers = [];
 
             $('input[type="radio"]').each(function () {
                 if ($(this).prop('checked')) {
@@ -81,7 +72,32 @@
                 }
             });
 
+            $('input[class="form-control"]').each(function () {
+                if ($(this).val() !== "") {
+                    var id = $(this).attr("id");
+                    var value = $(this).val();
+
+                    items = {};
+                    items ["id"] = id;
+                    items ["value"] = value;
+
+                    stringAnswers.push(items);
+                }
+            });
+
             console.log(jsonObj);
+            console.log(stringAnswers);
+
+            $.ajax({
+                url: "rest/getStringAnswers",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'application/json',
+                data: JSON.stringify(stringAnswers),
+                async: false,
+                cache: false,
+                processData: false,
+            });
 
             $.ajax({
                 url: "rest/getAnswer",
@@ -101,8 +117,11 @@
 
         function getPage(i) {
             checkIndex();
-            $("#table_id td").hide();
+            $(".table").hide();
+            $(".sub").hide();
+            $(".bottom-table").hide();
             $.getJSON("rest/cat/" + i.toString(), function (result) {
+
                 var category_title = result["categoryName"];
 
                 $("#category_id").html(category_title);
@@ -111,28 +130,58 @@
 
                 for (i = 0; i < subCategories.length; i++) {
 
-                    var subcategory_title = result["subCategories"][0]["name"];
-
-                    $("#subcategory_id").html(subcategory_title);
-
-                    $("#form_id").html("<input class=\"form-control\" placeholder=\"Мой ответ\" name=\"additional\"/>");
+                    var subcategory_title = result["subCategories"][i]["name"];
+                    var subcategory_add = result["subCategories"][i]["additional"];
 
                     var options = result["subCategories"][i]["options"];
 
                     var j;
+
+                    var table_id = 'table_id' + i.toString() + result["categoryId"];
+                    var tbody_id = 'tbody_id' + i.toString() + result["categoryId"];
+
+                    $("#table").after("  <table class='table table-stripped' id='" + table_id.toString() + "'>\n" +
+                        "                            <thead>\n" +
+                        "                            <div class='sub'>\n" +
+                        "                            <h3 id='subcategory_id'></h3>" +
+                        "                            <div id='subcategory_add'></div>" +
+                        "                            </div>" +
+                        "                            <tr>\n" +
+                        "                                <th class='col-md-4'></th>\n" +
+                        "                                <th class='col-md-2'><b>Нет</b></th>\n" +
+                        "                                <th class='col-md-2'><b>Начальные знания</b></th>\n" +
+                        "                                <th class='col-md-2'><b>Базовые знания</b></th>\n" +
+                        "                                <th class='col-md-2'><b>Продвинутые знания</b></th>\n" +
+                        "                            </tr>\n" +
+                        "                            </div>\n" +
+                        "                            <tbody id='" + tbody_id.toString() + "'>\n" +
+                        "                            </tbody>\n" +
+                        "                        </table>");
+
+                    $("#" + table_id.toString()).after("  <div class='bottom-table' id='footer'><p>\n" +
+                        "                            Если в списке выше что-то отсутствует из того, что Вы знаете и использовали, то укажите\n" +
+                        "                            ниже через запятую:\n" +
+                        "                        </p>\n" +
+                        "                        <div class=\"form-group\" id=\"form_id\">\n" +
+                        "<input class='form-control' id='" + result["subCategories"][i]["subCategoryId"] + "' placeholder='Мой ответ' name='additional'/>" +
+                        "                        </div></div>");
+
+                    $("#subcategory_id").text(subcategory_title);
+                    $("#subcategory_add").text(subcategory_add);
 
                     for (j = 0; j < options.length; j++) {
                         str1 = options[j]["optionName"];
 
                         str2 = "<tr><td class='col-md-4'>" + str1 + "</td>";
 
-                        str2 = str2 + "  <td class='col-md-2'> <label style='margin-left: 0px' class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='no' name='radio" + options[j]["optionId"] + "'> </label></td>";
-                        str2 = str2 + "  <td class='col-md-2'> <label style='margin-left: 0px' class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='begin' name='radio" + options[j]["optionId"] + "'> </label></td>";
-                        str2 = str2 + "  <td class='col-md-2'> <label style='margin-left: 0px' class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='basic' name='radio" + options[j]["optionId"] + "'> </label></td>";
-                        str2 = str2 + "  <td class='col-md-2'> <label style='margin-left: 0px' class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='advanced' name='radio" + options[j]["optionId"] + "'> </label></td>";
+                        str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='1' name='radio" + options[j]["optionId"] + "'></div></label></td>";
+                        str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='2' name='radio" + options[j]["optionId"] + "'></div></label></td>";
+                        str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='3' name='radio" + options[j]["optionId"] + "'></div></label></td>";
+                        str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='4' name='radio" + options[j]["optionId"] + "'></div></label></td>";
 
                         str2 = str2 + "</tr>";
-                        $("#table_id tr:last").after(str2);
+//                        $("#" + table_id.toString() + " tr:last").after(str2);
+                        $("#" + table_id.toString()).append(str2);
                     }
                 }
             });
@@ -141,46 +190,20 @@
 </head>
 <body>
 <div class="container">
-    <h1>ITFB Group - компетенции специалистов</h1>
     <div id="main-page">
+        <h1>ITFB Group - компетенции специалистов</h1>
         <div id="survey-page">
             <div id="questions">
                 <div class="category">
-                    <h2 id="category_id"></h2>
+                    <div id="category_id"></div>
                 </div>
                 <div>
-                    <div>
-                        <!--<div id="subcategory_id">-->
-
-                        <!--</div>-->
-                        <table class="table table-stripped" id="table_id">
-                            <p id="subcategory_id"></p>
-                            <thead>
-                            <tr>
-                                <th class="col-md-4"></th>
-                                <th class="col-md-2"><b>No</b></th>
-                                <th class="col-md-2"><b>Begin</b></th>
-                                <th class="col-md-2"><b>Basic</b></th>
-                                <th class="col-md-2"><b>Advanced</b></th>
-                            </tr>
-                            </thead>
-                        </table>
-                        <div>
-                            <p>
-                                Если в списке выше что-то отсутствует из того, что Вы знаете и использовали, то укажите
-                                ниже
-                                через запятую:
-                            </p>
-                            <div class="form-group" id="form_id">
-                                <!--<input class="form-control" placeholder="Мой ответ" name="additional"/>-->
-                            </div>
-                        </div>
+                    <div id="table">
                     </div>
                 </div>
             </div>
             <div class="buttons">
                 <button id="previous_button_id" class="btn">Назад</button>
-
                 <button id="next_button_id" class="btn">Далее</button>
                 <button style="display: none" id="finish_button_id" class="btn btn-primary" name="submit">Отправить
                 </button>
@@ -192,6 +215,7 @@
 <style>
     body {
         background-color: #f1f1f1;
+        font-family: Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
     }
 
     .container {
@@ -213,7 +237,44 @@
     .radio {
         display: inline-block;
         vertical-align: top;
+        width: 10px;
+        height: 10px;
     }
 
+    .table-stripped td label.radio {
+        margin: 5px auto;
+    }
+
+    .table-stripped td label.radio input {
+        margin: 0 auto;
+    }
+
+    th, td {
+        text-align: center;
+        height: 2.5em;
+        padding: 8px;
+        vertical-align: middle;
+        width: 50px;
+    }
+
+    .col-md-4 {
+        text-align: left;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2
+    }
+
+    .category {
+    background-color: rgb(43, 43, 99);
+    color: rgba(255, 255, 255, 1);
+
+    color: #fff;
+    min-width: 0%;
+    padding-top: 20px;
+    padding-right: 30px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    }
 </style>
 </html>

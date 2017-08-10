@@ -18,12 +18,21 @@ public class Category {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = SubCategory.class)
 	private Set<SubCategory> subCategories;
 
+	@Column(name = "image_source")
+	private String image;
+
 	public Category() {
 	}
 
 	public Category(String categoryName, Set<SubCategory> subCategories) {
 		this.categoryName = categoryName;
 		this.subCategories = subCategories;
+	}
+
+	public Category(String categoryName, Set<SubCategory> subCategories, String image) {
+		this.categoryName = categoryName;
+		this.subCategories = subCategories;
+		this.image = image;
 	}
 
 	public Long getCategoryId() {
@@ -48,6 +57,14 @@ public class Category {
 
 	public void setSubCategories(Set<SubCategory> subCategories) {
 		this.subCategories = subCategories;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	@Override

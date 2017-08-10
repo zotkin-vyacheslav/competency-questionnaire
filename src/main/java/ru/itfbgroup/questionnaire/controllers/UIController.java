@@ -33,8 +33,6 @@ public class UIController {
 		ModelAndView modelAndView = new ModelAndView("redirect:/index");
 
 		Answer userAnswer = new Answer();
-		AnswerOption answerOption = new AnswerOption();
-		answerOption.setAnswer(userAnswer);
 
 		User user = new User(email, userAnswer);
 		userService.addUser(user);

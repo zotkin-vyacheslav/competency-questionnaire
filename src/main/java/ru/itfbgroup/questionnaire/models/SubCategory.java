@@ -20,12 +20,21 @@ public class SubCategory {
 			inverseJoinColumns = { @JoinColumn(name = "option_id") })
 	private Set<Option> options;
 
+	@Column(name = "additional")
+	private String additional;
+
 	public SubCategory() {
 	}
 
 	public SubCategory(String name, Set<Option> options) {
 		this.name = name;
 		this.options = options;
+	}
+
+	public SubCategory(String name, Set<Option> options, String additional) {
+		this.name = name;
+		this.options = options;
+		this.additional = additional;
 	}
 
 	public Long getSubCategoryId() {
@@ -50,6 +59,14 @@ public class SubCategory {
 
 	public void setOptions(Set<Option> options) {
 		this.options = options;
+	}
+
+	public String getAdditional() {
+		return additional;
+	}
+
+	public void setAdditional(String additional) {
+		this.additional = additional;
 	}
 
 	@Override

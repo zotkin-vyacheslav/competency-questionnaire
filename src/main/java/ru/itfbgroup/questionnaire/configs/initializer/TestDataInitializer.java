@@ -1,9 +1,11 @@
 package ru.itfbgroup.questionnaire.configs.initializer;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.itfbgroup.questionnaire.dao.abstr.PossibleAnswerDao;
 import ru.itfbgroup.questionnaire.models.Category;
 import ru.itfbgroup.questionnaire.models.Option;
 import ru.itfbgroup.questionnaire.models.SubCategory;
+import ru.itfbgroup.questionnaire.models.util.PossibleAnswer;
 import ru.itfbgroup.questionnaire.service.abstr.CategoryService;
 
 import java.util.Arrays;
@@ -14,6 +16,9 @@ public class TestDataInitializer {
 
 	@Autowired
 	private CategoryService categoryService;
+
+	@Autowired
+	private PossibleAnswerDao possibleAnswerDao;
 
 	private void addMiddleware() {
 		Option option1 = new Option("Oracle Weblogic Server");
@@ -28,7 +33,7 @@ public class TestDataInitializer {
 		Option[] middlewaresApplicationServersOptions = {option1, option2, option3, option4, option5, option6, option7, option8};
 		Set<Option> mwASOptions = new LinkedHashSet<>(Arrays.asList(middlewaresApplicationServersOptions));
 
-		SubCategory middlewareSC = new SubCategory("Application Servers", mwASOptions);
+		SubCategory middlewareSC = new SubCategory("Application Servers", mwASOptions, "Понимается администрирование: установка, конфигурирование (кластеризация, высокая доступность и т.п.), обслуживание и автоматизация задач администрирования.");
 
 		Set<SubCategory> middlewareSubCategories = new LinkedHashSet<>();
 		middlewareSubCategories.add(middlewareSC);
@@ -67,9 +72,9 @@ public class TestDataInitializer {
 		Set<Option> adddevOptionsSet = new LinkedHashSet<>();
 		adddevOptionsSet.addAll(Arrays.asList(addevOptions));
 
-		SubCategory dbDevSC = new SubCategory("Разработка", dbOptions);
-		SubCategory dbAdminSC = new SubCategory("Администрирование", dbOptions);
-		SubCategory addevSC = new SubCategory("Разработка и администрирование", adddevOptionsSet);
+		SubCategory dbDevSC = new SubCategory("Разработка", dbOptions, "Реляционные базы данных.");
+		SubCategory dbAdminSC = new SubCategory("Администрирование", dbOptions, "Реляционные базы данных.");
+		SubCategory addevSC = new SubCategory("Разработка и администрирование", adddevOptionsSet, "NoSQL и нереляционные базы данных.");
 
 		Set<SubCategory> dbSubCategories = new LinkedHashSet<>();
 		dbSubCategories.add(dbDevSC);
@@ -94,7 +99,7 @@ public class TestDataInitializer {
 		Set<Option> options = new LinkedHashSet<>();
 		options.addAll(Arrays.asList(langs));
 
-		SubCategory subCategory = new SubCategory("Язык", options);
+		SubCategory subCategory = new SubCategory("", options);
 
 		Set<SubCategory> subCategories = new LinkedHashSet<>();
 		subCategories.add(subCategory);
@@ -102,10 +107,23 @@ public class TestDataInitializer {
 		Category category = new Category("Языки программирования", subCategories);
 
 		categoryService.addCategory(category);
+	}
+
+	private void addPossibleAnswers() {
+		PossibleAnswer possibleAnswer1 = new PossibleAnswer("Нет");
+		PossibleAnswer possibleAnswer2 = new PossibleAnswer("Начальные знания");
+		PossibleAnswer possibleAnswer3 = new PossibleAnswer("Базовые знания");
+		PossibleAnswer possibleAnswer4 = new PossibleAnswer("Продвинутые знания");
+
+		possibleAnswerDao.persist(possibleAnswer1);
+		possibleAnswerDao.persist(possibleAnswer2);
+		possibleAnswerDao.persist(possibleAnswer3);
+		possibleAnswerDao.persist(possibleAnswer4);
 
 	}
 
 	private void init() {
+		addPossibleAnswers();
 		startInit();
 		addDb();
 		addMiddleware();

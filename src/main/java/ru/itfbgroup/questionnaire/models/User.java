@@ -45,7 +45,7 @@ public class User {
 		this.email = email;
 	}
 
-	public Answer getnswer() {
+	public Answer getAnswer() {
 		return answer;
 	}
 

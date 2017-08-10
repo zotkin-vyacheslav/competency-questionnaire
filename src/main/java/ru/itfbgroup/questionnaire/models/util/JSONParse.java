@@ -1,4 +1,4 @@
-package ru.itfbgroup.questionnaire.models;
+package ru.itfbgroup.questionnaire.models.util;
 
 import java.io.Serializable;
 
