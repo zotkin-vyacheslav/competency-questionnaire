@@ -1,6 +1,7 @@
 package ru.itfbgroup.questionnaire.models;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -15,10 +16,10 @@ public class SubCategory {
 	@Column(name = "name")
 	private String name;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Option.class)
-	@JoinTable(name = "subcategory_options", joinColumns = { @JoinColumn(name = "subcategory_id") },
-			inverseJoinColumns = { @JoinColumn(name = "option_id") })
-	private Set<Option> options;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Option.class)
+//	@JoinTable(name = "subcategory_options", joinColumns = { @JoinColumn(name = "subcategory_id") },
+//			inverseJoinColumns = { @JoinColumn(name = "option_id") })
+	private List<Option> options;
 
 	@Column(name = "additional")
 	private String additional;
@@ -26,12 +27,12 @@ public class SubCategory {
 	public SubCategory() {
 	}
 
-	public SubCategory(String name, Set<Option> options) {
+	public SubCategory(String name, List<Option> options) {
 		this.name = name;
 		this.options = options;
 	}
 
-	public SubCategory(String name, Set<Option> options, String additional) {
+	public SubCategory(String name, List<Option> options, String additional) {
 		this.name = name;
 		this.options = options;
 		this.additional = additional;
@@ -53,11 +54,11 @@ public class SubCategory {
 		this.name = name;
 	}
 
-	public Set<Option> getOptions() {
+	public List<Option> getOptions() {
 		return options;
 	}
 
-	public void setOptions(Set<Option> options) {
+	public void setOptions(List<Option> options) {
 		this.options = options;
 	}
 

@@ -8,9 +8,7 @@ import ru.itfbgroup.questionnaire.models.SubCategory;
 import ru.itfbgroup.questionnaire.models.util.PossibleAnswer;
 import ru.itfbgroup.questionnaire.service.abstr.CategoryService;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 public class TestDataInitializer {
 
@@ -31,11 +29,11 @@ public class TestDataInitializer {
 		Option option8 = new Option("Oracle Tuxedo");
 
 		Option[] middlewaresApplicationServersOptions = {option1, option2, option3, option4, option5, option6, option7, option8};
-		Set<Option> mwASOptions = new LinkedHashSet<>(Arrays.asList(middlewaresApplicationServersOptions));
+		List<Option> mwASOptions = new LinkedList<>(Arrays.asList(middlewaresApplicationServersOptions));
 
 		SubCategory middlewareSC = new SubCategory("Application Servers", mwASOptions, "Понимается администрирование: установка, конфигурирование (кластеризация, высокая доступность и т.п.), обслуживание и автоматизация задач администрирования.");
 
-		Set<SubCategory> middlewareSubCategories = new LinkedHashSet<>();
+		List<SubCategory> middlewareSubCategories = new LinkedList<>();
 		middlewareSubCategories.add(middlewareSC);
 
 		Category middlewareCategory = new Category("Middleware", middlewareSubCategories);
@@ -66,17 +64,17 @@ public class TestDataInitializer {
 
 		Option[] addevOptions = {option12, option13, option14, option15, option16, option17, option18, option19, option20};
 
-		Set<Option> dbOptions = new LinkedHashSet<>();
+		List<Option> dbOptions = new LinkedList<>();
 		dbOptions.addAll(Arrays.asList(dbs));
 
-		Set<Option> adddevOptionsSet = new LinkedHashSet<>();
+		List<Option> adddevOptionsSet = new LinkedList<>();
 		adddevOptionsSet.addAll(Arrays.asList(addevOptions));
 
 		SubCategory dbDevSC = new SubCategory("Разработка", dbOptions, "Реляционные базы данных.");
 		SubCategory dbAdminSC = new SubCategory("Администрирование", dbOptions, "Реляционные базы данных.");
 		SubCategory addevSC = new SubCategory("Разработка и администрирование", adddevOptionsSet, "NoSQL и нереляционные базы данных.");
 
-		Set<SubCategory> dbSubCategories = new LinkedHashSet<>();
+		List<SubCategory> dbSubCategories = new LinkedList<>();
 		dbSubCategories.add(dbDevSC);
 		dbSubCategories.add(addevSC);
 //		dbSubCategories.add(dbAdminSC);
@@ -96,12 +94,12 @@ public class TestDataInitializer {
 
 		Option[] langs = {option1, option2, option3, option11, option12, option13};
 
-		Set<Option> options = new LinkedHashSet<>();
+		List<Option> options = new LinkedList<>();
 		options.addAll(Arrays.asList(langs));
 
-		SubCategory subCategory = new SubCategory("", options);
+		SubCategory subCategory = new SubCategory(" ", options);
 
-		Set<SubCategory> subCategories = new LinkedHashSet<>();
+		List<SubCategory> subCategories = new LinkedList<>();
 		subCategories.add(subCategory);
 
 		Category category = new Category("Языки программирования", subCategories);

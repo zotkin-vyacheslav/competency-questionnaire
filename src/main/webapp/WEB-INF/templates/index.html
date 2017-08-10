@@ -10,6 +10,7 @@
 
     <script>
         var currentIndexId = 0;
+        var loadPageIndex = 0;
         var categories_id = [[${categoriesId}]];
 
         $(document).ready(function () {
@@ -24,13 +25,13 @@
             });
             $("#finish_button_id").on("click", function () {
                 $("#survey-page").hide();
-                $("#main-page").append("<p>Данные сохранены. Спасибо!</p><a href=\"/\" class=\"btn btn-link\">Ответить заново</a>");
+                $("#main-page").append("<p>Данные сохранены. Спасибо!</p><a href='/' class='btn btn-link'>Ответить заново</a>");
 
                 createJSON();
             });
         });
 
-        function checkIndex() {
+        function checkIndexToHideButtons() {
             if (currentIndexId > 0 && !$("#previous_button_id").is(':visible')) {
                 $("#previous_button_id").show();
             } else if (currentIndexId === 0) {
@@ -108,18 +109,24 @@
                 async: false,
                 cache: false,
                 processData: false,
-                success: function (responseJsonObject) {
-                    // Success Message Handler
-                    console.log(responseJsonObject);
-                }
             });
         }
 
         function getPage(i) {
-            checkIndex();
-            $(".table").hide();
-            $(".sub").hide();
-            $(".bottom-table").hide();
+            checkIndexToHideButtons();
+            $("#table" + (i - 1).toString()).hide();
+            if (i < loadPageIndex) {
+                $("#table" + i.toString()).show();
+            } else {
+                loadPage(i);
+            }
+        }
+
+        function loadPage(i) {
+            loadPageIndex++;
+//            $(".table").hide();
+//            $(".sub").hide();
+//            $(".bottom-table").hide();
             $.getJSON("rest/cat/" + i.toString(), function (result) {
 
                 var category_title = result["categoryName"];
@@ -128,7 +135,9 @@
 
                 var subCategories = result["subCategories"];
 
-                for (i = 0; i < subCategories.length; i++) {
+                $("#table").after("<div id='" + result["categoryId"] + "'><div class='temp'></div><div");
+
+                for (i = subCategories.length - 1; i => 0; i--) {
 
                     var subcategory_title = result["subCategories"][i]["name"];
                     var subcategory_add = result["subCategories"][i]["additional"];
@@ -137,32 +146,30 @@
 
                     var j;
 
-                    var table_id = 'table_id' + i.toString() + result["categoryId"];
-                    var tbody_id = 'tbody_id' + i.toString() + result["categoryId"];
+                    var table_id = "table" + result["categoryId"] + i.toString();
 
-                    $("#table").after("  <table class='table table-stripped' id='" + table_id.toString() + "'>\n" +
-                        "                            <thead>\n" +
-                        "                            <div class='sub'>\n" +
+                    $("#" + result["categoryId"].toString()).append("<table class='table table-stripped'>" +
+                        "                            <thead>" +
+                        "                            <div class='sub'>" +
                         "                            <h3 id='subcategory_id'></h3>" +
                         "                            <div id='subcategory_add'></div>" +
                         "                            </div>" +
-                        "                            <tr>\n" +
-                        "                                <th class='col-md-4'></th>\n" +
-                        "                                <th class='col-md-2'><b>Нет</b></th>\n" +
-                        "                                <th class='col-md-2'><b>Начальные знания</b></th>\n" +
-                        "                                <th class='col-md-2'><b>Базовые знания</b></th>\n" +
-                        "                                <th class='col-md-2'><b>Продвинутые знания</b></th>\n" +
-                        "                            </tr>\n" +
-                        "                            </div>\n" +
-                        "                            <tbody id='" + tbody_id.toString() + "'>\n" +
-                        "                            </tbody>\n" +
-                        "                        </table>");
-
-                    $("#" + table_id.toString()).after("  <div class='bottom-table' id='footer'><p>\n" +
+                        "                            <tr>" +
+                        "                                <th class='col-md-4'></th>" +
+                        "                                <th class='col-md-2'><b>Нет</b></th>" +
+                        "                                <th class='col-md-2'><b>Начальные знания</b></th>" +
+                        "                                <th class='col-md-2'><b>Базовые знания</b></th>" +
+                        "                                <th class='col-md-2'><b>Продвинутые знания</b></th>" +
+                        "                            </tr>" +
+                        "                            </div>" +
+                        "                            <tbody id='" + table_id.toString() + "'>" +
+                        "                            </tbody>" +
+                        "                        </table> " +
+                        "                        <div class='bottom-table' id='footer'><p>" +
                         "                            Если в списке выше что-то отсутствует из того, что Вы знаете и использовали, то укажите\n" +
-                        "                            ниже через запятую:\n" +
-                        "                        </p>\n" +
-                        "                        <div class=\"form-group\" id=\"form_id\">\n" +
+                        "                            ниже через запятую:" +
+                        "                        </p>" +
+                        "                        <div class=\"form-group\" id=\"form_id\">" +
                         "<input class='form-control' id='" + result["subCategories"][i]["subCategoryId"] + "' placeholder='Мой ответ' name='additional'/>" +
                         "                        </div></div>");
 
@@ -180,7 +187,6 @@
                         str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='4' name='radio" + options[j]["optionId"] + "'></div></label></td>";
 
                         str2 = str2 + "</tr>";
-//                        $("#" + table_id.toString() + " tr:last").after(str2);
                         $("#" + table_id.toString()).append(str2);
                     }
                 }
@@ -197,9 +203,7 @@
                 <div class="category">
                     <div id="category_id"></div>
                 </div>
-                <div>
-                    <div id="table">
-                    </div>
+                <div id="table">
                 </div>
             </div>
             <div class="buttons">
@@ -229,16 +233,12 @@
         border-top: 6px solid #481cff;
     }
 
-    /*.category {*/
-    /*background-color: #090fe6;*/
-    /*color: white;*/
-    /*}*/
-
-    .radio {
+    .radio input[type=radio] {
         display: inline-block;
         vertical-align: top;
-        width: 10px;
-        height: 10px;
+        width: 13px;
+        height: 15px;
+        position: relative;
     }
 
     .table-stripped td label.radio {
@@ -252,7 +252,7 @@
     th, td {
         text-align: center;
         height: 2.5em;
-        padding: 8px;
+        padding: 8px 3px 3px 5px;
         vertical-align: middle;
         width: 50px;
     }
@@ -266,15 +266,15 @@
     }
 
     .category {
-    background-color: rgb(43, 43, 99);
-    color: rgba(255, 255, 255, 1);
+        background-color: rgb(43, 43, 99);
+        color: rgba(255, 255, 255, 1);
 
-    color: #fff;
-    min-width: 0%;
-    padding-top: 20px;
-    padding-right: 30px;
-    padding-bottom: 20px;
-    padding-left: 20px;
+        color: #fff;
+        min-width: 0%;
+        padding-top: 20px;
+        padding-right: 30px;
+        padding-bottom: 20px;
+        padding-left: 20px;
     }
 </style>
 </html>

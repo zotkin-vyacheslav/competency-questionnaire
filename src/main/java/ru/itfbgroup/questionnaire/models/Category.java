@@ -1,6 +1,7 @@
 package ru.itfbgroup.questionnaire.models;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -16,7 +17,7 @@ public class Category {
 	private String categoryName;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = SubCategory.class)
-	private Set<SubCategory> subCategories;
+	private List<SubCategory> subCategories;
 
 	@Column(name = "image_source")
 	private String image;
@@ -24,12 +25,12 @@ public class Category {
 	public Category() {
 	}
 
-	public Category(String categoryName, Set<SubCategory> subCategories) {
+	public Category(String categoryName, List<SubCategory> subCategories) {
 		this.categoryName = categoryName;
 		this.subCategories = subCategories;
 	}
 
-	public Category(String categoryName, Set<SubCategory> subCategories, String image) {
+	public Category(String categoryName, List<SubCategory> subCategories, String image) {
 		this.categoryName = categoryName;
 		this.subCategories = subCategories;
 		this.image = image;
@@ -51,11 +52,11 @@ public class Category {
 		this.categoryName = categoryName;
 	}
 
-	public Set<SubCategory> getSubCategories() {
+	public List<SubCategory> getSubCategories() {
 		return subCategories;
 	}
 
-	public void setSubCategories(Set<SubCategory> subCategories) {
+	public void setSubCategories(List<SubCategory> subCategories) {
 		this.subCategories = subCategories;
 	}
 
