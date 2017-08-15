@@ -1,27 +1,49 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>ITFB Group - компетенции специалистов</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="../../resources/static/css/style.css"/>
-    <script type="text/javascript" src="resources/static/js/page.js"></script>
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{../../resources/static/css/style.css}">
+    <script type="text/javascript" th:src="@{../../resources/static/js/page.js}"></script>
 
     <script>
-        var currentIndexId = 0;
-        var loadPageIndex = 0;
+        var loadedPage = 0;
+        var currentPageIndex = 0;
         var categories_id = [[${categoriesId}]];
 
         $(document).ready(function () {
 
-            getPage(categories_id[0]);
+            loadPage(categories_id[currentPageIndex++]);
+            checkIndexToHideButtons();
 
             $("#next_button_id").on("click", function () {
-                getPage(getNextId());
+
+                if (currentPageIndex > 0) {
+                    $("#" + categories_id[loadedPage].toString()).hide();
+                }
+
+                if (currentPageIndex === categories_id.length) {
+                    $("#" + categories_id[++loadedPage].toString()).show();
+                } else {
+                    currentPageIndex++;
+                    loadPage(categories_id[++loadedPage]);
+                }
+                checkIndexToHideButtons();
             });
             $("#previous_button_id").on("click", function () {
-                getPage(getPreviousId());
+
+                if (currentPageIndex <= categories_id.length) {
+                    $("#" + categories_id[loadedPage].toString()).hide();
+                }
+
+                if (currentPageIndex === categories_id.length) {
+                    $("#" + categories_id[--loadedPage].toString()).show();
+                } else {
+                    loadPage(categories_id[--loadedPage]);
+                }
+                checkIndexToHideButtons();
             });
             $("#finish_button_id").on("click", function () {
                 $("#survey-page").hide();
@@ -32,28 +54,94 @@
         });
 
         function checkIndexToHideButtons() {
-            if (currentIndexId > 0 && !$("#previous_button_id").is(':visible')) {
+            if (loadedPage > 0 && !$("#previous_button_id").is(':visible')) {
                 $("#previous_button_id").show();
-            } else if (currentIndexId === 0) {
+            } else if (loadedPage === 0) {
                 $("#previous_button_id").hide();
             }
-            if (currentIndexId === Object.keys(categories_id).length - 1) {
+            if (loadedPage === Object.keys(categories_id).length - 1) {
                 $("#next_button_id").hide();
                 $("#finish_button_id").show();
-            } else if (currentIndexId < Object.keys(categories_id).length - 1) {
+            } else if (loadedPage < Object.keys(categories_id).length - 1) {
                 $("#next_button_id").show();
                 $("#finish_button_id").hide();
             }
         }
 
-        function getPreviousId() {
+        function loadPage(k) {
 
-            return categories_id[--currentIndexId];
-        }
+            $.getJSON("rest/cat/" + k.toString(), function (result) {
 
-        function getNextId() {
+                var category_title = result["categoryName"];
 
-            return categories_id[++currentIndexId];
+                var subCategories = result["subCategories"];
+
+                var cat_id = "table" + result["categoryId"] + k.toString();
+
+                $("#table").after("<div id='" + result["categoryId"] + "'><div class='category'>" +
+                    "<div id='" + cat_id +"'></div>" +
+                    "</div></div>");
+
+                $("#" + cat_id).html(category_title);
+
+                var i;
+
+                for (i = 0; i < subCategories.length; i++) {
+
+                    var subcategory_title = result["subCategories"][i]["name"];
+                    var subcategory_add = result["subCategories"][i]["additional"];
+
+                    var options = result["subCategories"][i]["options"];
+
+                    var j;
+
+                    var table_id = "table" + result["categoryId"] + i.toString();
+                    var sub_id = "sub" + result["categoryId"] + i.toString();
+                    var sub_add = "sub_add" + result["categoryId"] + i.toString();
+
+                    $("#" + result["categoryId"].toString()).append("<table class='table table-stripped'>" +
+                        "                            <thead>" +
+                        "                            <div class='sub'>" +
+                        "                            <h3 id='"+ sub_id +"''></h3>" +
+                        "                            <div id='"+ sub_add +"''></div>" +
+                        "                            </div>" +
+                        "                            <tr>" +
+                        "                                <th class='col-md-4'></th>" +
+                        "                                <th class='col-md-2'><b>Нет</b></th>" +
+                        "                                <th class='col-md-2'><b>Начальные знания</b></th>" +
+                        "                                <th class='col-md-2'><b>Базовые знания</b></th>" +
+                        "                                <th class='col-md-2'><b>Продвинутые знания</b></th>" +
+                        "                            </tr>" +
+                        "                            </div>" +
+                        "                            <tbody id='" + table_id.toString() + "'>" +
+                        "                            </tbody>" +
+                        "                        </table> " +
+                        "                        <div class='bottom-table' id='footer'><p>" +
+                        "                            Если в списке выше что-то отсутствует из того, что Вы знаете и использовали, то укажите\n" +
+                        "                            ниже через запятую:" +
+                        "                        </p>" +
+                        "                        <div class=\"form-group\" id=\"form_id\">" +
+                        "<input class='form-control' id='" + result["subCategories"][i]["subCategoryId"] + "' placeholder='Мой ответ' name='additional'/>" +
+                        "                        </div></div>");
+
+                    $("#" + sub_id).text(subcategory_title);
+                    $("#" + sub_add).text(subcategory_add);
+
+                    for (j = 0; j < options.length; j++) {
+                        str1 = options[j]["optionName"];
+
+                        str2 = "<tr><td class='col-md-4'>" + str1 + "</td>";
+
+                        str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='1' name='radio" + options[j]["optionId"] + "'></div></label></td>";
+                        str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='2' name='radio" + options[j]["optionId"] + "'></div></label></td>";
+                        str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='3' name='radio" + options[j]["optionId"] + "'></div></label></td>";
+                        str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='4' name='radio" + options[j]["optionId"] + "'></div></label></td>";
+
+                        str2 = str2 + "</tr>";
+                        $("#" + table_id.toString()).append(str2);
+                    }
+                }
+            });
         }
 
         function createJSON() {
@@ -111,87 +199,6 @@
                 processData: false,
             });
         }
-
-        function getPage(i) {
-            checkIndexToHideButtons();
-            $("#table" + (i - 1).toString()).hide();
-            if (i < loadPageIndex) {
-                $("#table" + i.toString()).show();
-            } else {
-                loadPage(i);
-            }
-        }
-
-        function loadPage(i) {
-            loadPageIndex++;
-//            $(".table").hide();
-//            $(".sub").hide();
-//            $(".bottom-table").hide();
-            $.getJSON("rest/cat/" + i.toString(), function (result) {
-
-                var category_title = result["categoryName"];
-
-                $("#category_id").html(category_title);
-
-                var subCategories = result["subCategories"];
-
-                $("#table").after("<div id='" + result["categoryId"] + "'><div class='temp'></div><div");
-
-                for (i = subCategories.length - 1; i => 0; i--) {
-
-                    var subcategory_title = result["subCategories"][i]["name"];
-                    var subcategory_add = result["subCategories"][i]["additional"];
-
-                    var options = result["subCategories"][i]["options"];
-
-                    var j;
-
-                    var table_id = "table" + result["categoryId"] + i.toString();
-
-                    $("#" + result["categoryId"].toString()).append("<table class='table table-stripped'>" +
-                        "                            <thead>" +
-                        "                            <div class='sub'>" +
-                        "                            <h3 id='subcategory_id'></h3>" +
-                        "                            <div id='subcategory_add'></div>" +
-                        "                            </div>" +
-                        "                            <tr>" +
-                        "                                <th class='col-md-4'></th>" +
-                        "                                <th class='col-md-2'><b>Нет</b></th>" +
-                        "                                <th class='col-md-2'><b>Начальные знания</b></th>" +
-                        "                                <th class='col-md-2'><b>Базовые знания</b></th>" +
-                        "                                <th class='col-md-2'><b>Продвинутые знания</b></th>" +
-                        "                            </tr>" +
-                        "                            </div>" +
-                        "                            <tbody id='" + table_id.toString() + "'>" +
-                        "                            </tbody>" +
-                        "                        </table> " +
-                        "                        <div class='bottom-table' id='footer'><p>" +
-                        "                            Если в списке выше что-то отсутствует из того, что Вы знаете и использовали, то укажите\n" +
-                        "                            ниже через запятую:" +
-                        "                        </p>" +
-                        "                        <div class=\"form-group\" id=\"form_id\">" +
-                        "<input class='form-control' id='" + result["subCategories"][i]["subCategoryId"] + "' placeholder='Мой ответ' name='additional'/>" +
-                        "                        </div></div>");
-
-                    $("#subcategory_id").text(subcategory_title);
-                    $("#subcategory_add").text(subcategory_add);
-
-                    for (j = 0; j < options.length; j++) {
-                        str1 = options[j]["optionName"];
-
-                        str2 = "<tr><td class='col-md-4'>" + str1 + "</td>";
-
-                        str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='1' name='radio" + options[j]["optionId"] + "'></div></label></td>";
-                        str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='2' name='radio" + options[j]["optionId"] + "'></div></label></td>";
-                        str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='3' name='radio" + options[j]["optionId"] + "'></div></label></td>";
-                        str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='4' name='radio" + options[j]["optionId"] + "'></div></label></td>";
-
-                        str2 = str2 + "</tr>";
-                        $("#" + table_id.toString()).append(str2);
-                    }
-                }
-            });
-        }
     </script>
 </head>
 <body>
@@ -200,9 +207,6 @@
         <h1>ITFB Group - компетенции специалистов</h1>
         <div id="survey-page">
             <div id="questions">
-                <div class="category">
-                    <div id="category_id"></div>
-                </div>
                 <div id="table">
                 </div>
             </div>
@@ -223,14 +227,15 @@
     }
 
     .container {
-        width: 600px;
         padding: 20px;
-        margin: 0 auto;
         background-color: #ffffff;
         position: absolute;
-        left: 30%;
+        border-top: 10px solid #481cff;
+        width: 600px;
+        margin: 0 auto;
         top: 20%;
-        border-top: 6px solid #481cff;
+        right: 0;
+        left: 0;
     }
 
     .radio input[type=radio] {
@@ -268,7 +273,7 @@
     .category {
         background-color: rgb(43, 43, 99);
         color: rgba(255, 255, 255, 1);
-
+        /*width: 600px;*/
         color: #fff;
         min-width: 0%;
         padding-top: 20px;

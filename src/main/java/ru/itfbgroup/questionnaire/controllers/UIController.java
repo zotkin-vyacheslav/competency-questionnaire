@@ -11,6 +11,8 @@ import ru.itfbgroup.questionnaire.models.User;
 import ru.itfbgroup.questionnaire.service.abstr.CategoryService;
 import ru.itfbgroup.questionnaire.service.abstr.UserService;
 
+import java.time.LocalDateTime;
+
 @Controller
 @SessionAttributes(types = User.class)
 public class UIController {
@@ -27,7 +29,7 @@ public class UIController {
 		return modelAndView;
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST, value = "/")
 	public ModelAndView getLoginPage(Model model,
 									 @RequestParam(value = "email") String email) {
 		ModelAndView modelAndView = new ModelAndView("redirect:/index");

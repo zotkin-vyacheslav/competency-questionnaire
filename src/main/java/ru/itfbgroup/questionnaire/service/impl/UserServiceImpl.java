@@ -38,4 +38,9 @@ public class UserServiceImpl implements UserService {
 	public User getUserById(Long id) {
 		return userDao.getByKey(id);
 	}
+
+	@Override
+	public List<User> getUsersToSendNotification() {
+		return userDao.getUsersToSendNotification();
+	}
 }

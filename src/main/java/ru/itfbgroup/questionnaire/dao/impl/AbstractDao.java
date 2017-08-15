@@ -60,8 +60,4 @@ public class AbstractDao<PK extends Serializable, T> {
 //			throw new RemoveException("Failed to deleting an object", e);
 		}
 	}
-
-	protected Session getSession() {
-		return (Session) entityManager.getDelegate();
-	}
 }

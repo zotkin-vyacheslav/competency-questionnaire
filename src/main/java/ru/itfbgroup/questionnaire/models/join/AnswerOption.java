@@ -1,6 +1,5 @@
 package ru.itfbgroup.questionnaire.models.join;
 
-import ru.itfbgroup.questionnaire.models.Answer;
 import ru.itfbgroup.questionnaire.models.Option;
 import ru.itfbgroup.questionnaire.models.util.PossibleAnswer;
 
