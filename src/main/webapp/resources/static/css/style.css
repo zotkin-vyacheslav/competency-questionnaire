@@ -1,14 +1,60 @@
 body {
     background-color: #f1f1f1;
+    font-family: Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
 }
 
 .container {
-    width: 600px;
     padding: 20px;
-    margin: 0 auto;
     background-color: #ffffff;
     position: absolute;
-    left: 30%;
+    border-top: 10px solid #481cff;
+    width: 600px;
+    margin: 0 auto;
     top: 20%;
-    border-top: 8px solid #0f1fff;
+    right: 0;
+    left: 0;
+}
+
+.radio input[type=radio] {
+    display: inline-block;
+    vertical-align: top;
+    width: 13px;
+    height: 15px;
+    position: relative;
+}
+
+.table-stripped td label.radio {
+    margin: 5px auto;
+}
+
+.table-stripped td label.radio input {
+    margin: 0 auto;
+}
+
+th, td {
+    text-align: center;
+    height: 2.5em;
+    padding: 8px 3px 3px 5px;
+    vertical-align: middle;
+    width: 50px;
+}
+
+.col-md-4 {
+    text-align: left;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2
+}
+
+.category {
+    background-color: rgb(43, 43, 99);
+    color: rgba(255, 255, 255, 1);
+    /*width: 600px;*/
+    color: #fff;
+    min-width: 0%;
+    padding-top: 20px;
+    padding-right: 30px;
+    padding-bottom: 20px;
+    padding-left: 20px;
 }

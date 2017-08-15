@@ -12,6 +12,8 @@ import ru.itfbgroup.questionnaire.models.join.AnswerOption;
 import ru.itfbgroup.questionnaire.models.util.JSONParse;
 import ru.itfbgroup.questionnaire.service.abstr.AnswerService;
 
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,6 +41,8 @@ public class AnswerServiceImpl implements AnswerService {
 					possibleAnswerDao.getByKey(Long.parseLong(jsonParse.getValue()))));
 		}
 		answer.setAnswerOptions(answerOptions);
+		Calendar currentTime = Calendar.getInstance();
+		answer.setLastTryDate(new Date(currentTime.getTime().getTime()));
 		answerDao.update(answer);
 
 	}

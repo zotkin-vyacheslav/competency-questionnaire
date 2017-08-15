@@ -5,6 +5,7 @@ import ru.itfbgroup.questionnaire.models.join.AdditionalInfo;
 import ru.itfbgroup.questionnaire.models.join.AnswerOption;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -24,13 +25,13 @@ public class Answer {
 	private Set<AdditionalInfo> additionalInfoSet;
 
 	@Column(name = "last_try_date")
-	@Type(type = "org.hibernate.type.LocalDateTimeType")
-	private LocalDateTime lastTryDate;
+//	@Type(type = "org.hibernate.type.LocalDateTimeType")
+	private Date lastTryDate;
 
 	public Answer() {
 	}
 
-	public Answer(LocalDateTime lastTryDate) {
+	public Answer(Date lastTryDate) {
 		this.lastTryDate = lastTryDate;
 	}
 
@@ -58,11 +59,11 @@ public class Answer {
 		this.additionalInfoSet = additionalInfoSet;
 	}
 
-	public LocalDateTime getLastTryDate() {
+	public Date getLastTryDate() {
 		return lastTryDate;
 	}
 
-	public void setLastTryDate(LocalDateTime lastTryDate) {
+	public void setLastTryDate(Date lastTryDate) {
 		this.lastTryDate = lastTryDate;
 	}
 

@@ -10,7 +10,6 @@ import ru.itfbgroup.questionnaire.models.User;
 import ru.itfbgroup.questionnaire.service.abstr.AnswerService;
 import ru.itfbgroup.questionnaire.service.abstr.CategoryService;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @org.springframework.web.bind.annotation.RestController
@@ -35,20 +34,17 @@ public class RestController {
 	}
 
 	@RequestMapping(value = "/getAnswer", method = RequestMethod.POST, produces = "application/json")
-	public @ResponseBody String getAnswer(@RequestBody List<JSONParse> jsonParses,
+	public void getAnswer(@RequestBody List<JSONParse> jsonParses,
 										  @ModelAttribute User user,
 										  SessionStatus status){
 		Answer answer = user.getAnswer();
-		answer.setLastTryDate(LocalDateTime.now());
 		answerService.saveAnswers(answer, jsonParses);
 		status.setComplete();
-		return jsonParses.toString();
 	}
 
 	@RequestMapping(value = "/getStringAnswers", method = RequestMethod.POST, produces = "application/json")
-	public @ResponseBody String getAdditionalInfo(@RequestBody List<JSONParse> jsonParses,
+	public void getAdditionalInfo(@RequestBody List<JSONParse> jsonParses,
 												  @ModelAttribute User user){
 		answerService.saveAdditionalInfo(user.getAnswer(), jsonParses);
-		return jsonParses.toString();
 	}
 }
