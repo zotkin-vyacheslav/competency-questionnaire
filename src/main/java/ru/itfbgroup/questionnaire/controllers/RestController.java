@@ -9,6 +9,7 @@ import ru.itfbgroup.questionnaire.models.util.JSONParse;
 import ru.itfbgroup.questionnaire.models.User;
 import ru.itfbgroup.questionnaire.service.abstr.AnswerService;
 import ru.itfbgroup.questionnaire.service.abstr.CategoryService;
+import ru.itfbgroup.questionnaire.service.abstr.UserService;
 
 import java.util.List;
 
@@ -22,6 +23,9 @@ public class RestController {
 
 	@Autowired
 	private AnswerService answerService;
+
+	@Autowired
+	private UserService userService;
 
 	@RequestMapping(value="/cat", method= RequestMethod.GET)
 	public List<Category> getAllCategories(){
@@ -46,5 +50,10 @@ public class RestController {
 	public void getAdditionalInfo(@RequestBody List<JSONParse> jsonParses,
 												  @ModelAttribute User user){
 		answerService.saveAdditionalInfo(user.getAnswer(), jsonParses);
+	}
+
+	@RequestMapping(value = "/get-user-answer/{id}", method = RequestMethod.GET)
+	public Answer getUserAnswer(@PathVariable("id") long id) {
+		return answerService.getAnswerById(id);
 	}
 }

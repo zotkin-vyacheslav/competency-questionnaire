@@ -6,12 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ru.itfbgroup.questionnaire.models.Answer;
-import ru.itfbgroup.questionnaire.models.join.AnswerOption;
 import ru.itfbgroup.questionnaire.models.User;
 import ru.itfbgroup.questionnaire.service.abstr.CategoryService;
 import ru.itfbgroup.questionnaire.service.abstr.UserService;
-
-import java.time.LocalDateTime;
 
 @Controller
 @SessionAttributes(types = User.class)
@@ -30,9 +27,8 @@ public class UIController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/")
-	public ModelAndView getLoginPage(Model model,
-									 @RequestParam(value = "email") String email) {
-		ModelAndView modelAndView = new ModelAndView("redirect:/index");
+	public ModelAndView getLoginPage(Model model, @RequestParam(value = "email") String email) {
+		ModelAndView modelAndView = new ModelAndView("redirect:/survey");
 
 		Answer userAnswer = new Answer();
 
@@ -43,9 +39,9 @@ public class UIController {
 		return modelAndView;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/index")
+	@RequestMapping(method = RequestMethod.GET, value = "/survey")
 	public ModelAndView getTableData() {
-		ModelAndView modelAndView = new ModelAndView("index");
+		ModelAndView modelAndView = new ModelAndView("survey");
 		modelAndView.addObject("categoriesId", categoryService.getAllCategoriesId());
 		return modelAndView;
 	}

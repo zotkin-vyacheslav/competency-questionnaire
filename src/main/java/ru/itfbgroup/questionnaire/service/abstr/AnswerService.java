@@ -10,4 +10,6 @@ public interface AnswerService {
 	void saveAnswers(Answer answer, List<JSONParse> jsonParses);
 
 	void saveAdditionalInfo(Answer answer, List<JSONParse> jsonParses);
+
+	Answer getAnswerById(Long id);
 }

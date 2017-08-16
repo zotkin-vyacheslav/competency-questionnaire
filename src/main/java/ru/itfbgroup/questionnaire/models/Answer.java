@@ -25,7 +25,6 @@ public class Answer {
 	private Set<AdditionalInfo> additionalInfoSet;
 
 	@Column(name = "last_try_date")
-//	@Type(type = "org.hibernate.type.LocalDateTimeType")
 	private Date lastTryDate;
 
 	public Answer() {

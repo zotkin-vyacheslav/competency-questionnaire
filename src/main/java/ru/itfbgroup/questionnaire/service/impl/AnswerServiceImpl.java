@@ -35,6 +35,7 @@ public class AnswerServiceImpl implements AnswerService {
 
 	@Override
 	public void saveAnswers(Answer answer, List<JSONParse> jsonParses) {
+
 		Set<AnswerOption> answerOptions = new HashSet<>();
 		for (JSONParse jsonParse : jsonParses) {
 			answerOptions.add(new AnswerOption(optionDao.getByKey(Long.parseLong(jsonParse.getId())),
@@ -44,11 +45,11 @@ public class AnswerServiceImpl implements AnswerService {
 		Calendar currentTime = Calendar.getInstance();
 		answer.setLastTryDate(new Date(currentTime.getTime().getTime()));
 		answerDao.update(answer);
-
 	}
 
 	@Override
 	public void saveAdditionalInfo(Answer answer, List<JSONParse> jsonParses) {
+
 		Set<AdditionalInfo> additionalInfoSet = new HashSet<>();
 		for (JSONParse jsonParse : jsonParses) {
 			additionalInfoSet.add(new AdditionalInfo(subcategoryDao.getByKey(Long.parseLong(jsonParse.getId())),
@@ -56,5 +57,10 @@ public class AnswerServiceImpl implements AnswerService {
 		}
 		answer.setAdditionalInfoSet(additionalInfoSet);
 		answerDao.update(answer);
+	}
+
+	@Override
+	public Answer getAnswerById(Long id) {
+		return answerDao.getByKey(id);
 	}
 }

@@ -9,40 +9,35 @@
     <script type="text/javascript" th:src="@{../../resources/static/js/page.js}"></script>
 
     <script>
-        var loadedPage = 0;
-        var currentPageIndex = 0;
+        var currentArrIndex = 0;
+        var countOfLoadedPages = 0;
         var categories_id = [[${categoriesId}]];
 
         $(document).ready(function () {
 
-            loadPage(categories_id[currentPageIndex++]);
+            loadPage(categories_id[currentArrIndex]);
             checkIndexToHideButtons();
 
             $("#next_button_id").on("click", function () {
 
-                if (currentPageIndex > 0) {
-                    $("#" + categories_id[loadedPage].toString()).hide();
-                }
 
-                if (currentPageIndex === categories_id.length) {
-                    $("#" + categories_id[++loadedPage].toString()).show();
+                $("#" + categories_id[currentArrIndex].toString()).hide();
+
+
+                if (countOfLoadedPages > currentArrIndex) {
+                    $("#" + categories_id[++currentArrIndex].toString()).show();
                 } else {
-                    currentPageIndex++;
-                    loadPage(categories_id[++loadedPage]);
+                    countOfLoadedPages++;
+                    loadPage(categories_id[++currentArrIndex]);
                 }
                 checkIndexToHideButtons();
             });
             $("#previous_button_id").on("click", function () {
 
-                if (currentPageIndex <= categories_id.length) {
-                    $("#" + categories_id[loadedPage].toString()).hide();
-                }
+                $("#" + categories_id[currentArrIndex].toString()).hide();
 
-                if (currentPageIndex === categories_id.length) {
-                    $("#" + categories_id[--loadedPage].toString()).show();
-                } else {
-                    loadPage(categories_id[--loadedPage]);
-                }
+                $("#" + categories_id[--currentArrIndex].toString()).show();
+
                 checkIndexToHideButtons();
             });
             $("#finish_button_id").on("click", function () {
@@ -54,15 +49,15 @@
         });
 
         function checkIndexToHideButtons() {
-            if (loadedPage > 0 && !$("#previous_button_id").is(':visible')) {
+            if (currentArrIndex > 0 && !$("#previous_button_id").is(':visible')) {
                 $("#previous_button_id").show();
-            } else if (loadedPage === 0) {
+            } else if (currentArrIndex === 0) {
                 $("#previous_button_id").hide();
             }
-            if (loadedPage === Object.keys(categories_id).length - 1) {
+            if (currentArrIndex === Object.keys(categories_id).length - 1) {
                 $("#next_button_id").hide();
                 $("#finish_button_id").show();
-            } else if (loadedPage < Object.keys(categories_id).length - 1) {
+            } else if (currentArrIndex < Object.keys(categories_id).length - 1) {
                 $("#next_button_id").show();
                 $("#finish_button_id").hide();
             }
@@ -79,7 +74,7 @@
                 var cat_id = "table" + result["categoryId"] + k.toString();
 
                 $("#table").after("<div id='" + result["categoryId"] + "'><div class='category'>" +
-                    "<div id='" + cat_id +"'></div>" +
+                    "<div id='" + cat_id + "'></div>" +
                     "</div></div>");
 
                 $("#" + cat_id).html(category_title);
@@ -102,8 +97,8 @@
                     $("#" + result["categoryId"].toString()).append("<table class='table table-stripped'>" +
                         "                            <thead>" +
                         "                            <div class='sub'>" +
-                        "                            <h3 id='"+ sub_id +"''></h3>" +
-                        "                            <div id='"+ sub_add +"''></div>" +
+                        "                            <h3 id='" + sub_id + "''></h3>" +
+                        "                            <div id='" + sub_add + "''></div>" +
                         "                            </div>" +
                         "                            <tr>" +
                         "                                <th class='col-md-4'></th>" +

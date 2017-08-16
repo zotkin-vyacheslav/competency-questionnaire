@@ -8,7 +8,7 @@ public class PossibleAnswer {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id")
+	@Column(name = "possible-answer_id")
 	private Long id;
 
 	@Column(name = "possible_answer_name")
