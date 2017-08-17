@@ -20,9 +20,7 @@
 
             $("#next_button_id").on("click", function () {
 
-
                 $("#" + categories_id[currentArrIndex].toString()).hide();
-
 
                 if (countOfLoadedPages > currentArrIndex) {
                     $("#" + categories_id[++currentArrIndex].toString()).show();
@@ -78,6 +76,14 @@
                     "</div></div>");
 
                 $("#" + cat_id).html(category_title);
+
+                $(".category").after("<div>" +
+                    "<img class='survey-image' src='" + result["image"] + "' title alt style=' margin-top: 4%;\n" +
+                    "    margin-left: auto;\n" +
+                    "    margin-right: auto;\n" +
+                    "    display: block;\n" +
+                    "    width: 412px;'/>" +
+                    "</div>");
 
                 var i;
 
@@ -197,6 +203,7 @@
     </script>
 </head>
 <body>
+<div class="back-image"></div>
 <div class="container">
     <div id="main-page">
         <h1>ITFB Group - компетенции специалистов</h1>

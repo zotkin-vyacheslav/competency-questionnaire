@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "answers_options")
-public class AnswerOption {
+public class AnswerOption implements Comparable<AnswerOption> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -72,5 +72,16 @@ public class AnswerOption {
 		result = 31 * result + (option != null ? option.hashCode() : 0);
 		result = 31 * result + (possibleAnswer != null ? possibleAnswer.hashCode() : 0);
 		return result;
+	}
+
+	@Override
+	public int compareTo(AnswerOption o) {
+		if (this.option.getOptionId() > o.option.getOptionId()) {
+			return 1;
+		} else if (this.option.getOptionId() < o.option.getOptionId()) {
+			return -1;
+		} else {
+			return 0;
+		}
 	}
 }

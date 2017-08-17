@@ -1,12 +1,11 @@
 package ru.itfbgroup.questionnaire.models;
 
-import org.hibernate.annotations.Type;
 import ru.itfbgroup.questionnaire.models.join.AdditionalInfo;
 import ru.itfbgroup.questionnaire.models.join.AnswerOption;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -19,7 +18,7 @@ public class Answer {
 	private Long id;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	private Set<AnswerOption> answerOptions;
+	private List<AnswerOption> answerOptions;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	private Set<AdditionalInfo> additionalInfoSet;
@@ -42,11 +41,11 @@ public class Answer {
 		this.id = id;
 	}
 
-	public Set<AnswerOption> getAnswerOptions() {
+	public List<AnswerOption> getAnswerOptions() {
 		return answerOptions;
 	}
 
-	public void setAnswerOptions(Set<AnswerOption> answerOptions) {
+	public void setAnswerOptions(List<AnswerOption> answerOptions) {
 		this.answerOptions = answerOptions;
 	}
 

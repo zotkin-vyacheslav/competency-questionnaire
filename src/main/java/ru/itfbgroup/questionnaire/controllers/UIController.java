@@ -41,7 +41,15 @@ public class UIController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/survey")
 	public ModelAndView getTableData() {
-		ModelAndView modelAndView = new ModelAndView("survey");
+		ModelAndView modelAndView = new ModelAndView("survey-page");
+		modelAndView.addObject("categoriesId", categoryService.getAllCategoriesId());
+		return modelAndView;
+	}
+
+	//TODO: rename
+	@RequestMapping(method = RequestMethod.GET, value = "/usr-answ")
+	public ModelAndView getUserAnswer() {
+		ModelAndView modelAndView = new ModelAndView("user-answer-page");
 		modelAndView.addObject("categoriesId", categoryService.getAllCategoriesId());
 		return modelAndView;
 	}

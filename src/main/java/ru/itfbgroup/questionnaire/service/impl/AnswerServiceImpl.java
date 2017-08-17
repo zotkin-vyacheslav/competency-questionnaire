@@ -13,10 +13,7 @@ import ru.itfbgroup.questionnaire.models.util.JSONParse;
 import ru.itfbgroup.questionnaire.service.abstr.AnswerService;
 
 import java.sql.Date;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class AnswerServiceImpl implements AnswerService {
@@ -35,12 +32,12 @@ public class AnswerServiceImpl implements AnswerService {
 
 	@Override
 	public void saveAnswers(Answer answer, List<JSONParse> jsonParses) {
-
-		Set<AnswerOption> answerOptions = new HashSet<>();
+		List<AnswerOption> answerOptions = new ArrayList<>();
 		for (JSONParse jsonParse : jsonParses) {
 			answerOptions.add(new AnswerOption(optionDao.getByKey(Long.parseLong(jsonParse.getId())),
 					possibleAnswerDao.getByKey(Long.parseLong(jsonParse.getValue()))));
 		}
+		Collections.sort(answerOptions);
 		answer.setAnswerOptions(answerOptions);
 		Calendar currentTime = Calendar.getInstance();
 		answer.setLastTryDate(new Date(currentTime.getTime().getTime()));
@@ -48,8 +45,16 @@ public class AnswerServiceImpl implements AnswerService {
 	}
 
 	@Override
-	public void saveAdditionalInfo(Answer answer, List<JSONParse> jsonParses) {
+	public void saveAnswer(Answer answer, List<JSONParse> jsonParses) {
+		Long answerId = answer.getId();
+		for (JSONParse jsonParse : jsonParses) {
+			answerDao.saveAnswer(answerId, Long.parseLong(jsonParse.getId()),Long.parseLong(jsonParse.getValue()));
+		}
+		answerDao.updateAnswerDate(answerId);
+	}
 
+	@Override
+	public void saveAdditionalInfo(Answer answer, List<JSONParse> jsonParses) {
 		Set<AdditionalInfo> additionalInfoSet = new HashSet<>();
 		for (JSONParse jsonParse : jsonParses) {
 			additionalInfoSet.add(new AdditionalInfo(subcategoryDao.getByKey(Long.parseLong(jsonParse.getId())),

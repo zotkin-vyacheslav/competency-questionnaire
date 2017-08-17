@@ -17,8 +17,6 @@ public class SubCategory {
 	private String name;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Option.class)
-//	@JoinTable(name = "subcategory_options", joinColumns = { @JoinColumn(name = "subcategory_id") },
-//			inverseJoinColumns = { @JoinColumn(name = "option_id") })
 	private List<Option> options;
 
 	@Column(name = "additional")

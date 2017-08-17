@@ -1,12 +1,12 @@
 package ru.itfbgroup.questionnaire.configs.initializer;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.itfbgroup.questionnaire.dao.abstr.PossibleAnswerDao;
 import ru.itfbgroup.questionnaire.models.Category;
 import ru.itfbgroup.questionnaire.models.Option;
 import ru.itfbgroup.questionnaire.models.SubCategory;
 import ru.itfbgroup.questionnaire.models.util.PossibleAnswer;
 import ru.itfbgroup.questionnaire.service.abstr.CategoryService;
+import ru.itfbgroup.questionnaire.service.abstr.PossibleAnswerService;
 
 import java.util.*;
 
@@ -16,14 +16,14 @@ public class TestDataInitializer {
 	private CategoryService categoryService;
 
 	@Autowired
-	private PossibleAnswerDao possibleAnswerDao;
+	private PossibleAnswerService possibleAnswerService;
 
 	private void init() {
 		addPossibleAnswers();
 		addProgramLanguages();
 		addDb();
-		addMiddleware();
-//		addFrontend();
+//		addMiddleware();
+		addFrontend();
 //		addBackendTech();
 //		addMobile();
 //		addCloud();
@@ -97,6 +97,7 @@ public class TestDataInitializer {
 		anotherCategories.add(anotherSC);
 
 		Category anotherCategory = new Category("Другие технологии", anotherCategories);
+		anotherCategory.setImage("../../resources/static/images/bigstock-Big-data.jpg");
 		categoryService.addCategory(anotherCategory);
 	}
 
@@ -133,6 +134,7 @@ public class TestDataInitializer {
 		cloudSubCategories.add(enterpriseSC);
 
 		Category cloudCategory = new Category("Облачные платформы", cloudSubCategories);
+		cloudCategory.setImage("../../resources/static/images/CloudComputing.jpg");
 		categoryService.addCategory(cloudCategory);
 	}
 
@@ -159,6 +161,7 @@ public class TestDataInitializer {
 		mobileSubCategories.add(mobileSC);
 
 		Category mobileCategory = new Category("Разработка под мобильные устройства", mobileSubCategories);
+		mobileCategory.setImage("../../resources/static/images/mobile.jpg");
 		categoryService.addCategory(mobileCategory);
 	}
 
@@ -219,6 +222,7 @@ public class TestDataInitializer {
 		frontendSubCategories.add(collectorsSC);
 
 		Category frontendCategory = new Category("Frontend-технологии", frontendSubCategories);
+		frontendCategory.setImage("../../resources/static/images/front-end-skills.png");
 		categoryService.addCategory(frontendCategory);
 	}
 
@@ -301,6 +305,7 @@ public class TestDataInitializer {
 		fameworkSubCategories.add(anotherSC);
 
 		Category backendCategory = new Category("Backend-технологии", fameworkSubCategories);
+		backendCategory.setImage("../../resources/static/images/backend.png");
 		categoryService.addCategory(backendCategory);
 	}
 
@@ -471,6 +476,7 @@ public class TestDataInitializer {
 		middlewareSubCategories.add(middlewareOCR);
 
 		Category middlewareCategory = new Category("Middleware", middlewareSubCategories);
+		middlewareCategory.setImage("../../resources/static/images/Middleware.jpg");
 		categoryService.addCategory(middlewareCategory);
 	}
 
@@ -514,7 +520,7 @@ public class TestDataInitializer {
 //		dbSubCategories.add(dbAdminSC);
 
 		Category dbCategory = new Category("Базы данных", dbSubCategories);
-
+		dbCategory.setImage("../../resources/static/images/db.jpg");
 		categoryService.addCategory(dbCategory);
 	}
 
@@ -556,7 +562,7 @@ public class TestDataInitializer {
 		subCategories.add(subCategory);
 
 		Category category = new Category("Языки программирования", subCategories, "");
-
+		category.setImage("../../resources/static/images/programming-languages.jpg");
 		categoryService.addCategory(category);
 	}
 
@@ -566,10 +572,9 @@ public class TestDataInitializer {
 		PossibleAnswer possibleAnswer3 = new PossibleAnswer("Базовые знания");
 		PossibleAnswer possibleAnswer4 = new PossibleAnswer("Продвинутые знания");
 
-		possibleAnswerDao.persist(possibleAnswer1);
-		possibleAnswerDao.persist(possibleAnswer2);
-		possibleAnswerDao.persist(possibleAnswer3);
-		possibleAnswerDao.persist(possibleAnswer4);
-
+		possibleAnswerService.savePossibleAnswer(possibleAnswer1);
+		possibleAnswerService.savePossibleAnswer(possibleAnswer2);
+		possibleAnswerService.savePossibleAnswer(possibleAnswer3);
+		possibleAnswerService.savePossibleAnswer(possibleAnswer4);
 	}
 }

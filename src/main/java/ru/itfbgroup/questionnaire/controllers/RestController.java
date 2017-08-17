@@ -42,7 +42,10 @@ public class RestController {
 										  @ModelAttribute User user,
 										  SessionStatus status){
 		Answer answer = user.getAnswer();
-		answerService.saveAnswers(answer, jsonParses);
+		Long start = System.nanoTime();
+		answerService.saveAnswer(answer, jsonParses);
+		Long finish = System.nanoTime();
+		System.out.println("time is " + (finish - start));
 		status.setComplete();
 	}
 
