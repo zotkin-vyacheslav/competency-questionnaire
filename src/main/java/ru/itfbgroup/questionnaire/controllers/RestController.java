@@ -3,6 +3,7 @@ package ru.itfbgroup.questionnaire.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import ru.itfbgroup.questionnaire.dao.abstr.AnswerDao;
 import ru.itfbgroup.questionnaire.models.Answer;
 import ru.itfbgroup.questionnaire.models.Category;
 import ru.itfbgroup.questionnaire.models.util.JSONParse;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @org.springframework.web.bind.annotation.RestController
 @RequestMapping(value = "rest")
-@SessionAttributes(types = User.class)
+@SessionAttributes(value = "user")
 public class RestController {
 
 	@Autowired
@@ -26,6 +27,9 @@ public class RestController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private AnswerDao answerDao;
 
 	@RequestMapping(value="/cat", method= RequestMethod.GET)
 	public List<Category> getAllCategories(){
@@ -42,10 +46,7 @@ public class RestController {
 										  @ModelAttribute User user,
 										  SessionStatus status){
 		Answer answer = user.getAnswer();
-		Long start = System.nanoTime();
-		answerService.saveAnswer(answer, jsonParses);
-		Long finish = System.nanoTime();
-		System.out.println("time is " + (finish - start));
+		answerService.saveOptionsUserAnswer(answer, jsonParses);
 		status.setComplete();
 	}
 
@@ -58,5 +59,12 @@ public class RestController {
 	@RequestMapping(value = "/get-user-answer/{id}", method = RequestMethod.GET)
 	public Answer getUserAnswer(@PathVariable("id") long id) {
 		return answerService.getAnswerById(id);
+	}
+
+
+	@RequestMapping(value = "/get-user-answer-mod/{id}", method = RequestMethod.GET)
+	public List<JSONParse> getUserAnswerMod(@PathVariable("id") long id) {
+				List<JSONParse> objects = answerDao.getUserAnswerForJSON(id);
+				return objects;
 	}
 }

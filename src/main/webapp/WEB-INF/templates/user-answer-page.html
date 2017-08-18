@@ -6,16 +6,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" media="all" th:href="@{../../resources/static/css/style.css}">
-    <script type="text/javascript" th:src="@{../../resources/static/js/page.js}"></script>
-
+    <!--<script type="text/javascript" th:src="@{../../resources/static/js/page.js}"></script>-->
     <script>
         var currentArrIndex = 0;
         var countOfLoadedPages = 0;
         var categories_id = [[${categoriesId}]];
+        var answers = [[${answers}]];
 
         $(document).ready(function () {
 
-            loadPage();
+            loadPage(categories_id[currentArrIndex]);
             checkIndexToHideButtons();
 
             $("#next_button_id").on("click", function () {
@@ -30,7 +30,6 @@
                 }
                 checkIndexToHideButtons();
             });
-
             $("#previous_button_id").on("click", function () {
 
                 $("#" + categories_id[currentArrIndex].toString()).hide();
@@ -39,7 +38,6 @@
 
                 checkIndexToHideButtons();
             });
-
             $("#finish_button_id").on("click", function () {
                 $("#survey-page").hide();
                 $("#main-page").append("<p>Данные сохранены. Спасибо!</p><a href='/' class='btn btn-link'>Ответить заново</a>");
@@ -63,84 +61,94 @@
             }
         }
 
-        function loadPage() {
+        function loadPage(k) {
 
-            $.getJSON("rest/cat", function (result) {
-                var k;
+            $.getJSON("../rest/cat/" + k.toString(), function (result) {
 
-                for (k = 0; k < result.length; k++) {
+                var category_title = result["categoryName"];
 
-                    var category_title = result[k]["categoryName"];
+                var subCategories = result["subCategories"];
 
-                    var subCategories = result[k]["subCategories"];
+                var cat_id = "table" + result["categoryId"] + k.toString();
 
-                    var cat_id = "cat" + result[k]["categoryId"] + k.toString();
+                $("#table").after("<div id='" + result["categoryId"] + "'><div class='category'>" +
+                    "<div id='" + cat_id + "'></div>" +
+                    "</div></div>");
 
-                    $("#table").after("<div id='" + result[k]["categoryId"] + "'><div class='category'>" +
-                        "<div id='" + cat_id + "'></div>" +
-                        "</div></div>");
+                $("#" + cat_id).html(category_title);
 
-                    $("#" + cat_id).html(category_title);
+                $(".category").after("<div id='img" + cat_id + "'></div>");
 
-                    var i;
+                $("#img" + cat_id).html("<img class='survey-image' src='" + result["image"] + "' title alt style=' margin-top: 4%;\\n\" +\n" +
+                    "                       margin-left: auto;" +
+                    "                       margin-right: auto;" +
+                    "                       display: block;" +
+                    "                       width: 412px;'/>");
 
-                    for (i = 0; i < subCategories.length; i++) {
+                var i;
 
-                        var subcategory_title = result[k]["subCategories"][i]["name"];
-                        var subcategory_add = result[k]["subCategories"][i]["additional"];
+                for (i = 0; i < subCategories.length; i++) {
 
-                        var options = result[k]["subCategories"][i]["options"];
+                    var subcategory_title = result["subCategories"][i]["name"];
+                    var subcategory_add = result["subCategories"][i]["additional"];
 
-                        var j;
+                    var options = result["subCategories"][i]["options"];
 
-                        var table_id = "table" + result[k]["categoryId"] + i.toString();
-                        var sub_id = "sub" + result[k]["categoryId"] + i.toString();
-                        var sub_add = "sub_add" + result[k]["categoryId"] + i.toString();
+                    var j;
 
-                        $("#" + result[k]["categoryId"].toString()).append("<table class='table table-stripped'>" +
-                            "                            <thead>" +
-                            "                            <div class='sub'>" +
-                            "                            <h3 id='" + sub_id + "''></h3>" +
-                            "                            <div id='" + sub_add + "''></div>" +
-                            "                            </div>" +
-                            "                            <tr>" +
-                            "                                <th class='col-md-4'></th>" +
-                            "                                <th class='col-md-2'><b>Нет</b></th>" +
-                            "                                <th class='col-md-2'><b>Начальные знания</b></th>" +
-                            "                                <th class='col-md-2'><b>Базовые знания</b></th>" +
-                            "                                <th class='col-md-2'><b>Продвинутые знания</b></th>" +
-                            "                            </tr>" +
-                            "                            </div>" +
-                            "                            <tbody id='" + table_id.toString() + "'>" +
-                            "                            </tbody>" +
-                            "                        </table> " +
-                            "                        <div class='bottom-table' id='footer'><p>" +
-                            "                            Если в списке выше что-то отсутствует из того, что Вы знаете и использовали, то укажите\n" +
-                            "                            ниже через запятую:" +
-                            "                        </p>" +
-                            "                        <div class=\"form-group\" id=\"form_id\">" +
-                            "<input class='form-control' id='" + result[k]["subCategories"][i]["subCategoryId"] + "' placeholder='Мой ответ' name='additional'/>" +
-                            "                        </div></div>");
+                    var table_id = "table" + result["categoryId"] + i.toString();
+                    var sub_id = "sub" + result["categoryId"] + i.toString();
+                    var sub_add = "sub_add" + result["categoryId"] + i.toString();
 
-                        $("#" + sub_id).text(subcategory_title);
-                        $("#" + sub_add).text(subcategory_add);
+                    $("#" + result["categoryId"].toString()).append("<table class='table table-stripped'>" +
+                        "                            <thead>" +
+                        "                            <div class='sub'>" +
+                        "                            <h3 id='" + sub_id + "''></h3>" +
+                        "                            <div id='" + sub_add + "''></div>" +
+                        "                            </div>" +
+                        "                            <tr>" +
+                        "                                <th class='col-md-4'></th>" +
+                        "                                <th class='col-md-2'><b>Нет</b></th>" +
+                        "                                <th class='col-md-2'><b>Начальные знания</b></th>" +
+                        "                                <th class='col-md-2'><b>Базовые знания</b></th>" +
+                        "                                <th class='col-md-2'><b>Продвинутые знания</b></th>" +
+                        "                            </tr>" +
+                        "                            </div>" +
+                        "                            <tbody id='" + table_id.toString() + "'>" +
+                        "                            </tbody>" +
+                        "                        </table> " +
+                        "                        <div class='bottom-table' id='footer'><p>" +
+                        "                            Если в списке выше что-то отсутствует из того, что Вы знаете и использовали, то укажите\n" +
+                        "                            ниже через запятую:" +
+                        "                        </p>" +
+                        "                        <div class=\"form-group\" id=\"form_id\">" +
+                        "<input class='form-control' id='" + result["subCategories"][i]["subCategoryId"] + "' placeholder='Мой ответ' name='additional'/>" +
+                        "                        </div></div>");
 
-                        for (j = 0; j < options.length; j++) {
-                            str1 = options[j]["optionName"];
+                    $("#" + sub_id).text(subcategory_title);
+                    $("#" + sub_add).text(subcategory_add);
 
-                            str2 = "<tr><td class='col-md-4'>" + str1 + "</td>";
+                    for (j = 0; j < options.length; j++) {
+                        str1 = options[j]["optionName"];
 
-                            str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='1' name='radio" + options[j]["optionId"] + "'></div></label></td>";
-                            str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='2' name='radio" + options[j]["optionId"] + "'></div></label></td>";
-                            str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='3' name='radio" + options[j]["optionId"] + "'></div></label></td>";
-                            str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='4' name='radio" + options[j]["optionId"] + "'></div></label></td>";
+                        str2 = "<tr><td class='col-md-4'>" + str1 + "</td>";
 
-                            str2 = str2 + "</tr>";
-                            $("#" + table_id.toString()).append(str2);
-                        }
+                        str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='1' name='radio" + options[j]["optionId"] + "'></div></label></td>";
+                        str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='2' name='radio" + options[j]["optionId"] + "'></div></label></td>";
+                        str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='3' name='radio" + options[j]["optionId"] + "'></div></label></td>";
+                        str2 = str2 + "<td class='col-md-2'><div><label class='radio'> <input id='" + options[j]["optionId"] + "' type='radio' value='4' name='radio" + options[j]["optionId"] + "'></div></label></td>";
+
+                        str2 = str2 + "</tr>";
+                        $("#" + table_id.toString()).append(str2);
                     }
                 }
-                $(":radio[value=1]").prop('checked', true);
+                $("#" + result["categoryId"].toString() + " :radio[value=1]").prop('checked', true);
+                for (l = 0; l < answers.length; l++) {
+                    if ($('#' + answers[l][0]).length > 0) {
+                        $(":radio[id='" + answers[l][0] + "'][value='" + answers[l][1] + "']").prop('checked', true);
+                        answers[l] = [0][0];
+                    }
+                }
             });
         }
 
@@ -174,9 +182,6 @@
                 }
             });
 
-            console.log(jsonObj);
-            console.log(stringAnswers);
-
             $.ajax({
                 url: "rest/getStringAnswers",
                 type: "POST",
@@ -189,11 +194,11 @@
             });
 
             $.ajax({
-                url: "rest/getAnswer",
+                url: "../rest/update/getAnswer",
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 dataType: 'application/json',
-                data: JSON.stringify(jsonObj),
+                data: [ JSON.stringify(jsonObj), JSON.stringify(stringAnswers)],
                 async: false,
                 cache: false,
                 processData: false,
@@ -202,6 +207,7 @@
     </script>
 </head>
 <body>
+<div class="back-image"></div>
 <div class="container">
     <div id="main-page">
         <h1>ITFB Group - компетенции специалистов</h1>

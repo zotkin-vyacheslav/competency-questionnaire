@@ -7,11 +7,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ru.itfbgroup.questionnaire.models.Answer;
 import ru.itfbgroup.questionnaire.models.User;
+import ru.itfbgroup.questionnaire.service.abstr.AnswerService;
 import ru.itfbgroup.questionnaire.service.abstr.CategoryService;
 import ru.itfbgroup.questionnaire.service.abstr.UserService;
 
 @Controller
-@SessionAttributes(types = User.class)
+@SessionAttributes(value = "user")
 public class UIController {
 
 	@Autowired
@@ -19,6 +20,9 @@ public class UIController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private AnswerService answerService;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/")
 	public ModelAndView getLoginPage() {
@@ -31,25 +35,17 @@ public class UIController {
 		ModelAndView modelAndView = new ModelAndView("redirect:/survey");
 
 		Answer userAnswer = new Answer();
-
 		User user = new User(email, userAnswer);
+		userAnswer.setUser(user);
+		userAnswer.setUser(user);
 		userService.addUser(user);
 		model.addAttribute("user", user);
-
 		return modelAndView;
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/survey")
 	public ModelAndView getTableData() {
 		ModelAndView modelAndView = new ModelAndView("survey-page");
-		modelAndView.addObject("categoriesId", categoryService.getAllCategoriesId());
-		return modelAndView;
-	}
-
-	//TODO: rename
-	@RequestMapping(method = RequestMethod.GET, value = "/usr-answ")
-	public ModelAndView getUserAnswer() {
-		ModelAndView modelAndView = new ModelAndView("user-answer-page");
 		modelAndView.addObject("categoriesId", categoryService.getAllCategoriesId());
 		return modelAndView;
 	}

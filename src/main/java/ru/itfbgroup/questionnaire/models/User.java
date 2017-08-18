@@ -15,6 +15,7 @@ public class User {
 	private String email;
 
 	@OneToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name = "answer_id")
 	private Answer answer;
 
 	public User() {

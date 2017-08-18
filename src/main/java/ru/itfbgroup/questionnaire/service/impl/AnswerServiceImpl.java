@@ -45,7 +45,7 @@ public class AnswerServiceImpl implements AnswerService {
 	}
 
 	@Override
-	public void saveAnswer(Answer answer, List<JSONParse> jsonParses) {
+	public void saveOptionsUserAnswer(Answer answer, List<JSONParse> jsonParses) {
 		Long answerId = answer.getId();
 		for (JSONParse jsonParse : jsonParses) {
 			answerDao.saveAnswer(answerId, Long.parseLong(jsonParse.getId()),Long.parseLong(jsonParse.getValue()));
@@ -67,5 +67,15 @@ public class AnswerServiceImpl implements AnswerService {
 	@Override
 	public Answer getAnswerById(Long id) {
 		return answerDao.getByKey(id);
+	}
+
+	@Override
+	public void saveAnswer(Answer answer) {
+		answerDao.persist(answer);
+	}
+
+	@Override
+	public List<JSONParse> getUserAnswerForJSON(Long userId) {
+		return answerDao.getUserAnswerForJSON(userId);
 	}
 }

@@ -26,7 +26,17 @@ public class Answer {
 	@Column(name = "last_try_date")
 	private Date lastTryDate;
 
+	@OneToOne
+	private User user;
+
 	public Answer() {
+	}
+
+	public Answer(List<AnswerOption> answerOptions, Set<AdditionalInfo> additionalInfoSet, Date lastTryDate, User user) {
+		this.answerOptions = answerOptions;
+		this.additionalInfoSet = additionalInfoSet;
+		this.lastTryDate = lastTryDate;
+		this.user = user;
 	}
 
 	public Answer(Date lastTryDate) {
@@ -63,6 +73,14 @@ public class Answer {
 
 	public void setLastTryDate(Date lastTryDate) {
 		this.lastTryDate = lastTryDate;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	@Override

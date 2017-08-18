@@ -48,7 +48,7 @@ public class NotificationSender {
 
 			mimeMessage.setRecipient(Message.RecipientType.TO,
 					new InternetAddress(user.getEmail()));
-			mimeMessage.setText(message);
+			mimeMessage.setText(message + " http://localhost:8080/update/" + user.getId());
 			mimeMessage.setSubject("Анкета по техническим компетенциям");
 		};
 

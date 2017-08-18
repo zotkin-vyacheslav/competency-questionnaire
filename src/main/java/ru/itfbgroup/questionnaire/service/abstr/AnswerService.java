@@ -9,9 +9,13 @@ public interface AnswerService {
 
 	void saveAnswers(Answer answer, List<JSONParse> jsonParses);
 
-	void saveAnswer(Answer answer, List<JSONParse> jsonParses);
+	void saveOptionsUserAnswer(Answer answer, List<JSONParse> jsonParses);
 
 	void saveAdditionalInfo(Answer answer, List<JSONParse> jsonParses);
 
 	Answer getAnswerById(Long id);
+
+	void saveAnswer(Answer answer);
+
+	List<JSONParse> getUserAnswerForJSON(Long userId);
 }

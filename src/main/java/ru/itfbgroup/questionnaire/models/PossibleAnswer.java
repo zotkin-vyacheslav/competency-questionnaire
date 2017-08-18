@@ -1,4 +1,4 @@
-package ru.itfbgroup.questionnaire.models.util;
+package ru.itfbgroup.questionnaire.models;
 
 import javax.persistence.*;
 

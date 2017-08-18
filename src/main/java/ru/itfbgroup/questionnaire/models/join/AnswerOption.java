@@ -1,7 +1,7 @@
 package ru.itfbgroup.questionnaire.models.join;
 
 import ru.itfbgroup.questionnaire.models.Option;
-import ru.itfbgroup.questionnaire.models.util.PossibleAnswer;
+import ru.itfbgroup.questionnaire.models.PossibleAnswer;
 
 import javax.persistence.*;
 
@@ -19,7 +19,7 @@ public class AnswerOption implements Comparable<AnswerOption> {
 	private Option option;
 
 	@OneToOne
-	@JoinColumn(name = "id")
+	@JoinColumn(name = "possible_answer_id")
 	private PossibleAnswer possibleAnswer;
 
 	public AnswerOption() {

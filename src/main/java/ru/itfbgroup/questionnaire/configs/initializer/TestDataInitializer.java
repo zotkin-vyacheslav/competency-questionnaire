@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.itfbgroup.questionnaire.models.Category;
 import ru.itfbgroup.questionnaire.models.Option;
 import ru.itfbgroup.questionnaire.models.SubCategory;
-import ru.itfbgroup.questionnaire.models.util.PossibleAnswer;
+import ru.itfbgroup.questionnaire.models.PossibleAnswer;
 import ru.itfbgroup.questionnaire.service.abstr.CategoryService;
 import ru.itfbgroup.questionnaire.service.abstr.PossibleAnswerService;
 
@@ -492,6 +492,17 @@ public class TestDataInitializer {
 
 		Option[] dbs = {option4, option5, option6, option7, option8, option9, option10, option11};
 
+		Option option41 = new Option("Oracle Database");
+		Option option51 = new Option("Oracle TimesTen");
+		Option option61 = new Option("MS SQL Server");
+		Option option71 = new Option("IBM DB2");
+		Option option81 = new Option("IBM Informix");
+		Option option91 = new Option("PostgreSQL");
+		Option option101 = new Option("MySQL / MariaDB");
+		Option option111 = new Option("Interbase / Firebird");
+
+		Option[] dbs2 = {option41, option51, option61, option71, option81, option91, option101, option111};
+
 		Option option12 = new Option("Cassandra");
 		Option option13 = new Option("HBase");
 		Option option14 = new Option("Druid");
@@ -507,17 +518,20 @@ public class TestDataInitializer {
 		List<Option> dbOptions = new LinkedList<>();
 		dbOptions.addAll(Arrays.asList(dbs));
 
+		List<Option> dbOptions2 = new LinkedList<>();
+		dbOptions2.addAll(Arrays.asList(dbs2));
+
 		List<Option> adddevOptionsSet = new LinkedList<>();
 		adddevOptionsSet.addAll(Arrays.asList(addevOptions));
 
 		SubCategory dbDevSC = new SubCategory("Разработка", dbOptions, "Реляционные базы данных.");
-		SubCategory dbAdminSC = new SubCategory("Администрирование", dbOptions, "Реляционные базы данных.");
+		SubCategory dbAdminSC = new SubCategory("Администрирование", dbOptions2, "Реляционные базы данных.");
 		SubCategory addevSC = new SubCategory("Разработка и администрирование", adddevOptionsSet, "NoSQL и нереляционные базы данных.");
 
 		List<SubCategory> dbSubCategories = new LinkedList<>();
 		dbSubCategories.add(dbDevSC);
+		dbSubCategories.add(dbAdminSC);
 		dbSubCategories.add(addevSC);
-//		dbSubCategories.add(dbAdminSC);
 
 		Category dbCategory = new Category("Базы данных", dbSubCategories);
 		dbCategory.setImage("../../resources/static/images/db.jpg");

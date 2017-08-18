@@ -6,8 +6,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" media="all" th:href="@{../../resources/static/css/style.css}">
-    <script type="text/javascript" th:src="@{../../resources/static/js/page.js}"></script>
-
+    <!--<script type="text/javascript" th:src="@{../../resources/static/js/page.js}"></script>-->
     <script>
         var currentArrIndex = 0;
         var countOfLoadedPages = 0;
@@ -29,7 +28,10 @@
                     loadPage(categories_id[++currentArrIndex]);
                 }
                 checkIndexToHideButtons();
+                window.scrollTo(0,0);
+                return false;
             });
+
             $("#previous_button_id").on("click", function () {
 
                 $("#" + categories_id[currentArrIndex].toString()).hide();
@@ -37,7 +39,10 @@
                 $("#" + categories_id[--currentArrIndex].toString()).show();
 
                 checkIndexToHideButtons();
+                window.scrollTo(0,0);
+                return false;
             });
+
             $("#finish_button_id").on("click", function () {
                 $("#survey-page").hide();
                 $("#main-page").append("<p>Данные сохранены. Спасибо!</p><a href='/' class='btn btn-link'>Ответить заново</a>");
@@ -77,13 +82,13 @@
 
                 $("#" + cat_id).html(category_title);
 
-                $(".category").after("<div>" +
-                    "<img class='survey-image' src='" + result["image"] + "' title alt style=' margin-top: 4%;\n" +
-                    "    margin-left: auto;\n" +
-                    "    margin-right: auto;\n" +
-                    "    display: block;\n" +
-                    "    width: 412px;'/>" +
-                    "</div>");
+                $(".category").after("<div id='img" + cat_id + "'></div>");
+
+                $("#img" + cat_id).html("<img class='survey-image' src='" + result["image"] + "' title alt style=' margin-top: 4%;\\n\" +\n" +
+                    "                       margin-left: auto;" +
+                    "                       margin-right: auto;" +
+                    "                       display: block;" +
+                    "                       width: 412px;'/>");
 
                 var i;
 
@@ -149,8 +154,8 @@
             jsonObj = [];
             stringAnswers = [];
 
-            $('input[type="radio"]').each(function () {
-                if ($(this).prop('checked')) {
+            $('input[type="radio"]:checked').each(function () {
+//                if ($(this).prop('checked')) {
                     var id = $(this).attr("id");
                     var value = $(this).val();
 
@@ -159,7 +164,7 @@
                     item ["value"] = value;
 
                     jsonObj.push(item);
-                }
+//                }
             });
 
             $('input[class="form-control"]').each(function () {
@@ -174,9 +179,6 @@
                     stringAnswers.push(items);
                 }
             });
-
-            console.log(jsonObj);
-            console.log(stringAnswers);
 
             $.ajax({
                 url: "rest/getStringAnswers",
