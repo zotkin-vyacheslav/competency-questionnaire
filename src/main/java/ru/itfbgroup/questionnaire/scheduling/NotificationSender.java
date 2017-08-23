@@ -12,6 +12,7 @@ import ru.itfbgroup.questionnaire.service.abstr.UserService;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
+import java.net.URLEncoder;
 import java.util.List;
 
 @Component
@@ -48,7 +49,8 @@ public class NotificationSender {
 
 			mimeMessage.setRecipient(Message.RecipientType.TO,
 					new InternetAddress(user.getEmail()));
-			mimeMessage.setText(message + " http://localhost:8080/update/" + user.getId());
+			String encode = URLEncoder.encode(user.getId().toString(), "UTF-8");
+			mimeMessage.setText(message + " http://localhost:8080/update/" + encode);
 			mimeMessage.setSubject("Анкета по техническим компетенциям");
 		};
 

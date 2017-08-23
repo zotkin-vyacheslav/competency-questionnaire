@@ -14,9 +14,9 @@ public class AdditionalInfo {
 	@Column(name = "additional_info_id")
 	private Long id;
 
-//	@ManyToOne(cascade = CascadeType.ALL)
-//	@JoinColumn(name = "answer_id")
-//	private Answer answer;
+	@ManyToOne
+	@JoinColumn(name = "answer_id")
+	private Answer answer;
 
 	@OneToOne
 	@JoinColumn(name = "subcategory_id")
@@ -39,13 +39,13 @@ public class AdditionalInfo {
 //		this.additional = additional;
 //	}
 
-//	public Answer getAnswer() {
-//		return answer;
-//	}
-//
-//	public void setAnswer(Answer answer) {
-//		this.answer = answer;
-//	}
+	public Answer getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(Answer answer) {
+		this.answer = answer;
+	}
 
 	public SubCategory getSubCategory() {
 		return subCategory;

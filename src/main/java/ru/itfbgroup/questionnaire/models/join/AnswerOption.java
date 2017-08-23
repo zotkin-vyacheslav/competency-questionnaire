@@ -1,5 +1,6 @@
 package ru.itfbgroup.questionnaire.models.join;
 
+import ru.itfbgroup.questionnaire.models.Answer;
 import ru.itfbgroup.questionnaire.models.Option;
 import ru.itfbgroup.questionnaire.models.PossibleAnswer;
 
@@ -21,6 +22,10 @@ public class AnswerOption implements Comparable<AnswerOption> {
 	@OneToOne
 	@JoinColumn(name = "possible_answer_id")
 	private PossibleAnswer possibleAnswer;
+
+	@ManyToOne
+	@JoinColumn(name = "answer_id")
+	private Answer answer;
 
 	public AnswerOption() {
 	}
@@ -52,6 +57,14 @@ public class AnswerOption implements Comparable<AnswerOption> {
 
 	public void setPossibleAnswer(PossibleAnswer possibleAnswer) {
 		this.possibleAnswer = possibleAnswer;
+	}
+
+	public Answer getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(Answer answer) {
+		this.answer = answer;
 	}
 
 	@Override

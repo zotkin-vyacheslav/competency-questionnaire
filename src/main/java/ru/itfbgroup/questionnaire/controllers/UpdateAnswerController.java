@@ -17,6 +17,8 @@ import ru.itfbgroup.questionnaire.service.abstr.AnswerService;
 import ru.itfbgroup.questionnaire.service.abstr.CategoryService;
 import ru.itfbgroup.questionnaire.service.abstr.UserService;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 
 @Controller
@@ -35,11 +37,13 @@ public class UpdateAnswerController {
 
 	//TODO: rename
 	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
-	public ModelAndView getUserAnswer(Model model, @PathVariable Long id) throws JsonProcessingException {
-		User user = userService.getUserById(id);
+	public ModelAndView getUserAnswer(Model model, @PathVariable String id) throws JsonProcessingException, UnsupportedEncodingException {
+		String decode = URLDecoder.decode(id,"UTF-8");
+
+		User user = userService.getUserById(Long.parseLong(decode));
 		model.addAttribute("user", user);
 
-		List<JSONParse> objects = answerService.getUserAnswerForJSON(id);
+		List<JSONParse> objects = answerService.getUserAnswerForJSON(Long.parseLong(decode));
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		String json = ow.writeValueAsString(objects);
 

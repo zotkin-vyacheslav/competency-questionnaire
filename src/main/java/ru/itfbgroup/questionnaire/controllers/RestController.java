@@ -64,7 +64,7 @@ public class RestController {
 
 	@RequestMapping(value = "/get-user-answer-mod/{id}", method = RequestMethod.GET)
 	public List<JSONParse> getUserAnswerMod(@PathVariable("id") long id) {
-				List<JSONParse> objects = answerDao.getUserAnswerForJSON(id);
+				List<JSONParse> objects = answerDao.getUserAnswerForShow(id);
 				return objects;
 	}
 }

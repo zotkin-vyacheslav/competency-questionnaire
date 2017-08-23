@@ -17,14 +17,14 @@ public class Answer {
 	@Column(name = "answer_id")
 	private Long id;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	private List<AnswerOption> answerOptions;
+//	@OneToMany(cascade = CascadeType.ALL)
+//	private List<AnswerOption> answerOptions;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	private Set<AdditionalInfo> additionalInfoSet;
+//	@OneToMany(cascade = CascadeType.ALL)
+//	private Set<AdditionalInfo> additionalInfoSet;
 
-	@Column(name = "last_try_date")
-	private Date lastTryDate;
+	@Column(name = "timestamp")
+	private Date timestamp;
 
 	@OneToOne
 	private User user;
@@ -32,15 +32,15 @@ public class Answer {
 	public Answer() {
 	}
 
-	public Answer(List<AnswerOption> answerOptions, Set<AdditionalInfo> additionalInfoSet, Date lastTryDate, User user) {
-		this.answerOptions = answerOptions;
-		this.additionalInfoSet = additionalInfoSet;
-		this.lastTryDate = lastTryDate;
-		this.user = user;
-	}
+//	public Answer(List<AnswerOption> answerOptions, Set<AdditionalInfo> additionalInfoSet, Date timestamp, User user) {
+//		this.answerOptions = answerOptions;
+//		this.additionalInfoSet = additionalInfoSet;
+//		this.timestamp = timestamp;
+//		this.user = user;
+//	}
 
-	public Answer(Date lastTryDate) {
-		this.lastTryDate = lastTryDate;
+	public Answer(Date timestamp) {
+		this.timestamp = timestamp;
 	}
 
 	public Long getId() {
@@ -50,29 +50,29 @@ public class Answer {
 	public void setId(Long id) {
 		this.id = id;
 	}
+//
+//	public List<AnswerOption> getAnswerOptions() {
+//		return answerOptions;
+//	}
+//
+//	public void setAnswerOptions(List<AnswerOption> answerOptions) {
+//		this.answerOptions = answerOptions;
+//	}
 
-	public List<AnswerOption> getAnswerOptions() {
-		return answerOptions;
+//	public Set<AdditionalInfo> getAdditionalInfoSet() {
+//		return additionalInfoSet;
+//	}
+//
+//	public void setAdditionalInfoSet(Set<AdditionalInfo> additionalInfoSet) {
+//		this.additionalInfoSet = additionalInfoSet;
+//	}
+
+	public Date getTimestamp() {
+		return timestamp;
 	}
 
-	public void setAnswerOptions(List<AnswerOption> answerOptions) {
-		this.answerOptions = answerOptions;
-	}
-
-	public Set<AdditionalInfo> getAdditionalInfoSet() {
-		return additionalInfoSet;
-	}
-
-	public void setAdditionalInfoSet(Set<AdditionalInfo> additionalInfoSet) {
-		this.additionalInfoSet = additionalInfoSet;
-	}
-
-	public Date getLastTryDate() {
-		return lastTryDate;
-	}
-
-	public void setLastTryDate(Date lastTryDate) {
-		this.lastTryDate = lastTryDate;
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
 	}
 
 	public User getUser() {

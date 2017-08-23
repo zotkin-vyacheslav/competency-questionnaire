@@ -22,12 +22,12 @@ public class TestDataInitializer {
 		addPossibleAnswers();
 		addProgramLanguages();
 		addDb();
-//		addMiddleware();
+		addMiddleware();
 		addFrontend();
-//		addBackendTech();
-//		addMobile();
-//		addCloud();
-//		addAnotherTech();
+		addBackendTech();
+		addMobile();
+		addCloud();
+		addAnotherTech();
 	}
 
 	private void addAnotherTech() {
@@ -97,7 +97,7 @@ public class TestDataInitializer {
 		anotherCategories.add(anotherSC);
 
 		Category anotherCategory = new Category("Другие технологии", anotherCategories);
-		anotherCategory.setImage("../../resources/static/images/bigstock-Big-data.jpg");
+		anotherCategory.setImage("/resources/static/images/bigstock-Big-data.jpg");
 		categoryService.addCategory(anotherCategory);
 	}
 
@@ -134,7 +134,7 @@ public class TestDataInitializer {
 		cloudSubCategories.add(enterpriseSC);
 
 		Category cloudCategory = new Category("Облачные платформы", cloudSubCategories);
-		cloudCategory.setImage("../../resources/static/images/CloudComputing.jpg");
+		cloudCategory.setImage("/resources/static/images/CloudComputing.jpg");
 		categoryService.addCategory(cloudCategory);
 	}
 
@@ -161,7 +161,7 @@ public class TestDataInitializer {
 		mobileSubCategories.add(mobileSC);
 
 		Category mobileCategory = new Category("Разработка под мобильные устройства", mobileSubCategories);
-		mobileCategory.setImage("../../resources/static/images/mobile.jpg");
+		mobileCategory.setImage("/resources/static/images/mobile.jpg");
 		categoryService.addCategory(mobileCategory);
 	}
 
@@ -222,7 +222,7 @@ public class TestDataInitializer {
 		frontendSubCategories.add(collectorsSC);
 
 		Category frontendCategory = new Category("Frontend-технологии", frontendSubCategories);
-		frontendCategory.setImage("../../resources/static/images/front-end-skills.png");
+		frontendCategory.setImage("/resources/static/images/front-end-skills.png");
 		categoryService.addCategory(frontendCategory);
 	}
 
@@ -305,7 +305,7 @@ public class TestDataInitializer {
 		fameworkSubCategories.add(anotherSC);
 
 		Category backendCategory = new Category("Backend-технологии", fameworkSubCategories);
-		backendCategory.setImage("../../resources/static/images/backend.png");
+		backendCategory.setImage("/resources/static/images/backend.png");
 		categoryService.addCategory(backendCategory);
 	}
 
@@ -476,7 +476,7 @@ public class TestDataInitializer {
 		middlewareSubCategories.add(middlewareOCR);
 
 		Category middlewareCategory = new Category("Middleware", middlewareSubCategories);
-		middlewareCategory.setImage("../../resources/static/images/Middleware.jpg");
+		middlewareCategory.setImage("/resources/static/images/Middleware.jpg");
 		categoryService.addCategory(middlewareCategory);
 	}
 
@@ -534,38 +534,39 @@ public class TestDataInitializer {
 		dbSubCategories.add(addevSC);
 
 		Category dbCategory = new Category("Базы данных", dbSubCategories);
-		dbCategory.setImage("../../resources/static/images/db.jpg");
+		dbCategory.setImage("/resources/static/images/db.jpg");
 		categoryService.addCategory(dbCategory);
 	}
 
 	private void addProgramLanguages() {
 		Option option1 = new Option("Java");
-		Option option2 = new Option("Python");
-		Option option3 = new Option("Java Script");
-		Option option11 = new Option("С/С++");
-		Option option12 = new Option("С#");
-		Option option13 = new Option("Swift");
-		Option option14 = new Option("Go");
-		Option option15 = new Option("Kotlin");
-		Option option16 = new Option("Objective-C");
-		Option option17 = new Option("D");
-		Option option18 = new Option("R");
-		Option option19 = new Option("ABAP");
-		Option option20 = new Option("Perl");
-		Option option21 = new Option("Haskell");
-		Option option22 = new Option("Erlang");
-		Option option23 = new Option("Rust");
-		Option option24 = new Option("Lua");
-		Option option25 = new Option("Scala");
-		Option option26 = new Option("Clojure");
-		Option option27 = new Option("Object Pascal / Pascal");
-		Option option28 = new Option("ColdFusion");
-		Option option29 = new Option("Ada");
-		Option option30 = new Option("Assembler");
+		Option option2 = new Option("Java Script");
+		Option option3 = new Option("С#");
+		Option option4 = new Option("С/С++");
+		Option option5 = new Option("PHP");
+		Option option6 = new Option("Ruby");
+		Option option7 = new Option("Python");
+		Option option8 = new Option("Objective-C");
+		Option option9 = new Option("Swift");
+		Option option10 = new Option("Go");
+		Option option11 = new Option("Kotlin");
+		Option option12 = new Option("D");
+		Option option13 = new Option("R");
+		Option option14 = new Option("ABAP");
+		Option option15 = new Option("Perl");
+		Option option16 = new Option("Haskell");
+		Option option17 = new Option("Erlang");
+		Option option18 = new Option("Rust");
+		Option option19 = new Option("Lua");
+		Option option20 = new Option("Scala");
+		Option option21 = new Option("Clojure");
+		Option option22 = new Option("Object Pascal / Pascal");
+		Option option23 = new Option("ColdFusion");
+		Option option24 = new Option("Ada");
+		Option option25 = new Option("Assembler");
 
-		Option[] langs = {option1, option2, option3, option11, option12, option13, option14, option15, option16,
-				option17, option18, option19, option20, option21, option22, option23, option24, option25, option26,
-				option27, option28, option29, option30};
+		Option[] langs = {option1, option2, option3, option4, option5, option6, option7, option8, option9,
+				option10, option11, option12, option13, option14, option15, option16, option17, option18, option19, option20, option21, option22, option23, option24, option25};
 
 		List<Option> options = new LinkedList<>();
 		options.addAll(Arrays.asList(langs));
@@ -576,7 +577,7 @@ public class TestDataInitializer {
 		subCategories.add(subCategory);
 
 		Category category = new Category("Языки программирования", subCategories, "");
-		category.setImage("../../resources/static/images/programming-languages.jpg");
+		category.setImage("/resources/static/images/programming-languages.jpg");
 		categoryService.addCategory(category);
 	}
 

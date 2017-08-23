@@ -7,9 +7,11 @@ import java.util.List;
 
 public interface AnswerDao extends GenericDao<Long, Answer> {
 
-	void saveAnswer(Long answerId, Long optionId, Long possibleAnswerId);
+	void saveOptionsAnswer(Long answerId, Long optionId, Long possibleAnswerId);
+
+	void saveAdditionalAnswer(Long answerId, Long subcategoryId, String answer);
 
 	void updateAnswerDate(Long answerId);
 
-	List<JSONParse> getUserAnswerForJSON(Long userId);
+	List<JSONParse> getUserAnswerForShow(Long userId);
 }
