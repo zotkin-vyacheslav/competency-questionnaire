@@ -21,10 +21,6 @@ public class AnswerDaoImpl extends AbstractDao<Long, Answer> implements AnswerDa
 				.setParameter("answer", answerId)
 				.setParameter("possible_answer_id", possibleAnswerId)
 				.executeUpdate();
-
-//		entityManager.createNativeQuery("INSERT INTO ANSWERS_ANSWERS_OPTIONS (ANSWERS_ANSWER_ID, ANSWEROPTIONS_ANSWER_OPTIONS_ID) VALUES (:answer, HIBERNATE_SEQUENCE.currval)")
-//				.setParameter("answer", answerId)
-//				.executeUpdate();
 	}
 
 	@Override

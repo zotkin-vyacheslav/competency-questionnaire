@@ -16,5 +16,7 @@ public interface UserService {
 
 	User getUserById(Long id);
 
+	User getUserByName(String username);
+
 	List<User> getUsersToSendNotification();
 }

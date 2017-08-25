@@ -1,5 +1,7 @@
 package ru.itfbgroup.questionnaire.scheduling;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -19,6 +21,8 @@ import java.util.List;
 @EnableScheduling
 public class NotificationSender {
 
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	private JavaMailSender mailSender;
 
@@ -27,13 +31,15 @@ public class NotificationSender {
 
 	private final String MESSAGE = "Заполните анкету";
 
-	@Scheduled(cron = "0 0 11 1 * ?") //every 1 day of month 11:00
+//	@Scheduled(cron = "0 0 11 1 * ?") //every 1 day of month 11:00
 //	@Scheduled(fixedDelay = 50000)
+	@Scheduled(cron = "0 12 * * 1 ?") //every 1 day of week 12:00
 	public void sendNotificationToUsers() throws MessagingException {
 		List<User> usersToSendNotification = userService.getUsersToSendNotification();
 
 		for (User user : usersToSendNotification) {
 			sendMail(user, MESSAGE);
+			logger.debug("Message was send to " + user.getEmail());
 		}
 	}
 

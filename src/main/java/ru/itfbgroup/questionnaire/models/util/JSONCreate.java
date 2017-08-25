@@ -1,6 +1,6 @@
 package ru.itfbgroup.questionnaire.models.util;
 
-public class JSONCreate {
+public class JSONCreate extends JSONParse {
 
 	private String key;
 	private String[] values;

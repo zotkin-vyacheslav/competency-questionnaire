@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>ITFB Group - компетенции специалистов</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/resources/static/css/style.css}">
-    <!--<script type="text/javascript" th:src="@{../../resources/static/js/page.js}"></script>-->
     <script>
         var currentArrIndex = 0;
         var countOfLoadedPages = 0;
@@ -45,7 +46,7 @@
 
             $("#finish_button_id").on("click", function () {
                 $("#survey-page").hide();
-                $("#main-page").append("<p>Данные сохранены. Спасибо!</p><a href='/' class='btn btn-link'>Ответить заново</a>");
+                $("#main-page").append("<p>Данные сохранены. Спасибо!</p><a href='/survey' class='btn btn-link'>Ответить заново</a>");
 
                 createJSON();
             });
@@ -180,26 +181,38 @@
                 }
             });
 
-            $.ajax({
-                url: "rest/getStringAnswers",
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataType: 'application/json',
-                data: JSON.stringify(stringAnswers),
-                async: false,
-                cache: false,
-                processData: false,
-            });
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+
+            var arr = [jsonObj, stringAnswers];
+
+//            $.ajax({
+//                url: "rest/getStringAnswers",
+//                type: "POST",
+//                contentType: "application/json; charset=utf-8",
+//                dataType: 'application/json',
+//                data: JSON.stringify(stringAnswers),
+//                beforeSend: function(xhr) {
+//                    xhr.setRequestHeader(header, token);
+//                },
+//                async: false,
+//                cache: false,
+//                processData: false
+//            });
 
             $.ajax({
                 url: "rest/getAnswer",
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 dataType: 'application/json',
-                data: JSON.stringify(jsonObj),
+                data: JSON.stringify(arr),
+//                data: JSON.stringify(jsonObj),
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
                 async: false,
                 cache: false,
-                processData: false,
+                processData: false
             });
         }
     </script>

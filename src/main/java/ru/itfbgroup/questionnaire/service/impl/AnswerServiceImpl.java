@@ -52,14 +52,11 @@ public class AnswerServiceImpl implements AnswerService {
 
 	@Override
 	public void saveAdditionalInfo(Answer answer, List<JSONParse> jsonParses) {
-//		Set<AdditionalInfo> additionalInfoSet = new HashSet<>();
 		Long answerId = answer.getId();
 		for (JSONParse jsonParse : jsonParses) {
 			answerDao.saveAdditionalAnswer(answerId, Long.parseLong(jsonParse.getId()), jsonParse.getValue());
-//			additionalInfoSet.add(new AdditionalInfo(subcategoryDao.getByKey(Long.parseLong(jsonParse.getId())),
-//					jsonParse.getValue()));
 		}
-//		answer.setAdditionalInfoSet(additionalInfoSet);
+
 		answerDao.update(answer);
 	}
 

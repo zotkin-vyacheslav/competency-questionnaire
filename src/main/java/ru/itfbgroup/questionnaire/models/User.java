@@ -11,7 +11,7 @@ public class User {
 	@Column(name = "user_id")
 	private Long id;
 
-	@Column(name = "email")
+	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 
 	@OneToOne(cascade=CascadeType.ALL)

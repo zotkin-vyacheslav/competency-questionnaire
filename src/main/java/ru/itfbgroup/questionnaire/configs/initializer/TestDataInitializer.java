@@ -23,11 +23,11 @@ public class TestDataInitializer {
 		addProgramLanguages();
 		addDb();
 		addMiddleware();
-		addFrontend();
-		addBackendTech();
-		addMobile();
-		addCloud();
-		addAnotherTech();
+//		addFrontend();
+//		addBackendTech();
+//		addMobile();
+//		addCloud();
+//		addAnotherTech();
 	}
 
 	private void addAnotherTech() {
@@ -577,7 +577,7 @@ public class TestDataInitializer {
 		subCategories.add(subCategory);
 
 		Category category = new Category("Языки программирования", subCategories, "");
-		category.setImage("/resources/static/images/programming-languages.jpg");
+		category.setImage("resources/static/images/programming-languages.jpg");
 		categoryService.addCategory(category);
 	}
 

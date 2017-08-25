@@ -13,7 +13,7 @@ import ru.itfbgroup.questionnaire.service.abstr.UserService;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/rest/update")
+@RequestMapping(value = "/rest/update-answer")
 @SessionAttributes(value = "user")
 public class UpdateAnswerRestController {
 
@@ -24,14 +24,16 @@ public class UpdateAnswerRestController {
 	private UserService userService;
 
 	@RequestMapping(value = "/getAnswer", method = RequestMethod.POST, produces = "application/json")
-	public void getAnswer(@RequestBody List<JSONParse> jsonParses,
+	public void getAnswer(@RequestBody List<JSONParse>[] jsonParses,
 						  @ModelAttribute User user,
 						  SessionStatus status){
 		Answer answer = new Answer();
 		answer.setUser(user);
 		user.setUserAnswer(answer);
 		userService.updateUser(user);
-		answerService.saveOptionsUserAnswer(userService.getUserById(user.getId()).getAnswer(), jsonParses);
+		Answer answerFromDB = userService.getUserById(user.getId()).getAnswer();
+		answerService.saveAdditionalInfo(answerFromDB, jsonParses[1]);
+		answerService.saveOptionsUserAnswer(answerFromDB, jsonParses[0]);
 		status.setComplete();
 	}
 }

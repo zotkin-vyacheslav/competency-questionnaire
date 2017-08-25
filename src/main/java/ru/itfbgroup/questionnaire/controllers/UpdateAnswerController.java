@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
+import ru.itfbgroup.questionnaire.models.Answer;
 import ru.itfbgroup.questionnaire.models.User;
 import ru.itfbgroup.questionnaire.models.util.JSONParse;
 import ru.itfbgroup.questionnaire.service.abstr.AnswerService;
@@ -22,7 +25,7 @@ import java.net.URLDecoder;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/update")
+@RequestMapping(value = "/update-answer")
 @SessionAttributes(value = "user")
 public class UpdateAnswerController {
 
@@ -36,18 +39,23 @@ public class UpdateAnswerController {
 	private UserService userService;
 
 	//TODO: rename
-	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
-	public ModelAndView getUserAnswer(Model model, @PathVariable String id) throws JsonProcessingException, UnsupportedEncodingException {
-		String decode = URLDecoder.decode(id,"UTF-8");
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView getUserAnswer() throws JsonProcessingException, UnsupportedEncodingException {
+		ModelAndView modelAndView = new ModelAndView("user-answer-page");
 
-		User user = userService.getUserById(Long.parseLong(decode));
-		model.addAttribute("user", user);
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = userService.getUserByName(userDetails.getUsername());
 
-		List<JSONParse> objects = answerService.getUserAnswerForJSON(Long.parseLong(decode));
+		if (user == null) {
+			modelAndView.setViewName("redirect:/survey");
+		}
+
+		List<JSONParse> objects = answerService.getUserAnswerForJSON(user.getId());
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		String json = ow.writeValueAsString(objects);
 
-		ModelAndView modelAndView = new ModelAndView("user-answer-page");
+		modelAndView.setViewName("user-answer-page");
+		modelAndView.addObject("user", user);
 		modelAndView.addObject("categoriesId", categoryService.getAllCategoriesId());
 		modelAndView.addObject("answers", json);
 		return modelAndView;

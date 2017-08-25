@@ -40,6 +40,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public User getUserByName(String username) {
+		return userDao.getByUsername(username);
+	}
+
+	@Override
 	public List<User> getUsersToSendNotification() {
 		return userDao.getUsersToSendNotification();
 	}
