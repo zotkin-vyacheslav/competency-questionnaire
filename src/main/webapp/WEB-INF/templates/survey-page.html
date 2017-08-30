@@ -46,9 +46,21 @@
 
             $("#finish_button_id").on("click", function () {
                 $("#survey-page").hide();
-                $("#main-page").append("<p>Данные сохранены. Спасибо!</p><a href='/survey' class='btn btn-link'>Ответить заново</a>");
+                $("#main-page").append("<p>Данные сохранены. Спасибо!</p>" +
+                    "<a href='answer' class='btn btn-link'>Ответить заново</a>" +
+                    "<br> " +
+                    "<a href='update-answer' class='btn btn-link'>Изменить ответ</a>");
 
                 createJSON();
+            });
+
+            $("#logout_btn_id").click(function() {
+
+                if (confirm('Несохраненне данные будут потеряны')) {
+                    window.location.href = "/survey/logout";
+                }
+
+                return false;
             });
         });
 
@@ -186,27 +198,12 @@
 
             var arr = [jsonObj, stringAnswers];
 
-//            $.ajax({
-//                url: "rest/getStringAnswers",
-//                type: "POST",
-//                contentType: "application/json; charset=utf-8",
-//                dataType: 'application/json',
-//                data: JSON.stringify(stringAnswers),
-//                beforeSend: function(xhr) {
-//                    xhr.setRequestHeader(header, token);
-//                },
-//                async: false,
-//                cache: false,
-//                processData: false
-//            });
-
             $.ajax({
                 url: "rest/getAnswer",
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 dataType: 'application/json',
                 data: JSON.stringify(arr),
-//                data: JSON.stringify(jsonObj),
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader(header, token);
                 },
@@ -230,8 +227,8 @@
             <div class="buttons">
                 <button id="previous_button_id" class="btn">Назад</button>
                 <button id="next_button_id" class="btn">Далее</button>
-                <button style="display: none" id="finish_button_id" class="btn btn-primary" name="submit">Отправить
-                </button>
+                <button style="display: none" id="finish_button_id" class="btn btn-primary" name="submit">Отправить</button>
+                <a id="logout_btn_id" class='btn btn-link'>Выход</a>
             </div>
         </div>
     </div>

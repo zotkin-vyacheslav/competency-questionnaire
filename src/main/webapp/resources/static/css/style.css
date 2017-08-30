@@ -21,8 +21,8 @@ img {
     top: 20%;
     right: 0;
     left: 0;
-    -webkit-box-shadow: 0 1px 4px 0 rgba(0,0,0,0.37);
-    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.37);
+    -webkit-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
 }
 
 .radio input[type=radio] {
@@ -45,7 +45,7 @@ th, td {
     text-align: center;
     height: 2.5em;
     padding: 8px 3px 3px 5px;
-    vertical-align: middle;
+    vertical-align: middle !important;
     width: 50px;
 }
 
@@ -67,15 +67,24 @@ tr:nth-child(even) {
     padding-right: 30px;
     padding-bottom: 20px;
     padding-left: 20px;
-    font: 500 20px Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+    font: 500 20px Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
     margin-left: -20px
 }
 
-.back-image{
+.back-image {
     background-image: url('../images/header-it-managed.jpg');
     background-size: cover;
     background-position: center;
     color: rgba(255, 255, 255, 1);
     height: 278px;
 }
+
+.alert {
+    color: red; /* Красный цвет выделения */
+}
+
+#logout_btn_id {
+    float: right !important;
+}
+
 

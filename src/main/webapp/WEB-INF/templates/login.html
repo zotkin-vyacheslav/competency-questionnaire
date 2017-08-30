@@ -19,14 +19,14 @@
             администраторы и специалисты по тестированию)
             компании ITFB Group.</p>
 
-        <p>ВАЖНО: в поле ниже необходимо указывать Вашу корпоративную почту (т.е. с домена <a
-                href="https://www.google.com/url?q=http://itfbgroup.ru&sa=D&ust=1502358008448000&usg=AFQjCNHinZffXOz3zuzVUW3jbZCayF8C-Q">itfbgroup.ru</a>).
-        </p>
+        <!--<p>ВАЖНО: в поле ниже необходимо указывать Вашу корпоративную почту (т.е. с домена <a-->
+                <!--href="https://www.google.com/url?q=http://itfbgroup.ru&sa=D&ust=1502358008448000&usg=AFQjCNHinZffXOz3zuzVUW3jbZCayF8C-Q">itfbgroup.ru</a>).-->
+        <!--</p>-->
 
-        <h3>Электронный адрес</h3>
-        <p th:if="${param.error}" class="alert alert-error">Указан неправильиный адрес почты или пароль</p>
+        <h3>Вход</h3>
+        <p th:if="${param.error}" class="alert alert-error">Указано неправильиное имя пользователя или пароль</p>
         <div class="form-group">
-            <input class="form-control" placeholder="Адрес эл.почты" name="username" id="username"/>
+            <input class="form-control" placeholder="Имя пользователя" name="username" id="username"/>
         </div>
         <div class="form-group">
             <input id="password" class="form-control" type="password" placeholder="Пароль" name="password"/>
