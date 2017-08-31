@@ -36,20 +36,21 @@ public class UpdateAnswerController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getUpdateAnswerPage() throws JsonProcessingException, UnsupportedEncodingException {
-		ModelAndView modelAndView = new ModelAndView("user-answer-page");
+		ModelAndView modelAndView = new ModelAndView("update-answer-page");
 
 		CustomLdapUserDetails userDetails = (CustomLdapUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		User user = userService.getUserByName(userDetails.getMail());
 
 		if (user == null) {
 			modelAndView.setViewName("redirect:answer");
+			return modelAndView;
 		}
 
 		List<JSONParse> objects = answerService.getUserAnswerForJSON(user.getId());
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		String json = ow.writeValueAsString(objects);
 
-		modelAndView.setViewName("user-answer-page");
+		modelAndView.setViewName("update-answer-page");
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("categoriesId", categoryService.getAllCategoriesId());
 		modelAndView.addObject("answers", json);

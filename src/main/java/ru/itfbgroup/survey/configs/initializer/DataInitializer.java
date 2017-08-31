@@ -22,12 +22,12 @@ public class DataInitializer {
 		addPossibleAnswers();
 		addProgramLanguages();
 		addDb();
-//		addMiddleware();
-//		addFrontend();
-//		addBackendTech();
-//		addMobile();
-//		addCloud();
-//		addAnotherTech();
+		addMiddleware();
+		addFrontend();
+		addBackendTech();
+		addMobile();
+		addCloud();
+		addAnotherTech();
 	}
 
 	private void addAnotherTech() {
@@ -87,7 +87,7 @@ public class DataInitializer {
 		SubCategory roboticSC = new SubCategory("Robotic Process Automation (RPA)", roboticList, "ПОЯСНЕНИЕ: в случае невыбранного значения в строке подразумевается значение \"Нет\".");
 		SubCategory blockChainSC = new SubCategory("Block chain technology", blockChainList, "ПОЯСНЕНИЕ: в случае невыбранного значения в строке подразумевается значение \"Нет\".");
 		SubCategory iotSC = new SubCategory("IoT software and technology", iotList, "ПОЯСНЕНИЕ: в случае невыбранного значения в строке подразумевается значение \"Нет\".");
-		SubCategory anotherSC = new SubCategory("Другие технологии", null, "ПОЯСНЕНИЕ: в случае невыбранного значения в строке подразумевается значение \"Нет\".");
+		SubCategory anotherSC = new SubCategory("Другие технологии", null, null);
 
 		List<SubCategory> anotherCategories = new LinkedList<>();
 		anotherCategories.add(bigDataSC);

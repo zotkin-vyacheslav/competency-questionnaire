@@ -1,5 +1,7 @@
 package ru.itfbgroup.survey.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +22,8 @@ import javax.servlet.http.HttpServletResponse;
 @SessionAttributes(value = "user")
 public class UIController {
 
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	private CategoryService categoryService;
 
@@ -32,32 +36,20 @@ public class UIController {
 		return modelAndView;
 	}
 
-	//unused
-	@RequestMapping(method = RequestMethod.POST, value = "/login")
-	public ModelAndView getLoginPage(@RequestParam(value = "username") String email) {
-		ModelAndView modelAndView = new ModelAndView("redirect:answer");
-		Answer userAnswer = new Answer();
-		User user = new User(email, userAnswer);
-		userAnswer.setUser(user);
-		userAnswer.setUser(user);
-		userService.addUser(user);
-		modelAndView.addObject("user", user);
-		return modelAndView;
-	}
-
-	//	TODO:rename mapping
 	@RequestMapping(method = RequestMethod.GET, value = "answer")
 	public ModelAndView getTableData() {
 		ModelAndView modelAndView = new ModelAndView("survey-page");
 
 		CustomLdapUserDetails userDetails = (CustomLdapUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		User user = userService.getUserByName(userDetails.getMail());
+
 		if (user == null) {
-//			Answer userAnswer = new Answer();
-//			user = new User(userDetails.getUsername(), userAnswer);
-//			userAnswer.setUser(user);
-//			userService.addUser(user);
+			Answer userAnswer = new Answer();
+			user = new User(userDetails.getMail(), userAnswer);
+			userAnswer.setUser(user);
+			userService.addUser(user);
 		}
+		logger.debug("user " + user.getEmail() + " logged");
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("categoriesId", categoryService.getAllCategoriesId());
 		return modelAndView;

@@ -8,6 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/resources/static/css/style.css}">
+    <link rel="shortcut icon" th:href="@{/resources/static/images/favicon.ico}"/>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <script>
@@ -58,7 +59,7 @@
 
             $("#logout_btn_id").click(function() {
 
-                if (confirm('Несохраненне данные будут потеряны')) {
+                if (confirm('Внесенные данные будут потеряны')) {
                     window.location.href = "/survey/logout";
                 }
 

@@ -82,7 +82,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			public UserDetails mapUserFromContext(DirContextOperations ctx, String username, Collection<? extends GrantedAuthority> authorities) {
 				UserDetails details = super.mapUserFromContext(ctx, username, authorities);
 				return new CustomLdapUserDetails((LdapUserDetails) details, ctx);
-//				return details;
 			}
 		};
 	}

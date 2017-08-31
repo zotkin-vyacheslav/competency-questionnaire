@@ -8,6 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/resources/static/css/style.css}">
+    <link rel="shortcut icon" th:href="@{/resources/static/images/favicon.ico}"/>
     <script>
         var currentArrIndex = 0;
         var countOfLoadedPages = 0;
@@ -56,7 +57,7 @@
 
             $("#logout_btn_id").click(function() {
 
-                if (confirm('Несохраненне данные будут потеряны')) {
+                if (confirm('Внесенные данные будут потеряны')) {
                     window.location.href = "/survey/logout";
                 }
 
@@ -118,24 +119,41 @@
                     var sub_id = "sub" + result["categoryId"] + i.toString();
                     var sub_add = "sub_add" + result["categoryId"] + i.toString();
 
-                    $("#" + result["categoryId"].toString()).append("<table class='table table-stripped'>" +
-                        "                            <thead>" +
-                        "                            <div class='sub'>" +
+                    $("#" + result["categoryId"].toString()).append(     "                            <div class='sub'>" +
                         "                            <h3 id='" + sub_id + "''></h3>" +
                         "                            <div id='" + sub_add + "''></div>" +
-                        "                            </div>" +
-                        "                            <tr>" +
-                        "                                <th class='col-md-4'></th>" +
-                        "                                <th class='col-md-2'><b>Нет</b></th>" +
-                        "                                <th class='col-md-2'><b>Начальные знания</b></th>" +
-                        "                                <th class='col-md-2'><b>Базовые знания</b></th>" +
-                        "                                <th class='col-md-2'><b>Продвинутые знания</b></th>" +
-                        "                            </tr>" +
-                        "                            </div>" +
-                        "                            <tbody id='" + table_id.toString() + "'>" +
-                        "                            </tbody>" +
-                        "                        </table> " +
-                        "                        <div class='bottom-table' id='footer'><p>" +
+                        "                            </div>");
+
+                    if (options.length != 0) {
+
+                        $("#" + result["categoryId"].toString()).append("<table class='table table-stripped'>" +
+                            "                            <thead>" +
+                            //                        "                            <div class='sub'>" +
+                            //                        "                            <h3 id='" + sub_id + "''></h3>" +
+                            //                        "                            <div id='" + sub_add + "''></div>" +
+                            //                        "                            </div>" +
+                            "                            <tr>" +
+                            "                                <th class='col-md-4'></th>" +
+                            "                                <th class='col-md-2'><b>Нет</b></th>" +
+                            "                                <th class='col-md-2'><b>Начальные знания</b></th>" +
+                            "                                <th class='col-md-2'><b>Базовые знания</b></th>" +
+                            "                                <th class='col-md-2'><b>Продвинутые знания</b></th>" +
+                            "                            </tr>" +
+                            "                            </div>" +
+                            "                            <tbody id='" + table_id.toString() + "'>" +
+                            "                            </tbody>" +
+                            "                        </table> "
+//                        "                        <div class='bottom-table' id='footer'><p>" +
+//                        "                            Если в списке выше что-то отсутствует из того, что Вы знаете и использовали, то укажите\n" +
+//                        "                            ниже через запятую:" +
+//                        "                        </p>" +
+//                        "                        <div class=\"form-group\" id=\"form_id\">" +
+//                        "<input class='form-control' id='" + result["subCategories"][i]["subCategoryId"] + "' placeholder='Мой ответ' name='additional'/>" +
+//                        "                        </div></div>"
+                        );
+                    }
+
+                    $("#" + result["categoryId"].toString()).append(           "                        <div class='bottom-table' id='footer'><p>" +
                         "                            Если в списке выше что-то отсутствует из того, что Вы знаете и использовали, то укажите\n" +
                         "                            ниже через запятую:" +
                         "                        </p>" +
@@ -145,6 +163,10 @@
 
                     $("#" + sub_id).text(subcategory_title);
                     $("#" + sub_add).text(subcategory_add);
+
+                    if (options.length === 0) {
+                        $(".table").last().hide();
+                    }
 
                     for (j = 0; j < options.length; j++) {
                         str1 = options[j]["optionName"];
