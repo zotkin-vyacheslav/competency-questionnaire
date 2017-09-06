@@ -55,10 +55,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.managerPassword(environment.getRequiredProperty("security.ldap.auth.manager-password"));
 	}
 
-//	AuthLDAPURL "ldaps://77.244.210.181:636/DC=itfbgroup,DC=ru?uid?sub?(objectClass=*)" NONE
-//	AuthLDAPBindDN "uid=adbook,ou=users,dc=itfbgroup,dc=ru"
-//	AuthLDAPBindPassword "1qaz@WSX16"
-
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()

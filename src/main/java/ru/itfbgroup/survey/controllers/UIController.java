@@ -1,5 +1,9 @@
 package ru.itfbgroup.survey.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.unboundid.util.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +16,14 @@ import org.springframework.web.servlet.ModelAndView;
 import ru.itfbgroup.survey.configs.security.CustomLdapUserDetails;
 import ru.itfbgroup.survey.models.Answer;
 import ru.itfbgroup.survey.models.User;
+import ru.itfbgroup.survey.models.util.JSONParse;
+import ru.itfbgroup.survey.service.abstr.AnswerService;
 import ru.itfbgroup.survey.service.abstr.CategoryService;
 import ru.itfbgroup.survey.service.abstr.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Controller
 @SessionAttributes(value = "user")
@@ -30,15 +37,19 @@ public class UIController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private AnswerService answerService;
+
 	@RequestMapping(method = RequestMethod.GET, value = {"/login", "/"})
 	public ModelAndView getLoginPage() {
 		ModelAndView modelAndView = new ModelAndView("login");
 		return modelAndView;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "answer")
-	public ModelAndView getTableData() {
-		ModelAndView modelAndView = new ModelAndView("survey-page");
+	@RequestMapping(method = RequestMethod.GET, value = "answer", produces={"application/json; charset=UTF-8"})
+	public ModelAndView getTableData() throws JsonProcessingException, JSONException {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("categoriesId", categoryService.getAllCategoriesId());
 
 		CustomLdapUserDetails userDetails = (CustomLdapUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		User user = userService.getUserByName(userDetails.getMail());
@@ -48,10 +59,26 @@ public class UIController {
 			user = new User(userDetails.getMail(), userAnswer);
 			userAnswer.setUser(user);
 			userService.addUser(user);
+			modelAndView.setViewName("survey-page");
+			modelAndView.addObject("user", user);
+			logger.debug("user " + user.getEmail() + " logged first time");
+			return modelAndView;
 		}
-		logger.debug("user " + user.getEmail() + " logged");
+		List<JSONParse> objects = answerService.getUserAnswerForJSON(user.getId());
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json = ow.writeValueAsString(objects);
+
+		List<JSONParse> additionalAnswersObject = answerService.getAdditionalUserAnswerForJSON(user.getId());
+		ObjectWriter objectMapper = new ObjectMapper().writer();
+		String additionalAnswersJson = objectMapper.writeValueAsString(additionalAnswersObject);
+		String replaced = additionalAnswersJson.replace("\"", "'");
+
+		modelAndView.setViewName("update-answer-page");
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("categoriesId", categoryService.getAllCategoriesId());
+		modelAndView.addObject("answers", json);
+		modelAndView.addObject("addAnswers", additionalAnswersJson);
+
 		return modelAndView;
 	}
 

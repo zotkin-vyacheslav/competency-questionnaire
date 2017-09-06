@@ -7,15 +7,17 @@ import java.util.List;
 
 public interface AnswerService {
 
-	void saveAnswers(Answer answer, List<JSONParse> jsonParses);
-
 	void saveOptionsUserAnswer(Answer answer, List<JSONParse> jsonParses);
 
 	void saveAdditionalInfo(Answer answer, List<JSONParse> jsonParses);
 
 	Answer getAnswerById(Long id);
 
-	void saveAnswer(Answer answer);
+	void saveUserAnswer(Answer answer);
 
 	List<JSONParse> getUserAnswerForJSON(Long userId);
+
+	List<JSONParse> getAdditionalUserAnswerForJSON(Long userId);
+
+	List getDataForStatistics(Long categoryId);
 }

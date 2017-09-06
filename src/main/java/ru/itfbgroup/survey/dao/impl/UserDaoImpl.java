@@ -15,8 +15,7 @@ public class UserDaoImpl extends AbstractDao<Long, User> implements UserDao {
 	@Override
 	public List<User> getUsersToSendNotification() {
 
-
-		return entityManager.createQuery("SELECT u from User u WHERE (day(current_date()) - day(u.answer.timestamp)) > 180").getResultList();
+		return entityManager.createQuery("SELECT u from User u WHERE (current_date() - u.answer.timestamp) > 180").getResultList();
 	}
 
 	@Override

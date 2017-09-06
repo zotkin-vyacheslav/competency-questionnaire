@@ -30,7 +30,7 @@
                     loadPage(categories_id[++currentArrIndex]);
                 }
                 checkIndexToHideButtons();
-                window.scrollTo(0,0);
+                window.scrollTo(0, 0);
                 return false;
             });
 
@@ -41,21 +41,19 @@
                 $("#" + categories_id[--currentArrIndex].toString()).show();
 
                 checkIndexToHideButtons();
-                window.scrollTo(0,0);
+                window.scrollTo(0, 0);
                 return false;
             });
 
             $("#finish_button_id").on("click", function () {
                 $("#survey-page").hide();
                 $("#main-page").append("<p>Данные сохранены. Спасибо!</p>" +
-                    "<a href='answer' class='btn btn-link'>Ответить заново</a>" +
-                    "<br> " +
-                    "<a href='update-answer' class='btn btn-link'>Изменить ответ</a>");
+                    "<a href='answer' class='btn btn-link'>Ответить заново</a>");
 
                 createJSON();
             });
 
-            $("#logout_btn_id").click(function() {
+            $("#logout_btn_id").click(function () {
 
                 if (confirm('Внесенные данные будут потеряны')) {
                     window.location.href = "/survey/logout";
@@ -119,7 +117,7 @@
                     var sub_id = "sub" + result["categoryId"] + i.toString();
                     var sub_add = "sub_add" + result["categoryId"] + i.toString();
 
-                    $("#" + result["categoryId"].toString()).append(     "                            <div class='sub'>" +
+                    $("#" + result["categoryId"].toString()).append("                            <div class='sub'>" +
                         "                            <h3 id='" + sub_id + "''></h3>" +
                         "                            <div id='" + sub_add + "''></div>" +
                         "                            </div>");
@@ -128,10 +126,6 @@
 
                         $("#" + result["categoryId"].toString()).append("<table class='table table-stripped'>" +
                             "                            <thead>" +
-                            //                        "                            <div class='sub'>" +
-                            //                        "                            <h3 id='" + sub_id + "''></h3>" +
-                            //                        "                            <div id='" + sub_add + "''></div>" +
-                            //                        "                            </div>" +
                             "                            <tr>" +
                             "                                <th class='col-md-4'></th>" +
                             "                                <th class='col-md-2'><b>Нет</b></th>" +
@@ -142,18 +136,10 @@
                             "                            </div>" +
                             "                            <tbody id='" + table_id.toString() + "'>" +
                             "                            </tbody>" +
-                            "                        </table> "
-//                        "                        <div class='bottom-table' id='footer'><p>" +
-//                        "                            Если в списке выше что-то отсутствует из того, что Вы знаете и использовали, то укажите\n" +
-//                        "                            ниже через запятую:" +
-//                        "                        </p>" +
-//                        "                        <div class=\"form-group\" id=\"form_id\">" +
-//                        "<input class='form-control' id='" + result["subCategories"][i]["subCategoryId"] + "' placeholder='Мой ответ' name='additional'/>" +
-//                        "                        </div></div>"
-                        );
+                            "                        </table> ");
                     }
 
-                    $("#" + result["categoryId"].toString()).append(           "                        <div class='bottom-table' id='footer'><p>" +
+                    $("#" + result["categoryId"].toString()).append("                        <div class='bottom-table' id='footer'><p>" +
                         "                            Если в списке выше что-то отсутствует из того, что Вы знаете и использовали, то укажите\n" +
                         "                            ниже через запятую:" +
                         "                        </p>" +
@@ -190,16 +176,14 @@
             stringAnswers = [];
 
             $('input[type="radio"]:checked').each(function () {
-//                if ($(this).prop('checked')) {
-                    var id = $(this).attr("id");
-                    var value = $(this).val();
+                var id = $(this).attr("id");
+                var value = $(this).val();
 
-                    item = {};
-                    item ["id"] = id;
-                    item ["value"] = value;
+                item = {};
+                item ["id"] = id;
+                item ["value"] = value;
 
-                    jsonObj.push(item);
-//                }
+                jsonObj.push(item);
             });
 
             $('input[class="form-control"]').each(function () {
@@ -226,7 +210,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: 'application/json',
                 data: JSON.stringify(arr),
-                beforeSend: function(xhr) {
+                beforeSend: function (xhr) {
                     xhr.setRequestHeader(header, token);
                 },
                 async: false,
@@ -237,7 +221,9 @@
     </script>
 </head>
 <body>
-<div class="back-image"></div>
+<div class="back-image">
+    <a id="logout_btn_id" class='btn btn-link'>Выход</a>
+</div>
 <div class="container">
     <div id="main-page">
         <h1>ITFB Group - компетенции специалистов</h1>
@@ -249,8 +235,8 @@
             <div class="buttons">
                 <button id="previous_button_id" class="btn">Назад</button>
                 <button id="next_button_id" class="btn">Далее</button>
-                <button style="display: none" id="finish_button_id" class="btn btn-primary" name="submit">Отправить</button>
-                <a id="logout_btn_id" class='btn btn-link'>Выход</a>
+                <button style="display: none" id="finish_button_id" class="btn btn-primary" name="submit">Отправить
+                </button>
             </div>
         </div>
     </div>

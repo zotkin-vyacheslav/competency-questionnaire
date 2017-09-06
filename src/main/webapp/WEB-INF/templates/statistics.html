@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>ITFB Group - компетенции специалистов</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="resources/static/css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <link rel="shortcut icon" th:href="@{/resources/static/images/favicon.ico}"/>
+    <script>
+        var categories_id = [[${categoriesId}]];
+        var currentArrIndex = 0;
+        var countOfLoadedPages = 0;
+        var data = {};
+
+        $(document).ready(function () {
+
+            getDataFromServer();
+
+            loadPage();
+
+            checkIndexToHideButtons();
+
+            $("#next_button_id").on("click", function () {
+
+                $("#" + categories_id[currentArrIndex].toString()).hide();
+
+                if (countOfLoadedPages > currentArrIndex) {
+                    $("#" + categories_id[++currentArrIndex].toString()).show();
+                } else {
+                    countOfLoadedPages++;
+                    currentArrIndex++;
+                    loadPage();
+                }
+                checkIndexToHideButtons();
+                window.scrollTo(0, 0);
+                return false;
+            });
+
+            $("#previous_button_id").on("click", function () {
+
+                $("#" + categories_id[currentArrIndex].toString()).hide();
+
+                $("#" + categories_id[--currentArrIndex].toString()).show();
+
+                checkIndexToHideButtons();
+                window.scrollTo(0, 0);
+                return false;
+            });
+
+            $("#logout_btn_id").click(function () {
+
+                if (confirm('Подтвердите выход')) {
+                    window.location.href = "/survey/logout";
+                }
+
+                return false;
+            });
+        });
+
+        function checkIndexToHideButtons() {
+            if (currentArrIndex > 0 && !$("#previous_button_id").is(':visible')) {
+                $("#previous_button_id").show();
+            } else if (currentArrIndex === 0) {
+                $("#previous_button_id").hide();
+            }
+            if (currentArrIndex === Object.keys(categories_id).length - 1) {
+                $("#next_button_id").hide();
+            } else if (currentArrIndex < Object.keys(categories_id).length - 1) {
+                $("#next_button_id").show();
+            }
+        }
+
+        function loadPage() {
+            getDataFromServer();
+
+            var category_header_id = "cat" + categories_id[currentArrIndex];
+
+            $(".chart").append("<div id='" + categories_id[currentArrIndex] + "'><div class='category-stat'>" +
+                "               <div id='" + category_header_id + "'></div>" +
+                "                </div><br></div><br>");
+
+            $("#" + category_header_id).html(data[0]);
+
+            for (var i = 1; i < data.length; i++) {
+                var subcategoryId = 'subcategoryId' + categories_id[currentArrIndex] + i;
+                $("#" + categories_id[currentArrIndex] + "").append("<div id='" + subcategoryId + "' style=\"min-width: 900px; height: 500px; margin: 0 auto\"></div>");
+
+                getChart(data[i], subcategoryId);
+            }
+        }
+
+        function getDataFromServer() {
+            $.ajax({
+                url: "list",
+                async: false,
+                dataType: "json",
+                data: {
+                    categoryId: categories_id[currentArrIndex]
+                },
+                success: function (d) {
+                    data = d;
+                }
+            });
+        }
+
+        function getChart(data, id) {
+
+            var chart = Highcharts.chart('' + id + '', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: data[0]
+                    },
+                    colors: ['#f45b5b', '#8085e9', '#8d4654', '#7798BF', 'rgb(53, 131, 221)'],
+                    xAxis: {
+                        categories: data[1],
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            var points = this.points;
+
+                            var res = '<span style="font-size:10px">' + points[0].key + '</span>' +
+                                '<table>'
+
+                            for (var iter = 0; iter < points.length; iter++) {
+
+                                var i = Math.round(points[iter].y * 100 / 60);
+
+                                res = res + '<tr><td style="color:' + points[iter].series.color + ';padding:0">' + points[iter].series.name + ': </td>' +
+                                    '<td style="padding:0"><b>' + points[iter].y + ' (' + i + '%)' + '</b></td></tr>';
+                            }
+
+                            res = res + '</table>';
+
+                            return res;
+
+//                            return  +
+//                                '<tr><td style="color:'+this.points[0].series.color+';padding:0">' + this.points[0].series.name + ': </td>' +
+//                                '<td style="padding:0"><b>' + this.points[0].y + ' (' + i + '%)' + '</b></td></tr>' +
+//                                '<tr><td style="color:'+this.points[1].series.color+';padding:0">' + this.points[1].series.name + ': </td>' +
+//                                '<td style="padding:0"><b>' + this.points[1].y + ' (' + j + '%)' + '</b></td></tr>' +
+//                                '<tr><td style="color:'+this.points[2].series.color+';padding:0">' + this.points[2].series.name + ': </td>' +
+//                                '<td style="padding:0"><b>' + this.points[2].y + ' (' + k + '%)' + '</b></td></tr>' +
+//                                '<tr><td style="color:'+this.points[3].series.color+';padding:0">' + this.points[3].series.name + ': </td>' +
+//                                '<td style="padding:0"><b>' + this.points[3].y + ' (' + l + '%)' + '</b></td></tr>';
+
+                        },
+                        shared:
+                            true,
+                        useHTML:
+                            true,
+                        valueDecimals:
+                            0,
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth:
+                                0
+                        }
+                    }
+                    ,
+                    series: [{
+                        name: 'Нет',
+                        data: data[2]
+
+                    }, {
+                        name: 'Начальные знания',
+                        data: data[3]
+
+                    }, {
+                        name: 'Базове знания',
+                        data: data[4]
+
+                    }, {
+                        name: 'Продвинуте знания',
+                        data: data[5]
+                    }]
+                })
+            ;
+
+
+            $(".highcharts-credits").hide();
+//            $(".highcharts-button").hide();
+            $(".highcharts-axis-title").hide();
+        }
+    </script>
+</head>
+<body>
+<div>
+    <a id="logout_btn_id" class='btn btn-link'>Выход</a>
+</div>
+<div class="container-stat">
+    <h1>Статистика ответов</h1>
+    <!--<div id="myChart" style="min-width: 900px; height: 500px; margin: 0 auto"></div>-->
+    <div class="chart"></div>
+    <div class="buttons">
+        <button id="previous_button_id" class="btn">Назад</button>
+        <button id="next_button_id" class="btn">Далее</button>
+    </div>
+</div>
+</body>
+</html>

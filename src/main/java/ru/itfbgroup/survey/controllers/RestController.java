@@ -48,12 +48,6 @@ public class RestController {
 		status.setComplete();
 	}
 
-//	@RequestMapping(value = "/getStringAnswers", method = RequestMethod.POST, produces = "application/json")
-//	public void getAdditionalInfo(@RequestBody List<JSONParse> jsonParses,
-//												  @ModelAttribute User user){
-//		answerService.saveAdditionalInfo(user.getAnswer(), jsonParses);
-//	}
-
 	@RequestMapping(value = "/get-user-answer/{id}", method = RequestMethod.GET)
 	public Answer getUserAnswer(@PathVariable("id") long id) {
 		return answerService.getAnswerById(id);
@@ -62,7 +56,7 @@ public class RestController {
 
 	@RequestMapping(value = "/get-user-answer-mod/{id}", method = RequestMethod.GET)
 	public List<JSONParse> getUserAnswerMod(@PathVariable("id") long id) {
-				List<JSONParse> objects = answerDao.getUserAnswerForShow(id);
+				List<JSONParse> objects = answerDao.getUserAnswerOptions(id);
 				return objects;
 	}
 }

@@ -16,6 +16,9 @@
         var countOfLoadedPages = 0;
         var categories_id = [[${categoriesId}]];
         var answers = [[${answers}]];
+        var addAnswers = [[${addAnswers}]];
+//        var addAnswers = jQuery.parseJSON( [[${addAnswers}]]);
+
 
         $(document).ready(function () {
 
@@ -50,9 +53,7 @@
             $("#finish_button_id").on("click", function () {
                 $("#survey-page").hide();
                 $("#main-page").append("<p>Данные сохранены. Спасибо!</p>" +
-                    "<a href='answer' class='btn btn-link'>Ответить заново</a>" +
-                    "<br>" +
-                    "<a href='update-answer' class='btn btn-link'>Изменить ответ</a>");
+                    "<a href='answer' class='btn btn-link'>Ответить заново</a>");
 
                 createJSON();
             });
@@ -121,24 +122,29 @@
                     var sub_id = "sub" + result["categoryId"] + i.toString();
                     var sub_add = "sub_add" + result["categoryId"] + i.toString();
 
-                    $("#" + result["categoryId"].toString()).append("<table class='table table-stripped'>" +
-                        "                            <thead>" +
-                        "                            <div class='sub'>" +
+                    $("#" + result["categoryId"].toString()).append(     "                            <div class='sub'>" +
                         "                            <h3 id='" + sub_id + "''></h3>" +
                         "                            <div id='" + sub_add + "''></div>" +
-                        "                            </div>" +
-                        "                            <tr>" +
-                        "                                <th class='col-md-4'></th>" +
-                        "                                <th class='col-md-2'><b>Нет</b></th>" +
-                        "                                <th class='col-md-2'><b>Начальные знания</b></th>" +
-                        "                                <th class='col-md-2'><b>Базовые знания</b></th>" +
-                        "                                <th class='col-md-2'><b>Продвинутые знания</b></th>" +
-                        "                            </tr>" +
-                        "                            </div>" +
-                        "                            <tbody id='" + table_id.toString() + "'>" +
-                        "                            </tbody>" +
-                        "                        </table> " +
-                        "                        <div class='bottom-table' id='footer'><p>" +
+                        "                            </div>");
+
+                    if (options.length != 0) {
+
+                        $("#" + result["categoryId"].toString()).append("<table class='table table-stripped'>" +
+                            "                            <thead>" +
+                            "                            <tr>" +
+                            "                                <th class='col-md-4'></th>" +
+                            "                                <th class='col-md-2'><b>Нет</b></th>" +
+                            "                                <th class='col-md-2'><b>Начальные знания</b></th>" +
+                            "                                <th class='col-md-2'><b>Базовые знания</b></th>" +
+                            "                                <th class='col-md-2'><b>Продвинутые знания</b></th>" +
+                            "                            </tr>" +
+                            "                            </div>" +
+                            "                            <tbody id='" + table_id.toString() + "'>" +
+                            "                            </tbody>" +
+                            "                        </table> ");
+                    }
+
+                    $("#" + result["categoryId"].toString()).append(           "                        <div class='bottom-table' id='footer'><p>" +
                         "                            Если в списке выше что-то отсутствует из того, что Вы знаете и использовали, то укажите\n" +
                         "                            ниже через запятую:" +
                         "                        </p>" +
@@ -163,11 +169,21 @@
                         $("#" + table_id.toString()).append(str2);
                     }
                 }
+
+                // set all radio buttons as checked
                 $("#" + result["categoryId"].toString() + " :radio[value=1]").prop('checked', true);
+                //set value from user answer
                 for (l = 0; l < answers.length; l++) {
                     if ($('#' + answers[l][0]).length > 0) {
                         $(":radio[id='" + answers[l][0] + "'][value='" + answers[l][1] + "']").prop('checked', true);
                         answers[l] = [0][0];
+                    }
+                }
+
+                for (q = 0; q < addAnswers.length; q++) {
+                    if ($('#' + answers[q][0]).length > 0) {
+                        ('#' + answers[q][0]).val(answers[q][1]);
+                        answers[q] = [0][0];
                     }
                 }
             });
@@ -214,7 +230,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: 'application/json',
                 data: JSON.stringify(arr),
-//                data: [ JSON.stringify(jsonObj), JSON.stringify(stringAnswers)],
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader(header, token);
                 },
@@ -226,7 +241,9 @@
     </script>
 </head>
 <body>
-<div class="back-image"></div>
+<div class="back-image">
+    <a id="logout_btn_id" class='btn btn-link'>Выход</a>
+</div>
 <div class="container">
     <div id="main-page">
         <h1>ITFB Group - компетенции специалистов</h1>
@@ -239,7 +256,6 @@
                 <button id="previous_button_id" class="btn">Назад</button>
                 <button id="next_button_id" class="btn">Далее</button>
                 <button style="display: none" id="finish_button_id" class="btn btn-primary" name="submit">Отправить</button>
-                <a id="logout_btn_id"  class='btn btn-link'>Выход</a>
             </div>
         </div>
     </div>

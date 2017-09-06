@@ -19,15 +19,15 @@ public class DataInitializer {
 	private PossibleAnswerService possibleAnswerService;
 
 	private void init() {
-		addPossibleAnswers();
-		addProgramLanguages();
-		addDb();
-		addMiddleware();
-		addFrontend();
-		addBackendTech();
-		addMobile();
-		addCloud();
-		addAnotherTech();
+//		addPossibleAnswers();
+//		addProgramLanguages();
+//		addDb();
+//		addMiddleware();
+//		addFrontend();
+//		addBackendTech();
+//		addMobile();
+//		addCloud();
+//		addAnotherTech();
 	}
 
 	private void addAnotherTech() {
@@ -155,7 +155,7 @@ public class DataInitializer {
 				option10, option11};
 		List<Option> mobileList = new LinkedList<>(Arrays.asList(mobileTech));
 
-		SubCategory mobileSC = new SubCategory("JavaScript-фреймворки", mobileList, "ПОЯСНЕНИЕ: в случае невыбранного значения в строке подразумевается значение \"Нет\".");
+		SubCategory mobileSC = new SubCategory("Платформы", mobileList, "ПОЯСНЕНИЕ: в случае невыбранного значения в строке подразумевается значение \"Нет\".");
 
 		List<SubCategory> mobileSubCategories = new LinkedList<>();
 		mobileSubCategories.add(mobileSC);
@@ -496,12 +496,11 @@ public class DataInitializer {
 		Option option51 = new Option("Oracle TimesTen");
 		Option option61 = new Option("MS SQL Server");
 		Option option71 = new Option("IBM DB2");
-		Option option81 = new Option("IBM Informix");
 		Option option91 = new Option("PostgreSQL");
 		Option option101 = new Option("MySQL / MariaDB");
 		Option option111 = new Option("Interbase / Firebird");
 
-		Option[] dbs2 = {option41, option51, option61, option71, option81, option91, option101, option111};
+		Option[] dbs2 = {option41, option51, option61, option71, option91, option101, option111};
 
 		Option option12 = new Option("Cassandra");
 		Option option13 = new Option("HBase");
@@ -561,12 +560,13 @@ public class DataInitializer {
 		Option option20 = new Option("Scala");
 		Option option21 = new Option("Clojure");
 		Option option22 = new Option("Object Pascal / Pascal");
-		Option option23 = new Option("ColdFusion");
-		Option option24 = new Option("Ada");
-		Option option25 = new Option("Assembler");
+		Option option23 = new Option("Visual Basic / VBA / Basic");
+		Option option24 = new Option("ColdFusion");
+		Option option25 = new Option("Ada");
+		Option option26 = new Option("Assembler");
 
 		Option[] langs = {option1, option2, option3, option4, option5, option6, option7, option8, option9,
-				option10, option11, option12, option13, option14, option15, option16, option17, option18, option19, option20, option21, option22, option23, option24, option25};
+				option10, option11, option12, option13, option14, option15, option16, option17, option18, option19, option20, option21, option22, option23, option24, option25, option26};
 
 		List<Option> options = new LinkedList<>();
 		options.addAll(Arrays.asList(langs));

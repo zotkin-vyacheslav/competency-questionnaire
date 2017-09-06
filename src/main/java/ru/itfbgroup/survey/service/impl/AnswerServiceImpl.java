@@ -7,8 +7,11 @@ import ru.itfbgroup.survey.dao.abstr.OptionDao;
 import ru.itfbgroup.survey.dao.abstr.PossibleAnswerDao;
 import ru.itfbgroup.survey.dao.abstr.SubcategoryDao;
 import ru.itfbgroup.survey.models.Answer;
+import ru.itfbgroup.survey.models.Category;
+import ru.itfbgroup.survey.models.SubCategory;
 import ru.itfbgroup.survey.models.util.JSONParse;
 import ru.itfbgroup.survey.service.abstr.AnswerService;
+import ru.itfbgroup.survey.service.abstr.CategoryService;
 
 import java.util.*;
 
@@ -27,19 +30,8 @@ public class AnswerServiceImpl implements AnswerService {
 	@Autowired
 	private SubcategoryDao subcategoryDao;
 
-	@Override
-	public void saveAnswers(Answer answer, List<JSONParse> jsonParses) {
-//		List<AnswerOption> answerOptions = new ArrayList<>();
-//		for (JSONParse jsonParse : jsonParses) {
-//			answerOptions.add(new AnswerOption(optionDao.getByKey(Long.parseLong(jsonParse.getId())),
-//					possibleAnswerDao.getByKey(Long.parseLong(jsonParse.getValue()))));
-//		}
-//		Collections.sort(answerOptions);
-////		answer.setAnswerOptions(answerOptions);
-//		Calendar currentTime = Calendar.getInstance();
-//		answer.setTimestamp(new Date(currentTime.getTime().getTime()));
-//		answerDao.update(answer);
-	}
+	@Autowired
+	private CategoryService categoryService;
 
 	@Override
 	public void saveOptionsUserAnswer(Answer answer, List<JSONParse> jsonParses) {
@@ -66,12 +58,40 @@ public class AnswerServiceImpl implements AnswerService {
 	}
 
 	@Override
-	public void saveAnswer(Answer answer) {
+	public void saveUserAnswer(Answer answer) {
 		answerDao.persist(answer);
 	}
 
 	@Override
 	public List<JSONParse> getUserAnswerForJSON(Long userId) {
-		return answerDao.getUserAnswerForShow(userId);
+		return answerDao.getUserAnswerOptions(userId);
+	}
+
+	@Override
+	public List<JSONParse> getAdditionalUserAnswerForJSON(Long userId) {
+		return answerDao.getAdditionalAnswers(userId);
+	}
+
+	@Override
+	public List getDataForStatistics(Long categoryId) {
+		Category category = categoryService.getCategoryById(categoryId);
+
+		List list = new ArrayList();
+		list.add(category.getCategoryName());
+
+		for (SubCategory subCategory : category.getSubCategories()) {
+			List strings = new ArrayList();
+
+			strings.add(subCategory.getName());
+			strings.add(answerDao.getOptionsNames(subCategory.getSubCategoryId()));
+
+			for (int i = 1; i < 5; i++) {
+				strings.add(answerDao.getDataForStatistics(subCategory.getSubCategoryId(), new Long(i)));
+			}
+
+			list.add(strings);
+		}
+
+		return list;
 	}
 }

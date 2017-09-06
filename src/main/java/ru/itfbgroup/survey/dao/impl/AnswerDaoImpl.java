@@ -43,7 +43,7 @@ public class AnswerDaoImpl extends AbstractDao<Long, Answer> implements AnswerDa
 	}
 
 	@Override
-	public List<JSONParse> getUserAnswerForShow(Long userId) {
+	public List<JSONParse> getUserAnswerOptions(Long userId) {
 		return entityManager.createNativeQuery("SELECT\n" +
 				"  ao.OPTION_ID,\n" +
 				"  ao.POSSIBLE_ANSWER_ID\n" +
@@ -54,5 +54,49 @@ public class AnswerDaoImpl extends AbstractDao<Long, Answer> implements AnswerDa
 				"WHERE u.USER_ID = :userId")
 				.setParameter("userId", userId)
 				.getResultList();
+	}
+
+	@Override
+	public List<JSONParse> getAdditionalAnswers(Long userId) {
+		return entityManager.createNativeQuery("SELECT ai.SUBCATEGORY_ID, ai.ADDITIONAL_INFO\n" +
+				"  FROM USERS u\n" +
+				"JOIN ANSWERS a ON u.ANSWER_ID = a.ANSWER_ID\n" +
+				"JOIN ADDITIONAL_INFORMATION ai ON a.ANSWER_ID = ai.ANSWER_ID\n" +
+				"WHERE u.USER_ID = :userId")
+				.setParameter("userId", userId)
+				.getResultList();
+	}
+
+	@Override
+	public List<String> getDataForStatistics(Long subCategoryId, Long possibleAnswerId) {
+		return entityManager.createNativeQuery("SELECT\n" +
+				"  COUNT(o2.OPTION_ID)" +
+				"\n" +
+				"FROM OPTIONS op\n" +
+				"  LEFT JOIN (SELECT o.OPTION_ID\n" +
+				"             FROM OPTIONS o\n" +
+				"               JOIN ANSWERS_OPTIONS ao ON o.OPTION_ID = ao.OPTION_ID\n" +
+				"               JOIN POSSIBLE_ANSWERS po ON ao.POSSIBLE_ANSWER_ID = po.POSSIBLE_ANSWER_ID\n" +
+				"             WHERE\n" +
+				"                 po.POSSIBLE_ANSWER_ID = :possibleAnswerId\n" +
+				"            ) o2\n" +
+				"    ON o2.OPTION_ID=op.OPTION_ID\n" +
+				"  JOIN SUBCATEGORY_OPTIONS so ON op.OPTION_ID = so.OPTIONS_OPTION_ID\n" +
+				"  JOIN SUBCATEGORY s ON so.SUBCATEGORY_SUBCATEGORY_ID = s.SUBCATEGORY_ID\n" +
+				"WHERE s.SUBCATEGORY_ID = :subCategoryId\n" +
+				"\n" +
+				"GROUP BY op.OPTION_NAME, op.OPTION_ID\n" +
+				"ORDER BY op.OPTION_ID")
+				.setParameter("subCategoryId", subCategoryId)
+				.setParameter("possibleAnswerId", possibleAnswerId)
+				.getResultList();
+	}
+
+	@Override
+	public List<String> getOptionsNames(Long subCategoryId) {
+		return entityManager.createNativeQuery("SELECT o.OPTION_NAME FROM OPTIONS o\n" +
+				"  JOIN SUBCATEGORY_OPTIONS so ON o.OPTION_ID = so.OPTIONS_OPTION_ID\n" +
+				"JOIN SUBCATEGORY s on so.SUBCATEGORY_SUBCATEGORY_ID = s.SUBCATEGORY_ID\n" +
+				"WHERE s.SUBCATEGORY_ID = :subCategoryId").setParameter("subCategoryId", subCategoryId).getResultList();
 	}
 }

@@ -13,5 +13,11 @@ public interface AnswerDao extends GenericDao<Long, Answer> {
 
 	void updateAnswerDate(Long answerId);
 
-	List<JSONParse> getUserAnswerForShow(Long userId);
+	List<JSONParse> getUserAnswerOptions(Long userId);
+
+	List<JSONParse> getAdditionalAnswers(Long userId);
+
+	List<String> getDataForStatistics(Long subCategoryId, Long possibleAnswerId);
+
+	List<String> getOptionsNames(Long subCategoryId);
 }
