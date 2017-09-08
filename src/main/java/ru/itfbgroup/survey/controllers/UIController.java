@@ -57,6 +57,8 @@ public class UIController {
 		if (user == null) {
 			Answer userAnswer = new Answer();
 			user = new User(userDetails.getMail(), userAnswer);
+			user.setFirstName(userDetails.getFirstName());
+			user.setLastName(userDetails.getLastName());
 			userAnswer.setUser(user);
 			userService.addUser(user);
 			modelAndView.setViewName("survey-page");
@@ -64,6 +66,14 @@ public class UIController {
 			logger.debug("user " + user.getEmail() + " logged first time");
 			return modelAndView;
 		}
+
+		if (user.getFirstName() == null || user.getLastName() == null) {
+			user.setFirstName(userDetails.getFirstName());
+			user.setLastName(userDetails.getLastName());
+			userService.updateUser(user);
+			logger.debug("first and last name was added to " + user.getEmail() + " user");
+		}
+
 		List<JSONParse> objects = answerService.getUserAnswerForJSON(user.getId());
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		String json = ow.writeValueAsString(objects);

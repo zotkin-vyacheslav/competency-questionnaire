@@ -1,10 +1,11 @@
 package ru.itfbgroup.survey.models;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,6 +18,12 @@ public class User {
 	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name = "answer_id")
 	private Answer answer;
+
+	@Column(name = "first_name")
+	private String firstName;
+
+	@Column(name = "last_name")
+	private String lastName;
 
 	public User() {
 	}
@@ -52,6 +59,26 @@ public class User {
 
 	public void setUserAnswer(Answer answer) {
 		this.answer = answer;
+	}
+
+	public void setAnswer(Answer answer) {
+		this.answer = answer;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	@Override

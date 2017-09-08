@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>ITFB Group - компетенции специалистов</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="resources/static/js/adminPage.js"></script>
+    <link rel="stylesheet" href="resources/static/css/style.css">
+    <link rel="shortcut icon" th:href="@{/resources/static/images/favicon.ico}"/>
+    <script>
+
+        var categories_id = [[${categoriesId}]];
+        var currentArrIndex = 0;
+        var countOfLoadedPages = 0;
+        var data = {};
+
+        $(document).ready(function () {
+
+            checkIndexToHideButtons();
+
+            loadPersonalPage(13626);
+
+            $("#next_button_id").on("click", function () {
+
+                $("#" + categories_id[currentArrIndex].toString()).hide();
+
+                if (countOfLoadedPages > currentArrIndex) {
+                    $("#" + categories_id[++currentArrIndex].toString()).show();
+                } else {
+                    countOfLoadedPages++;
+                    currentArrIndex++;
+                    loadPersonalPage();
+                }
+                checkIndexToHideButtons();
+                window.scrollTo(0, 0);
+                return false;
+            });
+
+            $("#previous_button_id").on("click", function () {
+
+                $("#" + categories_id[currentArrIndex].toString()).hide();
+
+                $("#" + categories_id[--currentArrIndex].toString()).show();
+
+                checkIndexToHideButtons();
+                window.scrollTo(0, 0);
+                return false;
+            });
+
+            $(".highcharts-credits").hide();
+            //            $(".highcharts-button").hide();
+            $(".highcharts-axis-title").hide();
+
+        });
+
+        function loadPersonalPage(userId) {
+
+            getDataFromServerForPersonalStat(userId, categories_id[currentArrIndex]);
+
+            var category_header_id = "cat" + categories_id[currentArrIndex];
+
+            $(".chart").append("<div id='" + categories_id[currentArrIndex] + "'><div class='category-stat'>" +
+                "               <div id='" + category_header_id + "'></div>" +
+                "                </div><br></div>");
+
+            $("#" + category_header_id).html(data[0]);
+
+            for (var i = 1; i < data.length; i++) {
+
+                if (data[i][1].length === 0) {
+                    return;
+                }
+
+                var subcategoryId = 'subcategoryId' + categories_id[currentArrIndex] + i;
+                $("#" + categories_id[currentArrIndex] + "").append("<div id='" + subcategoryId + "' style=\"min-width: 700px; height: 500px; max-width: 1200px;\"></div>");
+
+                getPersonalChart(data[i], subcategoryId);
+            }
+        }
+
+        function getPersonalChart(data, subcategoryId) {
+
+            var chart = Highcharts.chart('' + subcategoryId + '', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: data[0]
+                },
+                xAxis: {
+                    categories: data[1]
+                },
+                yAxis: [{
+                    min: 0,
+                    categories: ['Нет', 'Начальные знания', 'Базовые знания', 'Продвинутые знания'],
+                }],
+                legend: {
+                    shadow: false
+                },
+                tooltip: {
+                    shared: true
+                },
+                plotOptions: {
+                    column: {
+                        grouping: false,
+                        shadow: false,
+                        borderWidth: 0
+                    }
+                },
+//                series: [{
+//                    name: data[2][1],
+//                    color: 'rgba(165,170,217,1)',
+//                    data: data[2][0],
+//                    pointPadding: 0,
+//                    pointPlacement: 0
+//                }, {
+//                    name: data[3][1],
+//                    color: 'rgba(126,86,134,.9)',
+//                    data: data[3][0],
+//                    pointPadding: 0,
+//                    pointPlacement: 0
+//                }]
+            });
+
+            var j = 0;
+            var pp = -0.4;
+
+            for (i = 2; i < data.length; i++) {
+//                chart.series[j++].setData(data[i]);
+                chart.addSeries({
+                    name: data[i][1],
+                    data: data[i][0],
+                    pointPadding: 0.4,
+                    pointPlacement: pp
+                });
+
+                pp = pp + 0.2;
+            }
+        }
+
+        function getDataFromServerForPersonalStat(userId, categoryId) {
+            $.ajax({
+                url: "personal-stat-data",
+                async: false,
+                dataType: "json",
+                data: {
+                    userId: userId,
+                    categoryId: categoryId
+                },
+                success: function (d) {
+                    data = d;
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div class="row">
+
+    <div th:replace="fragments :: left-panel-admin"></div>
+    <div class="div col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h1>Статистика ответов</h1>
+        <div class="chart"></div>
+        <div class="buttons">
+            <br>
+            <button id="previous_button_id" class="btn">Назад</button>
+            <button id="next_button_id" class="btn">Далее</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -29,9 +29,10 @@ public class NotificationSender {
 	@Autowired
 	private UserService userService;
 
-	private final String MESSAGE = "Заполните анкету";
+	private final String MESSAGE = "Здравствуйте\n" +
+			"Вы заполняли анкету по техническим компетенциям более полугода назад, прошу заполнить анкету повторно http://skills.itfbgroup.ru/survey/update-answer.\n";
 
-//	@Scheduled(cron = "0 0 11 1 * ?") //every 1 day of month 11:00
+	//	@Scheduled(cron = "0 0 11 1 * ?") //every 1 day of month 11:00
 //	@Scheduled(fixedDelay = 50000)
 	@Scheduled(cron = "0 12 * * 1 ?") //every 1 day of week 12:00
 	public void sendNotificationToUsers() throws MessagingException {

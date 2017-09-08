@@ -41,6 +41,14 @@ public class CustomLdapUserDetails implements UserDetails {
 		return context.getStringAttribute("mail");
 	}
 
+	public String getFirstName() {
+		return context.getStringAttribute("givenname");
+	}
+
+	public String getLastName() {
+		return context.getStringAttribute("sn");
+	}
+
 	public boolean isAccountNonExpired() {
 		return details.isAccountNonExpired();
 	}

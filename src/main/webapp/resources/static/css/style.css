@@ -74,15 +74,12 @@ tr:nth-child(even) {
 .category-stat {
     background-color: rgb(43, 43, 99);
     color: rgba(255, 255, 255, 1);
-    width: 1000px;
-    color: #fff;
-    min-width: 0%;
+    width: 1200px;;
     padding-top: 20px;
     padding-right: 30px;
     padding-bottom: 20px;
     padding-left: 20px;
     font: 500 20px Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
-    margin-left: -20px
 }
 
 .back-image {
@@ -115,6 +112,35 @@ tr:nth-child(even) {
     left: 0;
     -webkit-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+}
+
+.nav-sidebar {
+    margin-right: 70px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    position: fixed;
+    top: 0;
+    bottom: 0px;
+    left: 0px;
+    z-index: 1000;
+    display: block;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: rgb(245, 245, 245);
+    padding: 20px;
+}
+
+.main {
+    margin-left: 15%;
+}
+
+#employees_table_id thead {
+    color: white;
+    background-color: rgb(43, 43, 99);
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    float: left;
 }
 
 

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table class="table table-striped">
+    <tr>
+        <td><b>#</b></td>
+        <td><b>Имя</b></td>
+        <td><b>Фамилия</b></td>
+        <td><b>Адрес эл. почты</b></td>
+        <td><b>Дата последнего ответа</b></td>
+    </tr>
+    <tr th:each="employee : ${employees}">
+        <td/>
+        <td th:text="${employee.firstName}"/>
+        <td th:text="${employee.lastName}"/>
+        <td th:text="${employee.email}"/>
+        <td th:text="${employee.answer.timestamp}"/>
+    </tr>
+</table>
+</body>
+</html>

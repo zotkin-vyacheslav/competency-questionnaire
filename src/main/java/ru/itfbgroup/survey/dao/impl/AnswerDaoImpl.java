@@ -4,8 +4,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itfbgroup.survey.dao.abstr.AnswerDao;
 import ru.itfbgroup.survey.models.Answer;
+import ru.itfbgroup.survey.models.User;
 import ru.itfbgroup.survey.models.util.JSONParse;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -43,7 +45,7 @@ public class AnswerDaoImpl extends AbstractDao<Long, Answer> implements AnswerDa
 	}
 
 	@Override
-	public List<JSONParse> getUserAnswerOptions(Long userId) {
+	public List<JSONParse> getUserAnswerForJSON(Long userId) {
 		return entityManager.createNativeQuery("SELECT\n" +
 				"  ao.OPTION_ID,\n" +
 				"  ao.POSSIBLE_ANSWER_ID\n" +
@@ -98,5 +100,26 @@ public class AnswerDaoImpl extends AbstractDao<Long, Answer> implements AnswerDa
 				"  JOIN SUBCATEGORY_OPTIONS so ON o.OPTION_ID = so.OPTIONS_OPTION_ID\n" +
 				"JOIN SUBCATEGORY s on so.SUBCATEGORY_SUBCATEGORY_ID = s.SUBCATEGORY_ID\n" +
 				"WHERE s.SUBCATEGORY_ID = :subCategoryId").setParameter("subCategoryId", subCategoryId).getResultList();
+	}
+
+	public List<Answer> getUserAnswers(User user) {
+		return entityManager.createQuery("select a from Answer a where a.user = :user").setParameter("user", user).getResultList();
+	}
+
+	@Override
+	public List<BigDecimal> getAllUserAnswerId(Long userId) {
+		return entityManager.createNativeQuery("SELECT a.ANSWER_ID\n" +
+				"FROM ANSWERS a\n" +
+				"WHERE a.USER_USER_ID = :userId").setParameter("userId", userId).getResultList();
+	}
+
+	@Override
+	public List<BigDecimal> getUserAnswerByCategory(Long answerId, Long subCatId) {
+		return entityManager.createNativeQuery("SELECT ao.POSSIBLE_ANSWER_ID FROM ANSWERS_OPTIONS ao\n" +
+				"  JOIN SUBCATEGORY_OPTIONS so ON ao.OPTION_ID = so.OPTIONS_OPTION_ID\n" +
+				"WHERE ao.ANSWER_ID = :answerId AND so.SUBCATEGORY_SUBCATEGORY_ID = :subCatId")
+				.setParameter("answerId", answerId)
+				.setParameter("subCatId", subCatId)
+				.getResultList();
 	}
 }

@@ -20,4 +20,6 @@ public interface AnswerService {
 	List<JSONParse> getAdditionalUserAnswerForJSON(Long userId);
 
 	List getDataForStatistics(Long categoryId);
+
+	List getDataForPersonalStatistics(Long userId, Long categoryId);
 }

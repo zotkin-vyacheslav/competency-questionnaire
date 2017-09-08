@@ -1,11 +1,14 @@
 package ru.itfbgroup.survey.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Date;
 
 @Entity
 @Table(name = "answers")
-public class Answer {
+public class Answer implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,6 +25,7 @@ public class Answer {
 	private Date timestamp;
 
 	@OneToOne
+	@JsonIgnore
 	private User user;
 
 	public Answer() {

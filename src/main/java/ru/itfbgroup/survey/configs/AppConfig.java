@@ -83,9 +83,8 @@ public class AppConfig {
 	@Bean
 	public JavaMailSender getMailSender() {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-		//Using gmail
 		mailSender.setHost(environment.getRequiredProperty("mail.host"));
-		mailSender.setPort(587);
+		mailSender.setPort(Integer.parseInt(environment.getRequiredProperty("mail.port")));
 		mailSender.setUsername(environment.getRequiredProperty("mail.username"));
 		mailSender.setPassword(environment.getRequiredProperty("mail.password"));
 
@@ -93,6 +92,7 @@ public class AppConfig {
 		javaMailProperties.put("mail.smtp.starttls.enable", "true");
 		javaMailProperties.put("mail.smtp.auth", "true");
 		javaMailProperties.put("mail.transport.protocol", "smtp");
+		javaMailProperties.put("mail.smtp.ssl.enable", "true");
 		javaMailProperties.put("mail.debug", "true");//Prints out everything on screen
 
 		mailSender.setJavaMailProperties(javaMailProperties);

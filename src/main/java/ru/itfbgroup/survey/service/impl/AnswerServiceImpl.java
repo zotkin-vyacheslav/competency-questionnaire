@@ -2,17 +2,16 @@ package ru.itfbgroup.survey.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.itfbgroup.survey.dao.abstr.AnswerDao;
-import ru.itfbgroup.survey.dao.abstr.OptionDao;
-import ru.itfbgroup.survey.dao.abstr.PossibleAnswerDao;
-import ru.itfbgroup.survey.dao.abstr.SubcategoryDao;
+import ru.itfbgroup.survey.dao.abstr.*;
 import ru.itfbgroup.survey.models.Answer;
 import ru.itfbgroup.survey.models.Category;
 import ru.itfbgroup.survey.models.SubCategory;
+import ru.itfbgroup.survey.models.User;
 import ru.itfbgroup.survey.models.util.JSONParse;
 import ru.itfbgroup.survey.service.abstr.AnswerService;
 import ru.itfbgroup.survey.service.abstr.CategoryService;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -32,6 +31,9 @@ public class AnswerServiceImpl implements AnswerService {
 
 	@Autowired
 	private CategoryService categoryService;
+
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public void saveOptionsUserAnswer(Answer answer, List<JSONParse> jsonParses) {
@@ -64,7 +66,7 @@ public class AnswerServiceImpl implements AnswerService {
 
 	@Override
 	public List<JSONParse> getUserAnswerForJSON(Long userId) {
-		return answerDao.getUserAnswerOptions(userId);
+		return answerDao.getUserAnswerForJSON(userId);
 	}
 
 	@Override
@@ -87,6 +89,37 @@ public class AnswerServiceImpl implements AnswerService {
 
 			for (int i = 1; i < 5; i++) {
 				strings.add(answerDao.getDataForStatistics(subCategory.getSubCategoryId(), new Long(i)));
+			}
+
+			list.add(strings);
+		}
+
+		return list;
+	}
+
+	@Override
+	public List getDataForPersonalStatistics(Long userId, Long categoryId) {
+		User user = userDao.getByKey(userId);
+
+		Category category = categoryService.getCategoryById(categoryId);
+
+		List list = new ArrayList();
+		list.add(category.getCategoryName());
+
+		for (SubCategory subCategory : category.getSubCategories()) {
+			List strings = new ArrayList();
+
+			strings.add(subCategory.getName());
+			strings.add(answerDao.getOptionsNames(subCategory.getSubCategoryId()));
+
+			List<BigDecimal> allUserAnswersId = answerDao.getAllUserAnswerId(userId);
+
+			for (BigDecimal j : allUserAnswersId) {
+				List temp = new ArrayList();
+				Answer answer = answerDao.getByKey(j.longValue());
+				temp.add(answerDao.getUserAnswerByCategory(j.longValue(), subCategory.getSubCategoryId()));
+				temp.add(answer.getTimestamp());
+				strings.add(temp);
 			}
 
 			list.add(strings);
