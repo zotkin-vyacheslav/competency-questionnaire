@@ -143,4 +143,8 @@ tr:nth-child(even) {
     float: left;
 }
 
+a.btn.btn-default.delete {
+    color: red;
+}
+
 

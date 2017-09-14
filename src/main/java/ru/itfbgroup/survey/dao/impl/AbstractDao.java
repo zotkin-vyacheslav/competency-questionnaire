@@ -1,6 +1,5 @@
 package ru.itfbgroup.survey.dao.impl;
 
-import org.hibernate.HibernateException;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;

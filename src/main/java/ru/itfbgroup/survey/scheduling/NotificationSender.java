@@ -29,12 +29,13 @@ public class NotificationSender {
 	@Autowired
 	private UserService userService;
 
-	private final String MESSAGE = "Здравствуйте\n" +
-			"Вы заполняли анкету по техническим компетенциям более полугода назад, прошу заполнить анкету повторно http://skills.itfbgroup.ru/survey/update-answer.\n";
+	private final String MESSAGE = "Здравствуйте.\n" +
+			"Вы заполняли анкету по техническим компетенциям более полугода назад, пожалуйста, заполните анкету повторно http://skills.itfbgroup.ru/survey.\n";
 
 	//	@Scheduled(cron = "0 0 11 1 * ?") //every 1 day of month 11:00
 //	@Scheduled(fixedDelay = 50000)
-	@Scheduled(cron = "0 12 * * 1 ?") //every 1 day of week 12:00
+//	@Scheduled(cron = "0 12 * * 1 ?") //every 1 day of week 12:00
+	@Scheduled(cron = "0 0 12 * * MON") //every 1 day of week 12:00
 	public void sendNotificationToUsers() throws MessagingException {
 		List<User> usersToSendNotification = userService.getUsersToSendNotification();
 
@@ -57,7 +58,8 @@ public class NotificationSender {
 			mimeMessage.setRecipient(Message.RecipientType.TO,
 					new InternetAddress(user.getEmail()));
 			String encode = URLEncoder.encode(user.getId().toString(), "UTF-8");
-			mimeMessage.setText(message + " http://localhost:8080/update/" + encode);
+			mimeMessage.setFrom(new InternetAddress("skills@zcs.itfbgroup.ru"));
+			mimeMessage.setText(message);
 			mimeMessage.setSubject("Анкета по техническим компетенциям");
 		};
 

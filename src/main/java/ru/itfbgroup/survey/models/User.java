@@ -1,11 +1,17 @@
 package ru.itfbgroup.survey.models;
 
+import com.sun.istack.internal.NotNull;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User implements Serializable {
+public class User implements Serializable, UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,6 +30,16 @@ public class User implements Serializable {
 
 	@Column(name = "last_name")
 	private String lastName;
+
+	@Column(name = "enabled")
+	private Boolean enabled = true;
+
+	@NotNull
+	@ManyToMany(fetch = FetchType.LAZY, targetEntity = Role.class)
+	@JoinTable(name = "permissions",
+			joinColumns = {@JoinColumn(name = "user_id")},
+			inverseJoinColumns = {@JoinColumn(name = "role_id")})
+	private Set<Role> roles;
 
 	public User() {
 	}
@@ -81,6 +97,57 @@ public class User implements Serializable {
 		this.lastName = lastName;
 	}
 
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+
+	@Override
+	public Set<Role> getAuthorities() {
+		return roles;
+	}
+
+	@Override
+	public String getPassword() {
+		return null;
+	}
+
+	@Override
+	public String getUsername() {
+		return email;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = id != null ? id.hashCode() : 0;
+		result = 31 * result + (email != null ? email.hashCode() : 0);
+		return result;
+	}
+
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -90,13 +157,6 @@ public class User implements Serializable {
 
 		if (id != null ? !id.equals(user.id) : user.id != null) return false;
 		return email != null ? email.equals(user.email) : user.email == null;
-	}
-
-	@Override
-	public int hashCode() {
-		int result = id != null ? id.hashCode() : 0;
-		result = 31 * result + (email != null ? email.hashCode() : 0);
-		return result;
 	}
 
 	@Override

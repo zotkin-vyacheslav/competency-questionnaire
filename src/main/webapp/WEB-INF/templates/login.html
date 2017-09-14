@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <title>ITFB Group - компетенции специалистов</title>
+    <title>Компетенции специалистов</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -14,7 +14,7 @@
 <div class="back-image"></div>
 <div class="container">
     <form class="form-signin" th:action="@{/login}" method='POST'>
-        <h2>ITFB Group - компетенции специалистов</h2>
+        <h2>Компетенции специалистов</h2>
 
         <p>Вы открыли анкету компетенций для технических специалистов (архитекторы, разрабочики, системные
             администраторы и специалисты по тестированию)
@@ -23,6 +23,8 @@
         <!--<p>ВАЖНО: в поле ниже необходимо указывать Вашу корпоративную почту (т.е. с домена <a-->
                 <!--href="https://www.google.com/url?q=http://itfbgroup.ru&sa=D&ust=1502358008448000&usg=AFQjCNHinZffXOz3zuzVUW3jbZCayF8C-Q">itfbgroup.ru</a>).-->
         <!--</p>-->
+
+        <p>Внимание! Необходимо использовать пароль от jira/confluence</p>
 
         <h3>Вход</h3>
         <p th:if="${param.error}" class="alert alert-error">Указано неправильиное имя пользователя или пароль</p>

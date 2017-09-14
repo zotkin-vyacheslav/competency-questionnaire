@@ -1,16 +1,19 @@
 package ru.itfbgroup.survey.controllers;
 
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 import ru.itfbgroup.survey.models.User;
 import ru.itfbgroup.survey.service.abstr.AnswerService;
 import ru.itfbgroup.survey.service.abstr.UserService;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
+@RequestMapping(value = "admin")
 public class AdminRestController {
 
 	@Autowired
@@ -37,5 +40,33 @@ public class AdminRestController {
 	public List getDataStat(@RequestParam long categoryId) {
 		List list = answerService.getDataForStatistics(categoryId);
 		return list;
+	}
+
+	@RequestMapping(value = "delete/{userId}", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> deleteUser(@PathVariable(value = "userId") long userId) {
+		try {
+			userService.deleteUser(userId);
+			return ResponseEntity.noContent().build();
+		} catch (HibernateException e) {
+			return ResponseEntity.notFound().build();
+		}
+	}
+
+	@RequestMapping(value = "rise-user", method = RequestMethod.POST)
+	public ResponseEntity<Void> riseUserToAdmin(@RequestParam(name = "rise") String role, @RequestParam(name = "userId") long userId) {
+		try {
+			userService.riseUser(userId, role);
+			return ResponseEntity.noContent().build();
+		} catch (HibernateException e) {
+			return ResponseEntity.notFound().build();
+		}
+	}
+
+	@RequestMapping(value = "get-search-results", method = RequestMethod.POST)
+	public List<User> getSearchResult(@RequestParam(value="options[]") List<Long> options,
+									  @RequestParam(value="answers[]") List<Long> answers) {
+		List<User> users = userService.getFilteredUsers(options, answers);
+		users.removeAll(Collections.singleton(null));
+		return users;
 	}
 }

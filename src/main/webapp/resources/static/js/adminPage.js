@@ -9,6 +9,41 @@ $(document).ready(function () {
     });
 });
 
+function checkNextAndPreviosButtons() {
+    $("#next_button_id").on("click", function () {
+
+        $("#" + categories_id[currentArrIndex].toString()).hide();
+
+        if (countOfLoadedPages > currentArrIndex) {
+            $("#" + categories_id[++currentArrIndex].toString()).show();
+        } else {
+            countOfLoadedPages++;
+            currentArrIndex++;
+            loadPersonalPage();
+        }
+        checkIndexToHideButtons();
+        $(".highcharts-credits").hide();
+        //            $(".highcharts-button").hide();
+        $(".highcharts-axis-title").hide();
+        window.scrollTo(0, 0);
+        return false;
+    });
+
+    $("#previous_button_id").on("click", function () {
+
+        $("#" + categories_id[currentArrIndex].toString()).hide();
+
+        $("#" + categories_id[--currentArrIndex].toString()).show();
+
+        checkIndexToHideButtons();
+        window.scrollTo(0, 0);
+        return false;
+    });
+    $(".highcharts-credits").hide();
+    //            $(".highcharts-button").hide();
+    $(".highcharts-axis-title").hide();
+}
+
 function checkIndexToHideButtons() {
     if (currentArrIndex > 0 && !$("#previous_button_id").is(':visible')) {
         $("#previous_button_id").show();
@@ -82,11 +117,13 @@ function getChart(data, id) {
                 var points = this.points;
 
                 var res = '<span style="font-size:10px">' + points[0].key + '</span>' +
-                    '<table>'
+                    '<table>';
+
+                var total = points[0].y + points[1].y +points[2].y +points[3].y;
 
                 for (var iter = 0; iter < points.length; iter++) {
 
-                    var i = Math.round(points[iter].y * 100 / 60);
+                    var i = Math.round(points[iter].y * 100 / total);
 
                     res = res + '<tr><td style="color:' + points[iter].series.color + ';padding:0">' + points[iter].series.name + ': </td>' +
                         '<td style="padding:0"><b>' + points[iter].y + ' (' + i + '%)' + '</b></td></tr>';

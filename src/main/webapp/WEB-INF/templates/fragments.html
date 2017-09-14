@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <script src="resources/static/js/adminPage.js"></script>
+    <script th:href="@{/resources/static/js/adminPage.js}"></script>
     <title>Title</title>
 </head>
 <body>
@@ -10,13 +10,16 @@
     <nav class="col-sm-3 col-md-2  sidebar">
         <ul class="nav nav-sidebar">
             <li>
-                <a class="nav-link active" href="statistics">Статистика</a>
+                <a class="nav-link active" th:href="@{/admin/statistics}">Статистика</a>
             </li>
             <li>
-                <a class="nav-link" href="employees">Список сотрудников</a>
+                <a class="nav-link" th:href="@{/admin/employees}">Список сотрудников</a>
             </li>
             <li>
-                <a class="nav-link" href="answer">Анкета</a>
+                <a class="nav-link" th:href="@{/admin/search}">Поиск</a>
+            </li>
+            <li>
+                <a class="nav-link" th:href="@{/answer}">Анкета</a>
             </li>
             <li>
                 <a href="#" class="nav-link" id="logout_btn_id_admin">Выход</a>

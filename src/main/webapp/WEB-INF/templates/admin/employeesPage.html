@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Компетенции специалистов</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/v/bs-3.3.7/dt-1.10.15/b-1.4.0/b-html5-1.4.0/se-1.2.2/datatables.min.css"/>
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/v/bs-3.3.7/dt-1.10.15/b-1.4.0/b-html5-1.4.0/se-1.2.2/datatables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.1/css/buttons.dataTables.min.css">
+    <script th:src="@{/resources/static/js/adminPage.js}"></script>
+    <link rel="stylesheet" th:href="@{/resources/static/css/style.css}">
+    <link rel="shortcut icon" th:href="@{/resources/static/images/favicon.ico}"/>
+    <script type="text/javascript">
+        var data = {};
+        var table;
+
+        $(document).ready(function () {
+
+            getDataFromServer();
+
+            $.fn.dataTable.ext.classes.sPageButton = 'button primary_button';
+
+            table = $('#employees_table_id').DataTable({
+                data: data,
+                columns: [
+                    {
+                        data: null,
+                        "orderable": false
+                    },
+                    {data: 'firstName'},
+                    {data: 'lastName'},
+                    {data: 'email'},
+                    {
+                        data: function (row, type, set, meta) {
+                            var roles = [];
+
+                            for (var i = 0; i < row.authorities.length; i++) {
+                                roles[i] = row.authorities[i].authority;
+                            }
+
+                            return roles;
+
+                            data;
+                        }
+                    },
+                    {data: 'answer.timestamp'},
+                    {data: 'enabled'}
+                ],
+                language: {
+                    zeroRecords: "Записи отсутствуют.",
+                    emptyTable: "В таблице отсутствуют данные",
+                    loadingRecords: "Загрузка записей...",
+                    search: "Поиск:",
+                    paginate: {
+                        previous: "Назад",
+                        next: "Далее"
+                    }
+                },
+                createdRow: function (row, data, index) {
+                    // if more than half of year
+                    if (new Date() - new Date(data.answer.timestamp) > 15552000000) {
+                        $('td', row).eq(5).css('color', 'red');
+                    }
+                },
+                lengthChange: false,
+                pageLength: 20,
+                info: false,
+                columnDefs: [{
+                    "searchable": false,
+                    "orderable": false,
+                    "targets": 0
+                }],
+                order: [],
+                dom: "Bfrtip",
+                select: 'single',
+                buttons: [
+                    {
+                        text: 'Посмотреть ответ',
+                        className: 'showAnswerButton',
+                        action: function (e, dt, node, config) {
+
+                            var id = table.rows({selected: true}).data()[0].id;
+
+                            window.location.href = "get-personal-answers?userId=" + id;
+                        },
+                        enabled: false
+                    }, {
+                        text: 'Сделать администартором',
+                        className: 'riseToAdminButton',
+                        action: function (e, dt, node, config) {
+                            var id = table.rows({selected: true}).data()[0].id;
+
+                            var token = $("meta[name='_csrf']").attr("content");
+                            var header = $("meta[name='_csrf_header']").attr("content");
+
+                            $.ajax({
+                                type: 'POST',
+                                url: 'rise-user',
+                                data: {
+                                    rise: 'admin',
+                                    userId: id,
+                                },
+                                dataType: 'json',
+                                success: function (d) {
+                                    $('tr.selected td').eq(4).append(' ADMIN');
+                                },
+                                beforeSend: function (xhr) {
+                                    xhr.setRequestHeader(header, token);
+                                },
+                            });
+                        },
+                        enabled: false
+                    },
+                    {
+                        text: 'Сделать модератором',
+                        className: 'riseToModerButton',
+                        action: function (e, dt, node, config) {
+                            var id = table.rows({selected: true}).data()[0].id;
+
+                            var token = $("meta[name='_csrf']").attr("content");
+                            var header = $("meta[name='_csrf_header']").attr("content");
+
+                            $.ajax({
+                                type: 'POST',
+                                url: 'rise-user',
+                                data: {
+                                    rise: 'moder',
+                                    userId: id,
+                                },
+                                dataType: 'json',
+                                success: function (d) {
+                                    $('tr.selected td').eq(4).append(' MODER');
+                                },
+                                beforeSend: function (xhr) {
+                                    xhr.setRequestHeader(header, token);
+                                },
+                            });
+                        },
+                        enabled: false
+                    },
+                    {
+                        text: 'Удалить',
+                        className: 'delete',
+                        action: function (e, dt, node, config) {
+                            var id = table.rows({selected: true}).data()[0].id;
+                            var row = table.row(this).data();
+
+                            var token = $("meta[name='_csrf']").attr("content");
+                            var header = $("meta[name='_csrf_header']").attr("content");
+
+                            $.ajax({
+                                type: 'DELETE',
+                                url: 'delete/' + id,
+                                data: {
+                                    userId: id,
+                                },
+                                success: function (d) {
+                                    $('tr.selected td').eq($('tr.selected td').length - 1).text('false');
+                                },
+                                beforeSend: function (xhr) {
+                                    xhr.setRequestHeader(header, token);
+                                },
+                            });
+                        },
+                        enabled: false
+                    }
+                ]
+            });
+
+            table.on('order.dt search.dt', function () {
+                table.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+
+
+            $('#employees_table_id').on('select.dt deselect.dt', function () {
+                table.buttons(['.delete', '.showAnswerButton', '.riseToAdminButton', '.riseToModerButton']).enable(
+                    table.rows({selected: true}).indexes().length === 0 ? false : true
+                );
+            });
+        });
+
+        function getDataFromServer() {
+            $.ajax({
+                url: "get-all-employees",
+                async: false,
+                dataType: "json",
+                success: function (d) {
+                    data = d;
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div class="row">
+    <div th:replace="fragments :: left-panel-admin"></div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h1>Список сотрудников</h1>
+        <table id="employees_table_id" class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Адрес эл. почты</th>
+                <th>Права</th>
+                <th>Дата последнего ответа</th>
+                <th>Доступен</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+</body>
+</html>

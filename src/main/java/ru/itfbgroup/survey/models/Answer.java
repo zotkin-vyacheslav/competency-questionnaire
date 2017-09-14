@@ -15,14 +15,11 @@ public class Answer implements Serializable {
 	@Column(name = "answer_id")
 	private Long id;
 
-//	@OneToMany(cascade = CascadeType.ALL)
-//	private List<AnswerOption> answerOptions;
-
-//	@OneToMany(cascade = CascadeType.ALL)
-//	private Set<AdditionalInfo> additionalInfoSet;
-
 	@Column(name = "timestamp")
 	private Date timestamp;
+
+	@Column(name = "isActual")
+	private Boolean isActual = true;
 
 	@OneToOne
 	@JsonIgnore
@@ -30,13 +27,6 @@ public class Answer implements Serializable {
 
 	public Answer() {
 	}
-
-//	public Answer(List<AnswerOption> answerOptions, Set<AdditionalInfo> additionalInfoSet, Date timestamp, User user) {
-//		this.answerOptions = answerOptions;
-//		this.additionalInfoSet = additionalInfoSet;
-//		this.timestamp = timestamp;
-//		this.user = user;
-//	}
 
 	public Answer(Date timestamp) {
 		this.timestamp = timestamp;
@@ -49,22 +39,6 @@ public class Answer implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-//
-//	public List<AnswerOption> getAnswerOptions() {
-//		return answerOptions;
-//	}
-//
-//	public void setAnswerOptions(List<AnswerOption> answerOptions) {
-//		this.answerOptions = answerOptions;
-//	}
-
-//	public Set<AdditionalInfo> getAdditionalInfoSet() {
-//		return additionalInfoSet;
-//	}
-//
-//	public void setAdditionalInfoSet(Set<AdditionalInfo> additionalInfoSet) {
-//		this.additionalInfoSet = additionalInfoSet;
-//	}
 
 	public Date getTimestamp() {
 		return timestamp;
@@ -80,6 +54,14 @@ public class Answer implements Serializable {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public Boolean getActual() {
+		return isActual;
+	}
+
+	public void setActual(Boolean actual) {
+		isActual = actual;
 	}
 
 	@Override

@@ -1,12 +1,10 @@
 package ru.itfbgroup.survey.configs.initializer;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.itfbgroup.survey.models.Category;
-import ru.itfbgroup.survey.models.Option;
-import ru.itfbgroup.survey.models.SubCategory;
-import ru.itfbgroup.survey.models.PossibleAnswer;
+import ru.itfbgroup.survey.models.*;
 import ru.itfbgroup.survey.service.abstr.CategoryService;
 import ru.itfbgroup.survey.service.abstr.PossibleAnswerService;
+import ru.itfbgroup.survey.service.abstr.RoleService;
 
 import java.util.*;
 
@@ -18,6 +16,9 @@ public class DataInitializer {
 	@Autowired
 	private PossibleAnswerService possibleAnswerService;
 
+	@Autowired
+	private RoleService roleService;
+
 	private void init() {
 //		addPossibleAnswers();
 //		addProgramLanguages();
@@ -28,6 +29,17 @@ public class DataInitializer {
 //		addMobile();
 //		addCloud();
 //		addAnotherTech();
+	}
+
+	private void addRoles() {
+		Role admin = new Role();
+		admin.setAuthority("ADMIN");
+
+		Role user = new Role();
+		user.setAuthority("USER");
+
+		roleService.addRole(admin);
+		roleService.addRole(user);
 	}
 
 	private void addAnotherTech() {

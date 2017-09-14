@@ -9,4 +9,6 @@ public interface UserDao extends GenericDao<Long, User> {
 	List<User> getUsersToSendNotification();
 
 	User getByUsername(String username);
+
+	List<User> getFilteredUsers(List<Long> options, List<Long> answers);
 }

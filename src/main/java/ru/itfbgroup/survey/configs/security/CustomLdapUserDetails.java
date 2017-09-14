@@ -1,13 +1,22 @@
 package ru.itfbgroup.survey.configs.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.userdetails.LdapUserDetails;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import ru.itfbgroup.survey.models.User;
+import ru.itfbgroup.survey.service.abstr.UserService;
 
 import java.util.Collection;
 
+@Component
 public class CustomLdapUserDetails implements UserDetails {
+
+	@Autowired
+	private UserService userService;
 
 	private LdapUserDetails details;
 	private DirContextOperations context;
@@ -15,6 +24,9 @@ public class CustomLdapUserDetails implements UserDetails {
 	public CustomLdapUserDetails(LdapUserDetails details, DirContextOperations context) {
 		this.details = details;
 		this.context = context;
+	}
+
+	public CustomLdapUserDetails() {
 	}
 
 	public boolean isEnabled() {
@@ -26,7 +38,9 @@ public class CustomLdapUserDetails implements UserDetails {
 	}
 
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return details.getAuthorities();
+		User user = userService.getUserByName(this.getMail());
+		return user.getAuthorities();
+//		return details.getAuthorities();
 	}
 
 	public String getPassword() {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <title>ITFB Group - компетенции специалистов</title>
+    <title>Компетенции специалистов</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -9,8 +9,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="resources/static/js/adminPage.js"></script>
-    <link rel="stylesheet" href="resources/static/css/style.css">
+    <script th:src="@{/resources/static/js/adminPage.js}"></script>
+    <link rel="stylesheet" th:href="@{/resources/static/css/style.css}">
     <link rel="shortcut icon" th:href="@{/resources/static/images/favicon.ico}"/>
     <script>
 
@@ -18,49 +18,23 @@
         var currentArrIndex = 0;
         var countOfLoadedPages = 0;
         var data = {};
+        var userID = [[${userId}]];
+//        var firstName = [[${personalData}]];
+
 
         $(document).ready(function () {
 
             checkIndexToHideButtons();
 
-            loadPersonalPage(13626);
+            loadPersonalPage(userID);
 
-            $("#next_button_id").on("click", function () {
-
-                $("#" + categories_id[currentArrIndex].toString()).hide();
-
-                if (countOfLoadedPages > currentArrIndex) {
-                    $("#" + categories_id[++currentArrIndex].toString()).show();
-                } else {
-                    countOfLoadedPages++;
-                    currentArrIndex++;
-                    loadPersonalPage();
-                }
-                checkIndexToHideButtons();
-                window.scrollTo(0, 0);
-                return false;
-            });
-
-            $("#previous_button_id").on("click", function () {
-
-                $("#" + categories_id[currentArrIndex].toString()).hide();
-
-                $("#" + categories_id[--currentArrIndex].toString()).show();
-
-                checkIndexToHideButtons();
-                window.scrollTo(0, 0);
-                return false;
-            });
-
-            $(".highcharts-credits").hide();
-            //            $(".highcharts-button").hide();
-            $(".highcharts-axis-title").hide();
+            checkNextAndPreviosButtons();
 
         });
 
-        function loadPersonalPage(userId) {
+        function loadPersonalPage() {
 
-            getDataFromServerForPersonalStat(userId, categories_id[currentArrIndex]);
+            getDataFromServerForPersonalStat(categories_id[currentArrIndex]);
 
             var category_header_id = "cat" + categories_id[currentArrIndex];
 
@@ -96,14 +70,47 @@
                     categories: data[1]
                 },
                 yAxis: [{
-                    min: 0,
-                    categories: ['Нет', 'Начальные знания', 'Базовые знания', 'Продвинутые знания'],
+                    min: 1,
+                    max: 4,
+                    rotation: -30,
+                    categories: [null, 'Нет', 'Начальные знания', 'Базовые знания', 'Продвинутые знания'],
+                    labels: {
+                        formatter: function () {
+                            return this.value;
+                        }
+                    }
                 }],
                 legend: {
                     shadow: false
                 },
                 tooltip: {
-                    shared: true
+                    shared: true,
+                    formatter: function () {
+
+                        var points = this.points;
+
+                        var value;
+
+                        var res = '<span style="font-size:10px">' + points[0].key + '</span><br><table>';
+
+                        if (points[0].y === 1) {
+                            value = 'Нет';
+                        } else if (points[0].y === 2) {
+                            value = 'Начальные знания'
+                        } else if (points[0].y === 3) {
+                            value = 'Базовы знания';
+                        } else {
+                            value = 'Продвинутые знания';
+                        }
+
+                        res = res + '<tr><td style="color:' + points[0].series.color + ';padding:0">' + points[0].series.name + ': </td>' +
+                            '<td style="padding:0"><b>' + value + '</b></td></tr>';
+
+
+                        res = res + '</table>';
+
+                        return res;
+                    },
                 },
                 plotOptions: {
                     column: {
@@ -111,20 +118,7 @@
                         shadow: false,
                         borderWidth: 0
                     }
-                },
-//                series: [{
-//                    name: data[2][1],
-//                    color: 'rgba(165,170,217,1)',
-//                    data: data[2][0],
-//                    pointPadding: 0,
-//                    pointPlacement: 0
-//                }, {
-//                    name: data[3][1],
-//                    color: 'rgba(126,86,134,.9)',
-//                    data: data[3][0],
-//                    pointPadding: 0,
-//                    pointPlacement: 0
-//                }]
+                }
             });
 
             var j = 0;
@@ -143,13 +137,13 @@
             }
         }
 
-        function getDataFromServerForPersonalStat(userId, categoryId) {
+        function getDataFromServerForPersonalStat(categoryId) {
             $.ajax({
                 url: "personal-stat-data",
                 async: false,
                 dataType: "json",
                 data: {
-                    userId: userId,
+                    userId: userID,
                     categoryId: categoryId
                 },
                 success: function (d) {
@@ -161,10 +155,9 @@
 </head>
 <body>
 <div class="row">
-
     <div th:replace="fragments :: left-panel-admin"></div>
     <div class="div col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-        <h1>Статистика ответов</h1>
+        <h1 id="head"></h1>
         <div class="chart"></div>
         <div class="buttons">
             <br>

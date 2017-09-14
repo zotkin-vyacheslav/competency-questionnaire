@@ -127,4 +127,9 @@ public class AnswerServiceImpl implements AnswerService {
 
 		return list;
 	}
+
+	@Override
+	public void updateAnswer(Answer answer) {
+		answerDao.update(answer);
+	}
 }

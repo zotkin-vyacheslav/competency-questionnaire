@@ -26,4 +26,26 @@ public class UserDaoImpl extends AbstractDao<Long, User> implements UserDao {
 			return null;
 		}
 	}
+
+	@Override
+	public List<User> getFilteredUsers(List<Long> options, List<Long> answers) {
+
+		return entityManager.createQuery("select u from AnswerOption ao " +
+				"join ao.answer a " +
+				"join a.user u " +
+				"where a.isActual=true " +
+				"and u.enabled=true " +
+				"and ao.possibleAnswer.id in (:answers) " +
+				"and ao.option.optionId in (:options)")
+				.setParameter("answers", answers)
+				.setParameter("options", options)
+				.getResultList();
+	}
+
+	@Override
+	public void deleteByKey(Long aLong) {
+		User user = getByKey(aLong);
+		user.setEnabled(false);
+		update(user);
+	}
 }

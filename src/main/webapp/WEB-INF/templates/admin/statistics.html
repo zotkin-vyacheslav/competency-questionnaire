@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <title>ITFB Group - компетенции специалистов</title>
+    <title>Компетенции специалистов</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -9,8 +9,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="resources/static/js/adminPage.js"></script>
-    <link rel="stylesheet" href="resources/static/css/style.css">
+    <script th:src="@{/resources/static/js/adminPage.js}"></script>
+    <link rel="stylesheet" th:href="@{/resources/static/css/style.css}">
     <link rel="shortcut icon" th:href="@{/resources/static/images/favicon.ico}"/>
     <script>
         var categories_id = [[${categoriesId}]];
@@ -37,6 +37,9 @@
                 }
                 checkIndexToHideButtons();
                 window.scrollTo(0, 0);
+                $(".highcharts-credits").hide();
+                //            $(".highcharts-button").hide();
+                $(".highcharts-axis-title").hide();
                 return false;
             });
 

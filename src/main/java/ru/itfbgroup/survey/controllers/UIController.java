@@ -51,28 +51,7 @@ public class UIController {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.addObject("categoriesId", categoryService.getAllCategoriesId());
 
-		CustomLdapUserDetails userDetails = (CustomLdapUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User user = userService.getUserByName(userDetails.getMail());
-
-		if (user == null) {
-			Answer userAnswer = new Answer();
-			user = new User(userDetails.getMail(), userAnswer);
-			user.setFirstName(userDetails.getFirstName());
-			user.setLastName(userDetails.getLastName());
-			userAnswer.setUser(user);
-			userService.addUser(user);
-			modelAndView.setViewName("survey-page");
-			modelAndView.addObject("user", user);
-			logger.debug("user " + user.getEmail() + " logged first time");
-			return modelAndView;
-		}
-
-		if (user.getFirstName() == null || user.getLastName() == null) {
-			user.setFirstName(userDetails.getFirstName());
-			user.setLastName(userDetails.getLastName());
-			userService.updateUser(user);
-			logger.debug("first and last name was added to " + user.getEmail() + " user");
-		}
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		List<JSONParse> objects = answerService.getUserAnswerForJSON(user.getId());
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();

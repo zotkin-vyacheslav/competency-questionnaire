@@ -79,8 +79,12 @@ public class AnswerDaoImpl extends AbstractDao<Long, Answer> implements AnswerDa
 				"             FROM OPTIONS o\n" +
 				"               JOIN ANSWERS_OPTIONS ao ON o.OPTION_ID = ao.OPTION_ID\n" +
 				"               JOIN POSSIBLE_ANSWERS po ON ao.POSSIBLE_ANSWER_ID = po.POSSIBLE_ANSWER_ID\n" +
+				"               JOIN ANSWERS a ON ao.ANSWER_ID = a.ANSWER_ID\n" +
+				"               JOIN USERS u ON a.ANSWER_ID = u.ANSWER_ID\n" +
 				"             WHERE\n" +
 				"                 po.POSSIBLE_ANSWER_ID = :possibleAnswerId\n" +
+				"                 AND a.ISACTUAL = 1\n" +
+				"                 AND u.ENABLED = 1\n" +
 				"            ) o2\n" +
 				"    ON o2.OPTION_ID=op.OPTION_ID\n" +
 				"  JOIN SUBCATEGORY_OPTIONS so ON op.OPTION_ID = so.OPTIONS_OPTION_ID\n" +

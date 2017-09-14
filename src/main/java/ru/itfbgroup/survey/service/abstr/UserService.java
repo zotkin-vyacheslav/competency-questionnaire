@@ -19,4 +19,10 @@ public interface UserService {
 	User getUserByName(String username);
 
 	List<User> getUsersToSendNotification();
+
+	void deleteUserById(Long id);
+
+	void riseUser(Long id, String role);
+
+	List<User> getFilteredUsers(List<Long> options, List<Long> answers);
 }

@@ -10,6 +10,8 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
+import ru.itfbgroup.survey.models.Role;
+import ru.itfbgroup.survey.models.User;
 import ru.itfbgroup.survey.service.abstr.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,16 +49,12 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 	private String determineTargetUrl(Authentication authentication) {
 
-//		CustomLdapUserDetails userDetails = (CustomLdapUserDetails) authentication.getPrincipal();
-//		User user = userService.getUserByName(userDetails.getMail());
-//
-//		if (user == null) {
-//			Answer userAnswer = new Answer();
-//			user = new User(userDetails.getMail(), userAnswer);
-//			userAnswer.setUser(user);
-//			userService.addUser(user);
-//			return "/answer";
-//		}
+		User user = (User) authentication.getPrincipal();
+
+		if (user.getAuthorities().contains(new Role("ADMIN"))) {
+			return "/admin";
+		}
+
 		return "/answer";
 	}
 }

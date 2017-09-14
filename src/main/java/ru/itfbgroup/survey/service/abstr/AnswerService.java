@@ -22,4 +22,6 @@ public interface AnswerService {
 	List getDataForStatistics(Long categoryId);
 
 	List getDataForPersonalStatistics(Long userId, Long categoryId);
+
+	void updateAnswer(Answer answer);
 }

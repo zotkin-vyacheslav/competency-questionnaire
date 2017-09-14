@@ -27,6 +27,10 @@ public class UpdateAnswerRestController {
 	public void getAnswer(@RequestBody List<JSONParse>[] jsonParses,
 						  @ModelAttribute User user,
 						  SessionStatus status){
+		Answer oldAnswer = user.getAnswer();
+		oldAnswer.setActual(false);
+		answerService.updateAnswer(oldAnswer);
+
 		Answer answer = new Answer();
 		answer.setUser(user);
 		user.setUserAnswer(answer);
