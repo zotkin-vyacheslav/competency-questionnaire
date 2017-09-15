@@ -48,16 +48,6 @@ public class AdminController {
 		return modelAndView;
 	}
 
-	@RequestMapping(value = "search")
-	public ModelAndView getSearchPage() {
-
-		List<User> users = userService.getAllUsers();
-
-		ModelAndView modelAndView = new ModelAndView("admin/searchPage");
-		modelAndView.addObject("employees", users);
-		return modelAndView;
-	}
-
 	@RequestMapping(value = "get-personal-answers", method = RequestMethod.GET)
 	public ModelAndView getPersonalStatistics(@RequestParam(name = "userId") long userId) {
 

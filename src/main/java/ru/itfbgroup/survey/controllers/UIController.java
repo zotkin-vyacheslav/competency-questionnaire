@@ -57,16 +57,10 @@ public class UIController {
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		String json = ow.writeValueAsString(objects);
 
-		List<JSONParse> additionalAnswersObject = answerService.getAdditionalUserAnswerForJSON(user.getId());
-		ObjectWriter objectMapper = new ObjectMapper().writer();
-		String additionalAnswersJson = objectMapper.writeValueAsString(additionalAnswersObject);
-		String replaced = additionalAnswersJson.replace("\"", "'");
-
 		modelAndView.setViewName("update-answer-page");
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("categoriesId", categoryService.getAllCategoriesId());
 		modelAndView.addObject("answers", json);
-		modelAndView.addObject("addAnswers", additionalAnswersJson);
 
 		return modelAndView;
 	}
@@ -78,5 +72,15 @@ public class UIController {
 			new SecurityContextLogoutHandler().logout(request, response, auth);
 		}
 		return "redirect:/login?logout";
+	}
+
+	@RequestMapping(value = "search")
+	public ModelAndView getSearchPage() {
+
+		List<User> users = userService.getAllUsers();
+
+		ModelAndView modelAndView = new ModelAndView("admin/searchPage");
+		modelAndView.addObject("employees", users);
+		return modelAndView;
 	}
 }

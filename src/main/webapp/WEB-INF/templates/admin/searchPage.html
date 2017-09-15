@@ -22,33 +22,25 @@
     <link rel="stylesheet" th:href="@{/resources/static/css/style.css}">
     <link rel="shortcut icon" th:href="@{/resources/static/images/favicon.ico}"/>
     <script>
-        var data = {};
+        //        var data = {};
         var table;
-        var categories;
+        var options;
 
         $(document).ready(function () {
-            $('#filter').hide();
-            $('#add-filter').hide();
-            $('#select-answ').select2().val(null).trigger("change");
-            $('#select-answ').select2({disabled: true, placeholder: 'Выберите технологию', width: '20%'});
+            $('#filter').prop('disabled', true);
 
-            getDataFromServer();
+//            getDataFromServer();
 
             getAllCategories();
 
-            getTable();
+//            getTable();
 
             selectionsInitialize();
 
             selectionEvents();
 
             $('#filter').click(function () {
-                var selectAnsw = $('#select-answ').select2('data');
-                var answers = [];
 
-                for (var i = 0; i < selectAnsw.length; i++) {
-                    answers.push(selectAnsw[i].id);
-                }
 
                 var selectOpt = $('#select-opt').select2('data');
                 var options = [];
@@ -62,14 +54,14 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "get-search-results",
+                    url: "rest/get-search-results",
                     data: {
-                        answers: answers,
-                        options: options//notice that "myArray" matches the value for @RequestParam
-                        //on the Java side
+                        options: options
                     },
                     success: function (response) {
-                        table.destroy();
+                        if (table !== undefined) {
+                            table.destroy();
+                        }
                         data = response;
                         getTable();
                     },
@@ -79,177 +71,41 @@
                         xhr.setRequestHeader(header, token);
                     },
                 });
-            });
 
+            });
         });
 
         function selectionsInitialize() {
 
-            var i, len = categories.length;
+            var i, len = options.length;
             var result = [];
             for (i = 0; i < len; i++) {
                 result.push({
-                    id: i,
-                    text: categories[i].categoryName
+                    id: options[i].optionId,
+                    text: options[i].optionName
                 })
             }
 
-            $('#select-cat').select2({
-                data: result,
-                placeholder: 'Выберите категорию',
-                allowClear: true,
-                width: '20%'
-            });
-
-            $('#select-subcat').select2({
-                placeholder: 'Выберите подкатегорию',
-                disabled: true,
-                allowClear: true,
-                width: '20%'
-            });
-
             $('#select-opt').select2({
-                placeholder: 'Выберите технологию',
-                disabled: true,
-                allowClear: true,
+                data: result,
+                multiple: true,
                 width: '20%'
-            });
-
-            $('#select-answ').select2({
-                placeholder: 'Выберите вариант ответа',
-                disabled: true,
-                width: '20%',
-                multiple: true
             });
         }
 
         function selectionEvents() {
 
-            $('#select-cat').on('select2:select', function (e) {
-
-                var index = e.params.data.id;
-                var i, len = categories[index]["subCategories"].length;
-                var result = [];
-                for (i = 0; i < len; i++) {
-                    result.push({
-                        id: i,
-                        text: categories[index]["subCategories"][i].name
-                    })
-                }
-
-                var selector = $('#select-subcat');
-
-                if (selector.select2('data').length > 0 && !$.isNumeric(selector.select2('data')[0])) {
-                    selector.find('option').not(':eq(0)').remove();
-                    $('#select-opt').find('option').not(':eq(0)').remove();
-
-                    $('#select-answ').select2().val(null).trigger("change");
-                    $('#select-answ').select2({disabled: true, placeholder: 'Выберите технологию', width: '20%'});
-
-                    $('#filter').hide();
-                    $('#add-filter').hide();
-                }
-
-                selector.select2({
-                    data: result, disabled: false,
-                    allowClear: true, width: '20%', placeholder: 'Выберите подкатегорию',
-                })
-            });
-
-            //when category unselect
-            $('#select-cat').on('select2:unselect', function (e) {
-
-                $('#select-subcat').find('option').not(':eq(0)').remove();
-                $('#select-subcat').select2({disabled: true, placeholder: 'Выберите подкатегорию', width: '20%'});
-
-                $('#select-opt').find('option').not(':eq(0)').remove()
-                $('#select-opt').select2({disabled: true, placeholder: 'Выберите технологию', width: '20%'});
-
-                $('#select-answ').select2().val(null).trigger("change");
-                $('#select-answ').select2({disabled: true, placeholder: 'Выберите технологию', width: '20%'});
-
-                $('#filter').hide();
-                $('#add-filter').hide();
-            });
-
-            //subcategory select
-            $('#select-subcat').on('select2:select', function (e) {
-
-                var index = e.params.data.id;
-                var catId = $('#select-cat').select2('data')[0].id
-                var i, len = categories[catId]["subCategories"][index]['options'].length;
-                var result = [];
-                for (i = 0; i < len; i++) {
-                    result.push({
-                        id: categories[catId]["subCategories"][index]['options'][i].optionId,
-                        text: categories[catId]["subCategories"][index]['options'][i].optionName
-                    })
-                }
-
-                var selector = $('#select-opt');
-
-                if (selector.select2('data').length > 0 && !$.isNumeric(selector.select2('data')[0])) {
-                    selector.find('option').not(':eq(0)').remove().select2()
-                        .val(null).trigger('change');
-
-                    $('#select-answ').select2().val(null).trigger("change");
-                    $('#select-answ').select2({disabled: true, placeholder: 'Выберите технологию', width: '20%'});
-
-                    $('#filter').hide();
-                    $('#add-filter').hide();
-                }
-
-                selector.select2({
-                    data: result, disabled: false, allowClear: true,
-                    width: '20%', placeholder: 'Выберите технологию',
-                })
-            });
-
-            $('#select-subcat').on('select2:unselect', function (e) {
-                $('#select-opt').find('option').not(':eq(0)').remove()
-                $('#select-opt').select2({disabled: true, placeholder: 'Выберите технологию', width: '20%'});
-
-                $('#select-answ').select2().val(null).trigger("change");
-                $('#select-answ').select2({disabled: true, placeholder: 'Выберите технологию', width: '20%'});
-
-                $('#filter').hide();
-                $('#add-filter').hide();
-            });
-
             $('#select-opt').on('select2:select', function (e) {
 
-                var selector = $('#select-answ');
+                $('#filter').prop('disabled', false);
 
-                if (selector.select2('data').length > 0 && !$.isNumeric(selector.select2('data')[0])) {
-                    $('#select-answ').select2().val(null).trigger("change");
-                    $('#select-answ').select2({disabled: true, placeholder: 'Выберите технологию', width: '20%'});
-
-                    $('#filter').hide();
-                    $('#add-filter').hide();
-                }
-
-                selector.select2({
-                    disabled: false, width: '20%',
-                    placeholder: 'Выберите вариант ответа', multiple: true
-                })
             });
 
             $('#select-opt').on('select2:unselect', function (e) {
-                $('#select-answ').select2().val(null).trigger("change");
-                $('#select-answ').select2({disabled: true, placeholder: 'Выберите технологию', width: '20%'});
 
-                $('#filter').hide();
-                $('#add-filter').hide();
-            });
-
-            $('#select-answ').on('select2:select', function (e) {
-                $('#filter').show();
-                $('#add-filter').show();
-            });
-
-            $('#select-answ').on('select2:unselect', function (e) {
-                $('#filter').hide();
-                $('#add-filter').hide();
+                if ($('#select-opt').select2('data').length === 0) {
+                    $('#filter').prop('disabled', true);
+                }
             });
         }
 
@@ -257,60 +113,81 @@
             $.fn.dataTable.ext.classes.sPageButton = 'button primary_button';
 
             table = $('#employees_table_id').DataTable({
-                data: data,
-                processing: true,
-                columns: [
-                    {
-                        data: null,
-                        "orderable": false
-                    },
-                    {data: 'firstName'},
-                    {data: 'lastName'},
-                    {data: 'email'},
-                    {data: 'answer.timestamp'}
-                ],
-                language: {
-                    zeroRecords: "Записи отсутствуют.",
-                    emptyTable: "В таблице отсутствуют данные",
-                    loadingRecords: "Загрузка записей...",
-                    search: "Поиск:",
-                    paginate: {
-                        previous: "Назад",
-                        next: "Далее"
+                    data: data,
+                    columnDefs:
+                        [
+                            {
+                                "render": function (data, type, row) {
+                                    if (data === null) {
+                                        return row.email;
+                                    } else {
+                                        return data + ' ' + row.lastName + ' (' + row.email + ')';
+                                    }
+                                },
+                                "targets": 1
+                            }
+                        ],
+                    columns:
+                        [
+                            {
+                                data: null,
+                                "orderable": false,
+                                "searchable": false,
+                            },
+                            {data: 'firstName'},
+                            {data: 'answer.timestamp'}
+                        ],
+                    language:
+                        {
+                            zeroRecords: "Записи отсутствуют.",
+                            emptyTable:
+                                "В таблице отсутствуют данные",
+                            loadingRecords:
+                                "Загрузка записей...",
+                            search:
+                                "Поиск:",
+                            paginate:
+                                {
+                                    previous: "Назад",
+                                    next:
+                                        "Далее"
+                                }
+                        }
+                    ,
+                    createdRow: function (row, data, index) {
+                        // if more than half of year
+                        if (new Date() - new Date(data.answer.timestamp) > 15552000000) {
+                            $('td', row).eq(5).css('color', 'red');
+                        }
                     }
-                },
-                createdRow: function (row, data, index) {
-                    // if more than half of year
-                    if (new Date() - new Date(data.answer.timestamp) > 15552000000) {
-                        $('td', row).eq(5).css('color', 'red');
-                    }
-                },
-                lengthChange: false,
-                pageLength: 20,
-                info: false,
-                columnDefs: [{
-                    "searchable": false,
-                    "orderable": false,
-                    "targets": 0
-                }],
-                order: [],
-                dom: "Bfrtip",
-                select: 'single',
-                buttons: [
-                    {
-                        text: 'Посмотреть ответ',
-                        className: 'showAnswerButton',
-                        action: function (e, dt, node, config) {
+                    ,
+                    lengthChange: false,
+                    pageLength:
+                        20,
+                    info:
+                        false,
+                    order:
+                        [],
+                    dom:
+                        "Bfrtip",
+                    select:
+                        'single',
+                    buttons:
+                        [
+                            {
+                                text: 'Посмотреть ответ',
+                                className: 'showAnswerButton',
+                                action: function (e, dt, node, config) {
 
-                            var id = table.rows({selected: true}).data()[0].id;
+                                    var id = table.rows({selected: true}).data()[0].id;
 
-                            window.location.replace("get-personal-answers?userId=" + id);
-//                            window.location.href = "get-personal-answers?userId=" + id;
-                        },
-                        enabled: false
-                    }
-                ]
-            });
+                                    window.location.href = "get-personal-answers?userId=" + id;
+                                },
+                                enabled: false
+                            }
+                        ]
+                }
+            );
 
             table.on('order.dt search.dt', function () {
                 table.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
@@ -326,24 +203,13 @@
             });
         }
 
-        function getDataFromServer() {
-            $.ajax({
-                url: "get-all-employees",
-                async: false,
-                dataType: "json",
-                success: function (d) {
-                    data = d;
-                }
-            });
-        }
-
         function getAllCategories() {
             $.ajax({
-                url: "../rest/cat",
+                url: "rest/options",
                 async: false,
                 dataType: "json",
                 success: function (d) {
-                    categories = d;
+                    options = d;
 
                 }
             });
@@ -355,32 +221,18 @@
     <div th:replace="fragments :: left-panel-admin"></div>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
         <h1>Поиск</h1>
+        <label for="select-opt">Выберите технологию </label>
         <div class="selectors">
-            <select class="select" id="select-cat">
-                <option></option>
-            </select>
-            <select class="select" id="select-subcat">
-                <option></option>
-            </select>
             <select class="select" id="select-opt">
-                <option></option>
             </select>
-            <select class="select" id="select-answ">
-                <option value="1">Нет</option>
-                <option value="2">Начальные знания</option>
-                <option value="3">Базовые знания</option>
-                <option value="4">Продвинутые знания</option>
-            </select>
-            <button id="add-filter" class="button primary_button">+</button>
-            <button id="filter" class="button primary_button">Применить фильтр</button>
         </div>
+        <button id="filter" class="btn btn-default">Применить фильтр</button>
+        <br>
         <table id="employees_table_id" class="table table-striped table-bordered">
             <thead>
             <tr>
                 <th></th>
-                <th>Имя</th>
-                <th>Фамилия</th>
-                <th>Адрес эл. почты</th>
+                <th>Сотрудник</th>
                 <th>Дата последнего ответа</th>
             </tr>
             </thead>

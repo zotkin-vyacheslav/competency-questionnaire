@@ -128,6 +128,7 @@ tr:nth-child(even) {
     overflow-y: auto;
     background-color: rgb(245, 245, 245);
     padding: 20px;
+    width: 13%;
 }
 
 .main {
@@ -145,6 +146,10 @@ tr:nth-child(even) {
 
 a.btn.btn-default.delete {
     color: red;
+}
+
+#select-opt {
+    width: 340px;
 }
 
 

@@ -60,7 +60,7 @@ public class AnswerDaoImpl extends AbstractDao<Long, Answer> implements AnswerDa
 
 	@Override
 	public List<JSONParse> getAdditionalAnswers(Long userId) {
-		return entityManager.createNativeQuery("SELECT ai.SUBCATEGORY_ID, ai.ADDITIONAL_INFO\n" +
+		return (List<JSONParse> ) entityManager.createNativeQuery("SELECT ai.SUBCATEGORY_ID, ai.ADDITIONAL_INFO\n" +
 				"  FROM USERS u\n" +
 				"JOIN ANSWERS a ON u.ANSWER_ID = a.ANSWER_ID\n" +
 				"JOIN ADDITIONAL_INFORMATION ai ON a.ANSWER_ID = ai.ANSWER_ID\n" +

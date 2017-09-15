@@ -9,8 +9,7 @@ import ru.itfbgroup.survey.models.User;
 import ru.itfbgroup.survey.service.abstr.AnswerService;
 import ru.itfbgroup.survey.service.abstr.UserService;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "admin")
@@ -62,11 +61,5 @@ public class AdminRestController {
 		}
 	}
 
-	@RequestMapping(value = "get-search-results", method = RequestMethod.POST)
-	public List<User> getSearchResult(@RequestParam(value="options[]") List<Long> options,
-									  @RequestParam(value="answers[]") List<Long> answers) {
-		List<User> users = userService.getFilteredUsers(options, answers);
-		users.removeAll(Collections.singleton(null));
-		return users;
-	}
+
 }

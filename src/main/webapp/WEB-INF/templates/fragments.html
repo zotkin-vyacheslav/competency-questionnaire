@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <script th:href="@{/resources/static/js/adminPage.js}"></script>
@@ -9,19 +9,19 @@
 <th:block th:fragment="left-panel-admin">
     <nav class="col-sm-3 col-md-2  sidebar">
         <ul class="nav nav-sidebar">
-            <li>
+            <li sec:authorize="hasRole('ROLE_ADMIN')">
                 <a class="nav-link active" th:href="@{/admin/statistics}">Статистика</a>
             </li>
-            <li>
+            <li sec:authorize="isAuthenticated()">
                 <a class="nav-link" th:href="@{/admin/employees}">Список сотрудников</a>
             </li>
             <li>
-                <a class="nav-link" th:href="@{/admin/search}">Поиск</a>
+                <a class="nav-link" th:href="@{/search}">Поиск</a>
             </li>
             <li>
                 <a class="nav-link" th:href="@{/answer}">Анкета</a>
             </li>
-            <li>
+            <li sec:authorize="isAuthenticated()">
                 <a href="#" class="nav-link" id="logout_btn_id_admin">Выход</a>
             </li>
         </ul>

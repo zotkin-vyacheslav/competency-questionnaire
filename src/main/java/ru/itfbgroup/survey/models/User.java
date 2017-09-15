@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User implements Serializable, UserDetails {
+public class User implements Serializable, UserDetails, Comparable<User> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,7 +21,7 @@ public class User implements Serializable, UserDetails {
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "answer_id")
 	private Answer answer;
 
@@ -165,5 +165,15 @@ public class User implements Serializable, UserDetails {
 				"id=" + id +
 				", email='" + email + '\'' +
 				'}';
+	}
+
+	@Override
+	public int compareTo(User o) {
+		if (this.getId() < o.getId()) {
+			return -1;
+		} else if (this.getId().equals(o.getId())) {
+			return 0;
+		}
+		return 1;
 	}
 }

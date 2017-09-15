@@ -14,11 +14,10 @@
         var countOfLoadedPages = 0;
         var categories_id = [[${categoriesId}]];
         var answers = [[${answers}]];
-        var addAnswers = [[${addAnswers}]];
-//        var addAnswers = jQuery.parseJSON( [[${addAnswers}]]);
-
+        var addAnswers;
 
         $(document).ready(function () {
+            getAdditionalAnswers();
 
             loadPage(categories_id[currentArrIndex]);
             checkIndexToHideButtons();
@@ -35,7 +34,7 @@
                 }
 
                 checkIndexToHideButtons();
-                window.scrollTo(0,0);
+                window.scrollTo(0, 0);
                 return false;
             });
             $("#previous_button_id").on("click", function () {
@@ -45,7 +44,7 @@
                 $("#" + categories_id[--currentArrIndex].toString()).show();
 
                 checkIndexToHideButtons();
-                window.scrollTo(0,0);
+                window.scrollTo(0, 0);
                 return false;
             });
             $("#finish_button_id").on("click", function () {
@@ -56,7 +55,7 @@
                 createJSON();
             });
 
-            $("#logout_btn_id").click(function() {
+            $("#logout_btn_id").click(function () {
 
                 if (confirm('Внесенные данные будут потеряны')) {
                     window.location.href = "/survey/logout";
@@ -120,7 +119,7 @@
                     var sub_id = "sub" + result["categoryId"] + i.toString();
                     var sub_add = "sub_add" + result["categoryId"] + i.toString();
 
-                    $("#" + result["categoryId"].toString()).append(     "                            <div class='sub'>" +
+                    $("#" + result["categoryId"].toString()).append("                            <div class='sub'>" +
                         "                            <h3 id='" + sub_id + "''></h3>" +
                         "                            <div id='" + sub_add + "''></div>" +
                         "                            </div>");
@@ -142,7 +141,7 @@
                             "                        </table> ");
                     }
 
-                    $("#" + result["categoryId"].toString()).append(           "                        <div class='bottom-table' id='footer'><p>" +
+                    $("#" + result["categoryId"].toString()).append("                        <div class='bottom-table' id='footer'><p>" +
                         "                            Если в списке выше что-то отсутствует из того, что Вы знаете и использовали, то укажите\n" +
                         "                            ниже через запятую:" +
                         "                        </p>" +
@@ -179,10 +178,21 @@
                 }
 
                 for (q = 0; q < addAnswers.length; q++) {
-                    if ($('#' + answers[q][0]).length > 0) {
-                        ('#' + answers[q][0]).val(answers[q][1]);
-                        answers[q] = [0][0];
+                    if ($('#' + addAnswers[q][0]).length > 0) {
+                        $('#' + addAnswers[q][0]).val(addAnswers[q][1]);
+                        addAnswers[q] = [0][0];
                     }
+                }
+            });
+        }
+
+        function getAdditionalAnswers() {
+            $.ajax({
+                url: "rest/update-answer/getAdditionalAnswers",
+                async: false,
+                dataType: "json",
+                success: function (d) {
+                    addAnswers = d;
                 }
             });
         }
@@ -228,7 +238,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: 'application/json',
                 data: JSON.stringify(arr),
-                beforeSend: function(xhr) {
+                beforeSend: function (xhr) {
                     xhr.setRequestHeader(header, token);
                 },
                 async: false,
@@ -253,7 +263,8 @@
             <div class="buttons">
                 <button id="previous_button_id" class="btn">Назад</button>
                 <button id="next_button_id" class="btn">Далее</button>
-                <button style="display: none" id="finish_button_id" class="btn btn-primary" name="submit">Отправить</button>
+                <button style="display: none" id="finish_button_id" class="btn btn-primary" name="submit">Отправить
+                </button>
             </div>
         </div>
     </div>
